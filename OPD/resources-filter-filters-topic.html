@@ -75,22 +75,17 @@
 				var keyword = input.trim().toLowerCase();
 
 				var currentTopics = [];
-				var currentTopics = [];
 				var currentCounties = [];
 
 				var dataTopics = '';
-				var dataTopics = '';
-				var dataCounties = '';
 				var $items = $('#iop-filter-cards-container .iop-filter__item');
 
 				$items.removeClass('iop-filter__item--visible');
 				$items.each(function () {
 					var $item = $(this);
 					var title = $item.find('.ohio-card-content-header').text().toLowerCase();
-					var counties = $item.attr('data-counties').toLowerCase();
-					var topics = $item.attr('data-topics').toLowerCase();
-					var topics = $item.attr('data-topics').toLowerCase();
-					title = title + ' ' + counties + ' ' + topics + ' ' + topics;
+					var topics = $item.attr('data-name').toLowerCase();
+					title = title + topics;
 
 					if (title.indexOf(keyword) >= 0){
 
@@ -98,23 +93,10 @@
 						$item.addClass('js-is-match');
 						$item.show();
 
-						/*dataTopics = $item[0].getAttribute('data-topics');
+						dataTopics = $item[0].getAttribute('data-name');
 						dataTopics.split(',').forEach(function (partition) {
 							if (currentTopics.indexOf(partition) < 0) {
 								currentTopics.push(partition);
-							}
-						});*/
-
-						dataTopics = $item[0].getAttribute('data-topics');
-						dataTopics.split(',').forEach(function (partition) {
-							if (currentTopics.indexOf(partition) < 0) {
-								currentTopics.push(partition);
-							}
-						});
-						dataCounties = $item[0].getAttribute('data-counties');
-						dataCounties.split(',').forEach(function (partition) {
-							if (currentCounties.indexOf(partition) < 0) {
-								currentCounties.push(partition);
 							}
 						});
 					} else {
@@ -272,6 +254,25 @@
 				return categoriesToRender;
 			}
 
+			function removeDuplicatedIndex( items ){
+				if ( items.length > 1 ) {
+					for (var i = 1; i < items.length; i++) {
+						if ( items[i].hasOwnProperty('index') ) {
+							var currItemIndex = items[i].index;
+							if(items[i-1].hasOwnProperty('index')) {
+								var prevItemIndex = items[i-1].index;
+								if ( currItemIndex === prevItemIndex ) {
+									delete items[i].index;
+								}
+							}
+						}
+					}
+					return items;
+				} else {
+					return items;
+				}
+			}
+
 			// 1) Get all variables to support multilingual content
 			var currentLanguage = OHIO.ODX.actions.getUserLanguageByCookie();
 
@@ -318,13 +319,19 @@
 					var resources = JSON.parse(response);
 					//var topicsToRender = createDropdownSelect2Topics(resources);
 					//var countiesToRender = createDropdownSelect2Counties(resources);
+					var indexedResources = resources.filter( function(el, index){
+						var indexAlphabet = el.name.substring(0, 1);
+						Object.assign(el, {index: indexAlphabet});
+						return el;
+					});
+					var cleanedResources = removeDuplicatedIndex( indexedResources );
 
 					var component = new OhioToolkit.components.WebComponent({
 						element: '#iop-filter',
 						templateLocation:
 							'[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/opd/opd-locations-cards-filter.hbs.html"]',
 						data: {
-							items: resources,
+							items: cleanedResources,
 							noResultsImgPath: '[Component name="ohio design/agencies/opd/default-images/no-results.png" rendition="auto" format="url"]',
 							FilterTitle: 'opd-filter-title',
 							InputPlaceholder: 'opd-filter-placeholder',
