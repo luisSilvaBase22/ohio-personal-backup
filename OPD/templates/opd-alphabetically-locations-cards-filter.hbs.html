@@ -52,14 +52,14 @@
 
 <div id="iop-filter-cards-container" class="list-unstyled odx-topic__cards row margin-top-md js-common-card-wrapper">
 	{{#each items}}
-	<div class="iop-filter__item iop-filter__item--visible col-xs-12 col-sm-4 col-md-4 col-lg-4"
-	     data-topics="{{topic}}" data-topics="{{utility}}" data-counties="{{county}}">
+	<div class="iop-filter__item iop-filter__item--visible col-xs-12 col-sm-12 col-md-6 col-lg-6"
+	     data-name="{{decode name}}">
 		<div class="ohio-card ohio-card--center ohio-card-container">
 			<div class="opd-card-locations-title">
-				<strong>{{decode name}}</strong>
+				<h3 class="ohio-card-content-header">{{decode name}}</h3>
 			</div>
 			<div class="opd-card-locations-external-resources">
-				{{externalResources}}
+				{{{externalResources}}}
 			</div>
 		</div>
 
