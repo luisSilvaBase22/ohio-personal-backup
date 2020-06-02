@@ -1,5 +1,15 @@
 <!-- START: Ohio Design / Agencies / OPD / Filters / Locations / OPD Alpha Directory Component for Locations - Cards -->
 
+<style>
+	.opd-card-locations-title {
+		padding: 20px 25px;
+	}
+
+	.opd-card-locations-external-resources{
+		padding: 0px 25px 20px 25px;
+	}
+</style>
+
 <div id="iop-filter" class="iop-filter__container margin-bottom-md margin-top-md">
 	<span class="ohio-spinner ohio-spinner--centered"></span>
 </div>
@@ -23,6 +33,34 @@
 			function registerEvents(){
 				//Reset button
 				$('.iop-filter__reset-btn').on('click', function (event) {
+					$('.iop-filter__input-filter').val('');
+					$('#formioReset').click();
+					var $items = $('#iop-filter-cards-container .iop-filter__item');
+					$items.removeClass('iop-filter__item--visible');
+					$items.each(function () {
+						var $item = $(this);
+						$item.addClass('iop-filter__item--visible');
+						$item.addClass('js-is-match');
+						$item.show();
+					});
+
+					var $indexGroups = $('#iop-filter-cards-container .ohio-odx-alpha-directory__group-title');
+					//$indexGroups.removeClass('iop-filter__item--visible');
+					$indexGroups.each(function () {
+						var $item = $(this);
+						//$item.addClass('iop-filter__item--visible');
+						$item.show();
+					});
+
+					showResults();
+					$('#js-select-topics').val('all').trigger('change.select2');
+					//$('#js-select-topics').val('all').trigger('change.select2');
+					$('#js-select-counties').val('all').trigger('change.select2');
+					initializePagination();
+				});
+
+				//All type button
+				$('.js-opd-alpha-directory__alphabet-button-all').on('click', function(){
 					$('.iop-filter__input-filter').val('');
 					$('#formioReset').click();
 					var $items = $('#iop-filter-cards-container .iop-filter__item');
@@ -129,32 +167,33 @@
 					console.log("You pressed: ", target);
 					var parentTarget = target.parentElement;
 					var letter = parentTarget.getAttribute('data-target');
-					var $items = $('#iop-filter-cards-container .iop-filter__item');
-					$items.removeClass('iop-filter__item--visible');
-					$items.each(function () {
-						var $item = $(this);
-						var title = $item.find('.ohio-card-content-header').text().toLowerCase();
-						var topics = $item.attr('data-name').toLowerCase();
-						title = title + topics;
-						var firstLetterItem = title.substring(0, 1);
-						var indexGroupLetter = $('[data-index="'+firstLetterItem+'"]');
+					if (letter != null) {
+						var $items = $('#iop-filter-cards-container .iop-filter__item');
+						$items.removeClass('iop-filter__item--visible');
+						$items.each(function () {
+							var $item = $(this);
+							var title = $item.find('.ohio-card-content-header').text().toLowerCase();
+							var topics = $item.attr('data-name').toLowerCase();
+							title = title + topics;
+							var firstLetterItem = title.substring(0, 1);
+							var indexGroupLetter = $('[data-index="'+firstLetterItem+'"]');
 
-						if (firstLetterItem.indexOf(letter) >= 0){
+							if (firstLetterItem.indexOf(letter) >= 0){
 
-							$item.addClass('iop-filter__item--visible');
-							$item.addClass('js-is-match');
-							$item.show();
-							indexGroupLetter.show();
+								$item.addClass('iop-filter__item--visible');
+								$item.addClass('js-is-match');
+								$item.show();
+								indexGroupLetter.show();
 
-						} else {
-							$item.hide();
-							indexGroupLetter.hide();
-						}
-					});
+							} else {
+								$item.hide();
+								indexGroupLetter.hide();
+							}
+						});
 
-					showResults();
-					initializePagination();
-
+						showResults();
+						initializePagination();
+					}
 				});
 			}
 
@@ -378,6 +417,7 @@
 						return el;
 					});
 					var cleanedResources = removeDuplicatedIndex( indexedResources );
+					var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
 					var component = new OhioToolkit.components.WebComponent({
 						element: '#iop-filter',
@@ -395,6 +435,7 @@
 							labelCounties: 'opd-filter-county',
 							Results: 'odx-results',
 							FilterShowing: 'odx-filter-showing',
+							alphabetIndex: alphabet,
 							ResetFilters: 'opd-reset-filters',
 							shareTitle: 'odx-share',
 							NoResultsText: 'odx-no-results-image'
