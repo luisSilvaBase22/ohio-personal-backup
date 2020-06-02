@@ -331,15 +331,15 @@
 					var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
 					var component = new OhioToolkit.components.WebComponent({
-						element: '#iop-filter',
+						element: '#opd-filter',
 						templateLocation:
 							'[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/opd/opd-locations-cards-filter.hbs.html"]',
 						data: {
 							items: cleanedResources,
 							noResultsImgPath: '[Component name="ohio design/agencies/opd/default-images/no-results.png" rendition="auto" format="url"]',
-							FilterTitle: 'opd-filter-title',
+							FilterTitle: 'opd-filter-by-name',
 							InputPlaceholder: 'opd-filter-placeholder',
-							Filter: 'odx-filter',
+							Filter: 'opd-filter-title',
 							Results: 'odx-results',
 							FilterShowing: 'odx-filter-showing',
 							alphabetIndex: alphabet,
