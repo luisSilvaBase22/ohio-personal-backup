@@ -14,6 +14,30 @@
 <div class="iop-filter__second-section-container">
 	<div class="iop-filter__categories-title">{{ getMultilingualLabelByWCMKey ./Filter }}</div>
 	<div id="iop-filter-filters-container" class="row margin-bottom-sm">
+		<div class="ohio-odx-alpha-directory__alphabet-container">
+			<ul class="js-ohio-odx-alpha-directory__alphabet ohio-odx-alpha-directory__alphabet">
+				<li class="ohio-odx-alpha-directory__alphabet-list-title">
+					<a href="#top" class="js-ohio-odx-alpha-directory__alphabet-button-all odx-alpha-directory__alphabet-button-all">
+						<span>All type</span>
+					</a>
+				</li>
+				<li>
+					<a href data-target ="a" class="ohio-odx-alpha-directory__alphabet-char ohio-odx-alpha-directory__alphabet-char__a">
+						<span>a</span>
+					</a>
+				</li>
+				<li>
+					<a href data-target ="b" class="ohio-odx-alpha-directory__alphabet-char ohio-odx-alpha-directory__alphabet-char__b">
+						<span>b</span>
+					</a>
+				</li>
+				<li>
+					<a href data-target ="c" class="ohio-odx-alpha-directory__alphabet-char ohio-odx-alpha-directory__alphabet-char__c">
+						<span>c</span>
+					</a>
+				</li>
+			</ul>
+		</div>
 
 		<!--<article id="{{ getMultilingualLabelByWCMKey ./allLabelTopics }}"
 		         class="ohio-select2 col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -54,7 +78,7 @@
 	{{#each items}}
 	{{#if index}}
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<h3 class="ohio-odx-alpha-directory__group-title">{{index}}</h3>
+		<h3 data-index="{{lowercase index}}" class="ohio-odx-alpha-directory__group-title">{{index}}</h3>
 	</div>
 	{{/if}}
 	<div class="iop-filter__item iop-filter__item--visible col-xs-12 col-sm-12 col-md-6 col-lg-6"

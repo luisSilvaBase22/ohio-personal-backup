@@ -33,6 +33,15 @@
 						$item.addClass('js-is-match');
 						$item.show();
 					});
+
+					var $indexGroups = $('#iop-filter-cards-container .ohio-odx-alpha-directory__group-title');
+					//$indexGroups.removeClass('iop-filter__item--visible');
+					$indexGroups.each(function () {
+						var $item = $(this);
+						//$item.addClass('iop-filter__item--visible');
+						$item.show();
+					});
+
 					showResults();
 					$('#js-select-topics').val('all').trigger('change.select2');
 					//$('#js-select-topics').val('all').trigger('change.select2');
@@ -110,6 +119,43 @@
 				$('#js-select-topics').val(currentTopics).trigger('change.select2');
 				$('#js-select-counties').val(currentCounties).trigger('change.select2');
 				initializePagination();
+			}
+
+			function onClickIndex(){
+				var alphabetContainer = $('.js-ohio-odx-alpha-directory__alphabet');
+				alphabetContainer.on('click', function(){
+					event.preventDefault();
+					var target = event.target;
+					console.log("You pressed: ", target);
+					var parentTarget = target.parentElement;
+					var letter = parentTarget.getAttribute('data-target');
+					var $items = $('#iop-filter-cards-container .iop-filter__item');
+					$items.removeClass('iop-filter__item--visible');
+					$items.each(function () {
+						var $item = $(this);
+						var title = $item.find('.ohio-card-content-header').text().toLowerCase();
+						var topics = $item.attr('data-name').toLowerCase();
+						title = title + topics;
+						var firstLetterItem = title.substring(0, 1);
+						var indexGroupLetter = $('[data-index="'+firstLetterItem+'"]');
+
+						if (firstLetterItem.indexOf(letter) >= 0){
+
+							$item.addClass('iop-filter__item--visible');
+							$item.addClass('js-is-match');
+							$item.show();
+							indexGroupLetter.show();
+
+						} else {
+							$item.hide();
+							indexGroupLetter.hide();
+						}
+					});
+
+					showResults();
+					initializePagination();
+
+				});
 			}
 
 			function paginateResults(page, elementsPerPage) {
@@ -273,6 +319,13 @@
 				}
 			}
 
+			Handlebars.registerHelper('lowercase', function (str) {
+				if(str && typeof str === "string") {
+					return str.toLowerCase();
+				}
+				return '';
+			});
+
 			// 1) Get all variables to support multilingual content
 			var currentLanguage = OHIO.ODX.actions.getUserLanguageByCookie();
 
@@ -357,7 +410,7 @@
 							dropdownParent: jQuery('body')
 						});
 						addingAriaLabels();
-
+						onClickIndex();
 						registerCategoryEvent('#js-select-topics', 'topics');
 						registerCategoryEvent('#js-select-counties', 'counties');
 						registerEvents();
