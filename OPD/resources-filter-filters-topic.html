@@ -73,7 +73,7 @@
 						var $item = $(this);
 						$item.show();
 					});
-
+					onClickIndex( true );
 					showResults();
 					initializePagination();
 				});
@@ -165,7 +165,15 @@
 				initializePagination();
 			}
 
-			function onClickIndex(){
+			function onClickIndex( cleanFilter ){
+				var multiplesLetters = [];
+				var multiplesGroups = [];
+
+				if ( cleanFilter ) {
+					multiplesLetters.splice(0);
+					multiplesGroups.splice(0);
+				}
+
 				var alphabetContainer = $('.js-opd-alphabet-container');
 				alphabetContainer.on('click', function(){
 					event.preventDefault();
@@ -173,6 +181,7 @@
 					console.log("You pressed: ", target);
 					var parentTarget = target.parentElement;
 					var letter = parentTarget.getAttribute('data-target');
+					multiplesLetters.push(letter);
 					if (letter != null) {
 						var $items = $('#iop-filter-cards-container .iop-filter__item');
 						$items.removeClass('iop-filter__item--visible');
@@ -182,23 +191,41 @@
 							var topics = $item.attr('data-name').toLowerCase();
 							title = title + topics;
 							var firstLetterItem = title.substring(0, 1);
-							var indexGroupLetter = $('[data-index="'+firstLetterItem+'"]');
+							//var indexGroupLetter = $('[data-index="'+firstLetterItem+'"]');
 
-							if (firstLetterItem.indexOf(letter) >= 0){
+							multiplesLetters.forEach( function( le ){
+								if (firstLetterItem.indexOf( le ) >= 0){
 
-								$item.addClass('iop-filter__item--visible');
-								$item.addClass('js-is-match');
-								$item.show();
-								indexGroupLetter.show();
+									$item.addClass('iop-filter__item--visible');
+									$item.addClass('js-is-match');
+									$item.show();
+									//indexGroupLetter.show();
 
-							} else {
-								$item.hide();
-								indexGroupLetter.hide();
-							}
+								} else {
+									$item.hide();
+									//indexGroupLetter.hide();
+								}
+							} );
+
+						});
+
+						multiplesLetters.forEach(function( le ) {
+							multiplesGroups.push($('[data-index="'+le+'"]'));
+						});
+						var $allIndexGroups = $('[data-index]');
+						$allIndexGroups.each(function(){
+							var $groupItem = $(this);
+							$groupItem.hide();
+						});
+						multiplesGroups.forEach(function( group ){
+							group.show();
 						});
 
 						showResults();
 						initializePagination();
+					} else {
+						multiplesLetters.splice(0);
+						multiplesGroups.splice(0);
 					}
 				});
 			}
