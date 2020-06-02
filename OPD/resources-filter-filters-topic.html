@@ -251,93 +251,6 @@
 				$resultsParagraph.text('We found ' + $visibleItems.length + ' ' + results);
 			}
 
-			function registerCategoryEvent(id, category){
-				var labelForItemsWithNoGroup = "all";
-				$(id).select2().on('change', function (event) {
-					$('.iop-filter__input-filter').val('');
-
-					event.preventDefault();
-					var $items = $('.iop-filter__item');
-					var categoryArray = $(this).val();
-					var lastCategorySelected = $('span.select2-selection[aria-owns="select2-js-select-' + category + '-results"]');
-					var categoryLength = 0;
-
-					if (categoryArray !== null) {
-						categoryLength = categoryArray.length;
-					}
-
-					if (lastCategorySelected.length > 0) {
-						lastCategorySelected = lastCategorySelected[0].getAttribute('aria-activedescendant').split('-').pop();
-					} else if (categoryLength === 0) {
-						categoryArray = [];
-						categoryArray[0] = 'all';
-						lastCategorySelected = 'all';
-					}
-
-					if (lastCategorySelected === 'all') {
-						categoryArray = [];
-						categoryArray[0] = 'all';
-						$(id).val(categoryArray).trigger('change.select2');
-					} else {
-						if (categoryArray !== null && categoryArray[0] === 'all' && (categoryLength > 1 || countiesLength > 1)) {
-							categoryArray.splice(0, 1);
-							$(id).val(categoryArray).trigger('change.select2');
-						}
-					}
-					$items.css('display', 'none');
-					$items.removeClass('js-is-match');
-					$items.removeClass('iop-filter__item--visible');
-
-					getCategoryMatches($items, categoryArray, labelForItemsWithNoGroup, category);
-				})
-			}
-
-			function getCategoryMatches($items, CategoriesArray, labelForItemsWithNoGroup, categorySelection) {
-				var $currentCategoryMatches = [];
-
-				if (CategoriesArray !== null) {
-					for (var index = 0, length = CategoriesArray.length; index < length; index++) {
-						if (CategoriesArray[index] === labelForItemsWithNoGroup) {
-							$items.css('display', 'block');
-							$items.addClass('js-is-match');
-							$items.addClass('iop-filter__item--visible');
-							break;
-						} else {
-							$currentCategoryMatches = $('.iop-filter__item[data-' + categorySelection + '*="' + CategoriesArray[index].replace('&', '&') + '"]');
-							$currentCategoryMatches.css('display', 'block');
-							$currentCategoryMatches.addClass('js-is-match');
-							$currentCategoryMatches.addClass('iop-filter__item--visible');
-						}
-					}
-				}
-
-				showResults();
-				initializePagination();
-			}
-
-			function createDropdownSelect2Topics(items) {
-				var categoriesToRender = [];
-				items.forEach(function (el) {
-					el.topic.split(',').forEach(function (category) {
-						if (category !== '' && !categoriesToRender.includes(category)) {
-							categoriesToRender.push(category);
-						}
-					});
-				});
-				return categoriesToRender;
-			}
-
-			function createDropdownSelect2Counties(items) {
-				var categoriesToRender = [];
-				items.forEach(function (el) {
-					el.topic.split(',').forEach(function (category) {
-						if (category !== '' && !categoriesToRender.includes(category)) {
-							categoriesToRender.push(category);
-						}
-					});
-				});
-				return categoriesToRender;
-			}
 
 			function removeDuplicatedIndex( items ){
 				if ( items.length > 1 ) {
@@ -429,15 +342,10 @@
 							FilterTitle: 'opd-filter-title',
 							InputPlaceholder: 'opd-filter-placeholder',
 							Filter: 'odx-filter',
-							allLabelTopics: 'opd-all-topics',
-							labelTopics: 'opd-filter-topics',
-							allLabelCounties: 'opd-all-counties',
-							labelCounties: 'opd-filter-county',
 							Results: 'odx-results',
 							FilterShowing: 'odx-filter-showing',
 							alphabetIndex: alphabet,
 							ResetFilters: 'opd-reset-filters',
-							shareTitle: 'odx-share',
 							NoResultsText: 'odx-no-results-image'
 						}
 					});
@@ -452,8 +360,6 @@
 						});
 						addingAriaLabels();
 						onClickIndex();
-						registerCategoryEvent('#js-select-topics', 'topics');
-						registerCategoryEvent('#js-select-counties', 'counties');
 						registerEvents();
 						showResults();
 						initializePagination();
