@@ -1,0 +1,46 @@
+.opd-card-location-results__first-section {
+    border-bottom: none;
+}
+
+.opd-card-location-results__second-section{
+    border-top: none;
+    background-color: #f2f2f2;
+}
+
+.opd-alpha-directory__index-container {
+    margin-bottom: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+ul.opd-alpha-directory__alphabet {
+    list-style: none;
+    margin: 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 0;
+    background-color: white;
+    display: block;
+}
+
+ul.opd-alpha-directory__alphabet li:not(:first-child) a {
+    color: #9B9B9B !important;
+}
+
+.opd-card-locations-title {
+    padding: 20px 25px;
+}
+
+.opd-card-locations-external-resources{
+    padding: 0px 25px 20px 25px;
+}
+
+.opd-index--active {
+    color: #3D7AA9;
+    font-weight: bold;
+}
+
+.opd-alpha-directory__alphabet .ohio-odx-alpha-directory__alphabet-list-title a:hover {
+    color: white;
+    text-decoration: underline;
+}
