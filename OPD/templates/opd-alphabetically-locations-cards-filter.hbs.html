@@ -10,56 +10,24 @@
 			<button class="iop-filter__input-filter-btn btn btn-primary">{{ getMultilingualLabelByWCMKey ./Filter }}</button>
 		</div>
 	</div>
-</div>
-<div class="iop-filter__second-section-container">
-	<div class="iop-filter__categories-title">{{ getMultilingualLabelByWCMKey ./Filter }}</div>
+	<!-- START -->
 	<div id="iop-filter-filters-container" class="row margin-bottom-sm">
 		<div class="ohio-odx-alpha-directory__alphabet-container">
 			<ul class="js-ohio-odx-alpha-directory__alphabet ohio-odx-alpha-directory__alphabet">
 				<li class="ohio-odx-alpha-directory__alphabet-list-title">
-					<a href="#top" class="js-ohio-odx-alpha-directory__alphabet-button-all odx-alpha-directory__alphabet-button-all">
+					<a href="#top" class="js-opd-alpha-directory__alphabet-button-all odx-alpha-directory__alphabet-button-all">
 						<span>All type</span>
 					</a>
 				</li>
+				{{#each alphabetIndex}}
 				<li>
-					<a href data-target ="a" class="ohio-odx-alpha-directory__alphabet-char ohio-odx-alpha-directory__alphabet-char__a">
-						<span>a</span>
+					<a href data-target ="{{this}}" class="ohio-odx-alpha-directory__alphabet-char ohio-odx-alpha-directory__alphabet-char__{{this}}">
+						<span>{{this}}</span>
 					</a>
 				</li>
-				<li>
-					<a href data-target ="b" class="ohio-odx-alpha-directory__alphabet-char ohio-odx-alpha-directory__alphabet-char__b">
-						<span>b</span>
-					</a>
-				</li>
-				<li>
-					<a href data-target ="c" class="ohio-odx-alpha-directory__alphabet-char ohio-odx-alpha-directory__alphabet-char__c">
-						<span>c</span>
-					</a>
-				</li>
+				{{/each}}
 			</ul>
 		</div>
-
-		<!--<article id="{{ getMultilingualLabelByWCMKey ./allLabelTopics }}"
-		         class="ohio-select2 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-			<label for="js-select-topics">{{ getMultilingualLabelByWCMKey ./labelTopics }}</label>
-			<select multiple="multiple" id="js-select-topics">
-				<option value="all" selected="selected">{{ getMultilingualLabelByWCMKey ./allLabelTopics }}</option>
-				{{#each categoriesTopics}}
-				<option value="{{this}}">{{this}}</option>
-				{{/each}}
-			</select>
-		</article>-->
-
-		<!--<article id="{{ getMultilingualLabelByWCMKey ./allLabelCounties }}"
-				  class="ohio-select2 col-lg-6 col-md-6 col-sm-12 col-xs-12">
-			<label for="js-select-counties">{{ getMultilingualLabelByWCMKey ./labelCounties }}</label>
-			<select multiple="multiple" id="js-select-counties">
-				<option value="all" selected="selected">{{ getMultilingualLabelByWCMKey ./allLabelCounties }}</option>
-				{{#each categoriesCounties}}
-				<option value="{{this}}">{{this}}</option>
-				{{/each}}
-			</select>
-		</article>-->
 
 	</div>
 
@@ -71,7 +39,13 @@
 			<button class="iop-filter__reset-btn btn">{{ getMultilingualLabelByWCMKey ./ResetFilters }}</button>
 		</div>
 	</div>
+	<!-- END -->
 </div>
+<!--
+<div class="iop-filter__second-section-container">
+	  I was here
+</div>
+-->
 
 
 <div id="iop-filter-cards-container" class="list-unstyled odx-topic__cards row margin-top-md js-common-card-wrapper">
