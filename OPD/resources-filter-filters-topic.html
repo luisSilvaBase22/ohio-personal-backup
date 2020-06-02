@@ -18,10 +18,6 @@
 	[Component name="ohio design/global/social-networks-configuration/share-card-javascript-module"]
 	(function( $ ) {
 		$( document ).on( 'ready', function() {
-			var eventFilters = [];
-			var topicsArray = [];
-			var countiesArray = [];
-			var typesArray = [];
 			var elementsPerPage = 10;
 
 			function addingAriaLabels() {
@@ -34,7 +30,6 @@
 				//Reset button
 				$('.iop-filter__reset-btn').on('click', function (event) {
 					$('.iop-filter__input-filter').val('');
-					$('#formioReset').click();
 					var $items = $('#iop-filter-cards-container .iop-filter__item');
 					$items.removeClass('iop-filter__item--visible');
 					$items.each(function () {
@@ -45,24 +40,18 @@
 					});
 
 					var $indexGroups = $('#iop-filter-cards-container .ohio-odx-alpha-directory__group-title');
-					//$indexGroups.removeClass('iop-filter__item--visible');
 					$indexGroups.each(function () {
 						var $item = $(this);
-						//$item.addClass('iop-filter__item--visible');
 						$item.show();
 					});
 
 					showResults();
-					$('#js-select-topics').val('all').trigger('change.select2');
-					//$('#js-select-topics').val('all').trigger('change.select2');
-					$('#js-select-counties').val('all').trigger('change.select2');
 					initializePagination();
 				});
 
 				//All type button
-				$('.js-opd-alpha-directory__alphabet-button-all').on('click', function(){
+				$('.js-opd-alphabet-button-all').on('click', function(){
 					$('.iop-filter__input-filter').val('');
-					$('#formioReset').click();
 					var $items = $('#iop-filter-cards-container .iop-filter__item');
 					$items.removeClass('iop-filter__item--visible');
 					$items.each(function () {
@@ -73,26 +62,18 @@
 					});
 
 					var $indexGroups = $('#iop-filter-cards-container .ohio-odx-alpha-directory__group-title');
-					//$indexGroups.removeClass('iop-filter__item--visible');
 					$indexGroups.each(function () {
 						var $item = $(this);
-						//$item.addClass('iop-filter__item--visible');
 						$item.show();
 					});
 
 					showResults();
-					$('#js-select-topics').val('all').trigger('change.select2');
-					//$('#js-select-topics').val('all').trigger('change.select2');
-					$('#js-select-counties').val('all').trigger('change.select2');
 					initializePagination();
 				});
 
 				//Filter button
 				$('.iop-filter__input-filter-btn').on('click', function (event) {
 					onInputSearch($('.iop-filter__input-filter')[0].value);
-					$('#js-select-topics').val('all').trigger('change.select2');
-					//$('#js-select-topics').val('all').trigger('change.select2');
-					$('#js-select-counties').val('all').trigger('change.select2');
 				});
 
 				//Filter when enter
@@ -152,15 +133,11 @@
 				});
 
 				showResults();
-
-				//$('#js-select-topics').val(currentTopics).trigger('change.select2');
-				$('#js-select-topics').val(currentTopics).trigger('change.select2');
-				$('#js-select-counties').val(currentCounties).trigger('change.select2');
 				initializePagination();
 			}
 
 			function onClickIndex(){
-				var alphabetContainer = $('.js-ohio-odx-alpha-directory__alphabet');
+				var alphabetContainer = $('.js-opd-alphabet-container');
 				alphabetContainer.on('click', function(){
 					event.preventDefault();
 					var target = event.target;
@@ -322,8 +299,6 @@
 			// 3) Run the AJAX call and do something with the response
 			OHIO.ODX.actions.getAjaxDataFromURL(serviceURL).then(function (response) {
 					var resources = JSON.parse(response);
-					//var topicsToRender = createDropdownSelect2Topics(resources);
-					//var countiesToRender = createDropdownSelect2Counties(resources);
 					var indexedResources = resources.filter( function(el, index){
 						var indexAlphabet = el.name.substring(0, 1);
 						Object.assign(el, {index: indexAlphabet});
