@@ -183,6 +183,10 @@
 				if ( cleanFilter ) {
 					multiplesLetters.splice(0);
 					multiplesGroups.splice(0);
+					$('.opd-alpha-directory__alphabet a span').each(function(){
+						var $itemSelected = $(this);
+						$itemSelected.removeClass('opd-index--active');
+					});
 				}
 
 				var alphabetContainer = $('.js-opd-alphabet-container');
@@ -190,6 +194,8 @@
 					event.preventDefault();
 					var target = event.target;
 					console.log("You pressed: ", target);
+					if ( target.localName === "span" )
+						target.classList.add('opd-index--active');
 					var parentTarget = target.parentElement;
 					var letter = parentTarget.getAttribute('data-target');
 					multiplesLetters.push(letter);
