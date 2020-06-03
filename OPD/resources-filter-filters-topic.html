@@ -29,12 +29,12 @@
 						$item.show();
 					});
 
-					var $indexGroups = $('#iop-filter-cards-container .ohio-odx-alpha-directory__group-title');
-					$indexGroups.each(function () {
+					var $indexGroupHeaders = $('#iop-filter-cards-container .ohio-odx-alpha-directory__group-title');
+					$indexGroupHeaders.each(function () {
 						var $item = $(this);
 						$item.show();
 					});
-					onClickIndex( true );
+					filterOnClickIndex( true );
 					showResults();
 					initializePagination();
 				});
@@ -51,8 +51,8 @@
 						$item.show();
 					});
 
-					var $indexGroups = $('#iop-filter-cards-container .ohio-odx-alpha-directory__group-title');
-					$indexGroups.each(function () {
+					var $indexGroupHeaders = $('#iop-filter-cards-container .ohio-odx-alpha-directory__group-title');
+					$indexGroupHeaders.each(function () {
 						var $item = $(this);
 						$item.show();
 					});
@@ -126,29 +126,29 @@
 				initializePagination();
 			}
 
-			function onClickIndex( cleanFilter ){
-				var multiplesLetters = [];
-				var multiplesGroups = [];
+			function filterOnClickIndex( cleanFilter ){
+				var multipleLettersClicked = [];
+				var $multipleGroupHeaders = [];
 
 				if ( cleanFilter ) {
-					multiplesLetters.splice(0);
-					multiplesGroups.splice(0);
+					multipleLettersClicked.splice(0);
+					$multipleGroupHeaders.splice(0);
+					//Clean selected indexes
 					$('.opd-alpha-directory__alphabet a span').each(function(){
 						var $itemSelected = $(this);
 						$itemSelected.removeClass('opd-index--active');
 					});
 				}
 
-				var alphabetContainer = $('.js-opd-alphabet-container');
-				alphabetContainer.on('click', function(){
+				var $alphabetContainer = $('.js-opd-alphabet-container');
+				$alphabetContainer.on('click', function( event ){
 					event.preventDefault();
 					var target = event.target;
-					console.log("You pressed: ", target);
 					if ( target.localName === "span" )
 						target.classList.add('opd-index--active');
 					var parentTarget = target.parentElement;
 					var letter = parentTarget.getAttribute('data-target');
-					multiplesLetters.push(letter);
+					multipleLettersClicked.push(letter);
 					if (letter != null) {
 						var $items = $('#iop-filter-cards-container .iop-filter__item');
 						$items.removeClass('iop-filter__item--visible');
@@ -158,41 +158,37 @@
 							var topics = $item.attr('data-name').toLowerCase();
 							title = title + topics;
 							var firstLetterItem = title.substring(0, 1);
-							//var indexGroupLetter = $('[data-index="'+firstLetterItem+'"]');
 
-							multiplesLetters.forEach( function( le ){
+							multipleLettersClicked.forEach( function( le ){
 								if (firstLetterItem.indexOf( le ) >= 0){
 
 									$item.addClass('iop-filter__item--visible');
 									$item.addClass('js-is-match');
 									$item.show();
-									//indexGroupLetter.show();
-
 								} else {
 									$item.hide();
-									//indexGroupLetter.hide();
 								}
 							} );
 
 						});
 
-						multiplesLetters.forEach(function( le ) {
-							multiplesGroups.push($('[data-index="'+le+'"]'));
+						multipleLettersClicked.forEach(function( le ) {
+							$multipleGroupHeaders.push($('[data-index="'+le+'"]'));
 						});
 						var $allIndexGroups = $('[data-index]');
 						$allIndexGroups.each(function(){
 							var $groupItem = $(this);
 							$groupItem.hide();
 						});
-						multiplesGroups.forEach(function( group ){
+						$multipleGroupHeaders.forEach(function( group ){
 							group.show();
 						});
 
 						showResults();
 						initializePagination();
 					} else {
-						multiplesLetters.splice(0);
-						multiplesGroups.splice(0);
+						multipleLettersClicked.splice(0);
+						$multipleGroupHeaders.splice(0);
 					}
 				});
 			}
@@ -357,7 +353,7 @@
 							dropdownParent: jQuery('body')
 						});
 						addingAriaLabels();
-						onClickIndex();
+						filterOnClickIndex();
 						registerEvents();
 						showResults();
 						initializePagination();
