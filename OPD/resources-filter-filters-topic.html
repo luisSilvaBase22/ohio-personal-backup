@@ -16,27 +16,31 @@
 				})
 			}
 
+			function cleanAllFilters(){
+				$('.iop-filter__input-filter').val('');
+				var $items = $('#iop-filter-cards-container .iop-filter__item');
+				$items.removeClass('iop-filter__item--visible');
+				$items.each(function () {
+					var $item = $(this);
+					$item.addClass('iop-filter__item--visible');
+					$item.addClass('js-is-match');
+					$item.show();
+				});
+
+				var $indexGroupHeaders = $('#iop-filter-cards-container .ohio-odx-alpha-directory__group-title');
+				$indexGroupHeaders.each(function () {
+					var $item = $(this);
+					$item.show();
+				});
+				filterOnClickIndex( true );
+				showResults();
+				initializePagination();
+			}
+
 			function registerEvents(){
 				//Reset button
 				$('.iop-filter__reset-btn').on('click', function (event) {
-					$('.iop-filter__input-filter').val('');
-					var $items = $('#iop-filter-cards-container .iop-filter__item');
-					$items.removeClass('iop-filter__item--visible');
-					$items.each(function () {
-						var $item = $(this);
-						$item.addClass('iop-filter__item--visible');
-						$item.addClass('js-is-match');
-						$item.show();
-					});
-
-					var $indexGroupHeaders = $('#iop-filter-cards-container .ohio-odx-alpha-directory__group-title');
-					$indexGroupHeaders.each(function () {
-						var $item = $(this);
-						$item.show();
-					});
-					filterOnClickIndex( true );
-					showResults();
-					initializePagination();
+					cleanAllFilters();
 				});
 
 				//All type button
@@ -93,10 +97,16 @@
 				var keyword = input.trim().toLowerCase();
 
 				var currentTopics = [];
-				var currentCounties = [];
+				//var currentCounties = [];
 
 				var dataTopics = '';
 				var $items = $('#iop-filter-cards-container .iop-filter__item');
+
+				var $multipleGroupHeaders = $('.ohio-odx-alpha-directory__group-title');
+				$multipleGroupHeaders.each(function(){
+					var $headerIndex = $(this);
+					$headerIndex.hide();
+				});
 
 				$items.removeClass('iop-filter__item--visible');
 				$items.each(function () {
@@ -110,6 +120,15 @@
 						$item.addClass('iop-filter__item--visible');
 						$item.addClass('js-is-match');
 						$item.show();
+						//Get the group by attribute
+
+						$multipleGroupHeaders.each(function(){
+							var $headerIndex = $(this);
+							var attribute = $headerIndex.attr('data-index');
+							if ( attribute === title.substring(0, 1) )
+								$headerIndex.show();
+						});
+
 
 						dataTopics = $item[0].getAttribute('data-name');
 						dataTopics.split(',').forEach(function (partition) {
@@ -151,9 +170,12 @@
 					} else {
 						multipleLettersClicked.push(letter);
 					}
-					if (letter != null) {
+					if (letter != null && multipleLettersClicked.length > 0 ) {
 						var $items = $('#iop-filter-cards-container .iop-filter__item');
 						$items.removeClass('iop-filter__item--visible');
+						if (multipleLettersClicked.length > 0 ) {
+
+						}
 						$items.each(function () {
 							var $item = $(this);
 							var title = $item.find('.ohio-card-content-header').text().toLowerCase();
@@ -192,6 +214,7 @@
 					} else {
 						multipleLettersClicked.splice(0);
 						$multipleGroupHeaders.splice(0);
+						cleanAllFilters();
 					}
 				});
 			}
