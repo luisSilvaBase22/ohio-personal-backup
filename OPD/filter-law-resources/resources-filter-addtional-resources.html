@@ -1,0 +1,374 @@
+<!-- START: Ohio Design / Agencies / OPD / Filters / All Under Current Location / Resources By Topic / Resources Filter -->
+
+<div id="iop-filter" class="iop-filter__container margin-bottom-md margin-top-md">
+	<span class="ohio-spinner ohio-spinner--centered"></span>
+</div>
+
+<script>
+	[Component name="ohio design/global/social-networks-configuration/share-card-javascript-module"]
+	(function( $ ) {
+		$( document ).on( 'ready', function() {
+			var eventFilters = [];
+			var topicsArray = [];
+			var countiesArray = [];
+			var typesArray = [];
+			var elementsPerPage = 10;
+
+			function addingAriaLabels() {
+				$(".select2-search__field").attr("aria-label", function () {
+					return $(this).closest("article").attr("id")
+				})
+			}
+
+			function registerEvents(){
+				//Reset button
+				$('.iop-filter__reset-btn').on('click', function (event) {
+					$('.iop-filter__input-filter').val('');
+					$('#formioReset').click();
+					var $items = $('#iop-filter-cards-container .iop-filter__item');
+					$items.removeClass('iop-filter__item--visible');
+					$items.each(function () {
+						var $item = $(this);
+						$item.addClass('iop-filter__item--visible');
+						$item.addClass('js-is-match');
+						$item.show();
+					});
+					showResults();
+					$('#js-select-topics').val('all').trigger('change.select2');
+					//$('#js-select-topics').val('all').trigger('change.select2');
+					$('#js-select-counties').val('all').trigger('change.select2');
+					initializePagination();
+				});
+
+				//Filter button
+				$('.iop-filter__input-filter-btn').on('click', function (event) {
+					onInputSearch($('.iop-filter__input-filter')[0].value);
+					$('#js-select-topics').val('all').trigger('change.select2');
+					//$('#js-select-topics').val('all').trigger('change.select2');
+					$('#js-select-counties').val('all').trigger('change.select2');
+				});
+
+				//Filter when enter
+				$('.iop-filter__input-filter').on('keypress', function (event) {
+					if (event.which == 13) {
+						event.preventDefault();
+						$('.iop-filter__input-filter-btn').click();
+					}
+				});
+
+				// Filter header chevron
+				$('.iop-filter__title-container span').on('click', function (e) {
+					var $currentIcon = $(this).find('i');
+					if($currentIcon.hasClass('fa-chevron-down')){
+						$currentIcon.attr("class", "fa fa-chevron-up");
+						$('.iop-filter__input-container').hide();
+						$('.iop-filter__second-section-container').hide();
+					} else{
+						$currentIcon.attr("class", "fa fa-chevron-down");
+						$('.iop-filter__input-container').show();
+						$('.iop-filter__second-section-container').show();
+					}
+				});
+			}
+
+			function onInputSearch(input){
+				var keyword = input.trim().toLowerCase();
+
+				var currentTopics = [];
+				var currentTopics = [];
+				var currentCounties = [];
+
+				var dataTopics = '';
+				var dataTopics = '';
+				var dataCounties = '';
+				var $items = $('#iop-filter-cards-container .iop-filter__item');
+
+				$items.removeClass('iop-filter__item--visible');
+				$items.each(function () {
+					var $item = $(this);
+					var title = $item.find('.ohio-card-content-header').text().toLowerCase();
+					var counties = $item.attr('data-counties').toLowerCase();
+					var topics = $item.attr('data-topics').toLowerCase();
+					var topics = $item.attr('data-topics').toLowerCase();
+					title = title + ' ' + counties + ' ' + topics + ' ' + topics;
+
+					if (title.indexOf(keyword) >= 0){
+
+						$item.addClass('iop-filter__item--visible');
+						$item.addClass('js-is-match');
+						$item.show();
+
+						/*dataTopics = $item[0].getAttribute('data-topics');
+						dataTopics.split(',').forEach(function (partition) {
+							if (currentTopics.indexOf(partition) < 0) {
+								currentTopics.push(partition);
+							}
+						});*/
+
+						dataTopics = $item[0].getAttribute('data-topics');
+						dataTopics.split(',').forEach(function (partition) {
+							if (currentTopics.indexOf(partition) < 0) {
+								currentTopics.push(partition);
+							}
+						});
+						dataCounties = $item[0].getAttribute('data-counties');
+						dataCounties.split(',').forEach(function (partition) {
+							if (currentCounties.indexOf(partition) < 0) {
+								currentCounties.push(partition);
+							}
+						});
+					} else {
+						$item.hide();
+					}
+				});
+
+				showResults();
+
+				//$('#js-select-topics').val(currentTopics).trigger('change.select2');
+				$('#js-select-topics').val(currentTopics).trigger('change.select2');
+				$('#js-select-counties').val(currentCounties).trigger('change.select2');
+				initializePagination();
+			}
+
+			function paginateResults(page, elementsPerPage) {
+				$('#iop-filter-cards-container .iop-filter__item--visible').hide();
+				$('#iop-filter-cards-container .iop-filter__item--visible[data-page="' + page + '"]').show();
+			}
+
+			function initializePagination() {
+				var $pagination = $('.odx-topic-hub-filter__pagination');
+				var $allItems = $('#iop-filter-cards-container .iop-filter__item');
+				var $visibleItems = $('#iop-filter-cards-container .iop-filter__item--visible');
+				var visibleItemsNumber = $visibleItems.length;
+
+				$allItems.attr('data-page', '');
+				$allItems.attr('data-column', '');
+				$visibleItems.each(function (index) {
+					var $item = $(this);
+					index++;
+					var page = Math.ceil(index / elementsPerPage);
+					$item.attr('data-page', page);
+				});
+
+				$pagination.twbsPagination('destroy');
+
+				var $noResults = $('#iop-filter-cards-container .js-no-results-img');
+				$noResults.hide();
+				if (visibleItemsNumber <= 0) {
+					$noResults.show();
+					return;
+				}
+
+				$pagination.twbsPagination({
+					totalPages: Math.ceil(visibleItemsNumber / elementsPerPage),
+					visiblePages: 7,
+					first: null,
+					prev: '<i class="fa fa-caret-left"></i>',
+					next: '<i class="fa fa-caret-right"></i>',
+					last: null,
+					onPageClick: function (event, page) {
+						paginateResults(page, elementsPerPage);
+					}
+				});
+				var $anchorPagination = $('#js-events-search-pagination--gov a');
+				$anchorPagination.attr('aria-label', 'resources-search-pagination');
+				$anchorPagination.attr('href', '#top');
+			}
+
+			function showResults () {
+				var $visibleItems = $('#iop-filter-cards-container .iop-filter__item--visible');
+				var $resultsParagraph = $('.iop-filter__results-number');
+				var filterShowing = OHIO.Utils.actions.getMultilingualLabelByWCMKey('odx-filter-showing');
+				var results = OHIO.Utils.actions.getMultilingualLabelByWCMKey('odx-results');
+
+				$resultsParagraph.text('We found ' + $visibleItems.length + ' ' + results);
+			}
+
+			function registerCategoryEvent(id, category){
+				var labelForItemsWithNoGroup = "all";
+				$(id).select2().on('change', function (event) {
+					$('.iop-filter__input-filter').val('');
+
+					event.preventDefault();
+					var $items = $('.iop-filter__item');
+					var categoryArray = $(this).val();
+					var lastCategorySelected = $('span.select2-selection[aria-owns="select2-js-select-' + category + '-results"]');
+					var categoryLength = 0;
+
+					if (categoryArray !== null) {
+						categoryLength = categoryArray.length;
+					}
+
+					if (lastCategorySelected.length > 0) {
+						lastCategorySelected = lastCategorySelected[0].getAttribute('aria-activedescendant').split('-').pop();
+					} else if (categoryLength === 0) {
+						categoryArray = [];
+						categoryArray[0] = 'all';
+						lastCategorySelected = 'all';
+					}
+
+					if (lastCategorySelected === 'all') {
+						categoryArray = [];
+						categoryArray[0] = 'all';
+						$(id).val(categoryArray).trigger('change.select2');
+					} else {
+						if (categoryArray !== null && categoryArray[0] === 'all' && (categoryLength > 1 || countiesLength > 1)) {
+							categoryArray.splice(0, 1);
+							$(id).val(categoryArray).trigger('change.select2');
+						}
+					}
+					$items.css('display', 'none');
+					$items.removeClass('js-is-match');
+					$items.removeClass('iop-filter__item--visible');
+
+					getCategoryMatches($items, categoryArray, labelForItemsWithNoGroup, category);
+				})
+			}
+
+			function getCategoryMatches($items, CategoriesArray, labelForItemsWithNoGroup, categorySelection) {
+				var $currentCategoryMatches = [];
+
+				if (CategoriesArray !== null) {
+					for (var index = 0, length = CategoriesArray.length; index < length; index++) {
+						if (CategoriesArray[index] === labelForItemsWithNoGroup) {
+							$items.css('display', 'block');
+							$items.addClass('js-is-match');
+							$items.addClass('iop-filter__item--visible');
+							break;
+						} else {
+							$currentCategoryMatches = $('.iop-filter__item[data-' + categorySelection + '*="' + CategoriesArray[index].replace('&', '&') + '"]');
+							$currentCategoryMatches.css('display', 'block');
+							$currentCategoryMatches.addClass('js-is-match');
+							$currentCategoryMatches.addClass('iop-filter__item--visible');
+						}
+					}
+				}
+
+				showResults();
+				initializePagination();
+			}
+
+			function createDropdownSelect2Topics(items) {
+				var categoriesToRender = [];
+				items.forEach(function (el) {
+					el.topic.split(',').forEach(function (category) {
+						if (category !== '' && !categoriesToRender.includes(category)) {
+							categoriesToRender.push(category);
+						}
+					});
+				});
+				return categoriesToRender;
+			}
+
+			function createDropdownSelect2Counties(items) {
+				var categoriesToRender = [];
+				items.forEach(function (el) {
+					el.topic.split(',').forEach(function (category) {
+						if (category !== '' && !categoriesToRender.includes(category)) {
+							categoriesToRender.push(category);
+						}
+					});
+				});
+				return categoriesToRender;
+			}
+
+			// 1) Get all variables to support multilingual content
+			var currentLanguage = OHIO.ODX.actions.getUserLanguageByCookie();
+
+			var elementsPerPage = 12;
+
+			// Get the library according to the user's language
+			var wcmLibrary = (typeof window.WCMLibraries !== "undefined") ? window.WCMLibraries[currentLanguage] : window.WCMLibraries['en'];
+			var virtualPortal = (window.portalContext !== 'none') ? window.portalContext + '/' : 'gov';
+
+			var currentCluster = '';
+			var urlString = window.location.href;
+			var urlArray = urlString.split('/');
+			var index = urlArray.indexOf(window.siteId);
+			if (index > 0 && urlArray[index]) {
+				currentCluster = urlArray[index + 1];
+			}
+
+			var currentPathArray = decodeURIComponent("[URLCmpnt type="sitearea" context="current" mode="current"]").split("/");
+			var location = "";
+			var length = currentPathArray.length;
+			currentPathArray.forEach(function (element, index) {
+				if (index > 1) {
+					location += "/" + element;
+				}
+			});
+
+			// 2) Configure parameters for AJAX call
+			var params = {
+				source: 'library',
+				srv: 'cmpnt',
+				cmpntid:
+					'[Component name="ohio design/agencies/opd/filters/json-cards-tiles" resultsPerPage="" startPage="" format="id"]',
+				'WCM_Page.ResetAll': 'TRUE',
+				CACHE: 'NONE',
+				CONTENTCACHE: 'NONE',
+				CONNECTORCACHE: 'NONE',
+				location: wcmLibrary + '/' + location,
+			};
+
+			var serviceURL = '/wps/wcm/connect/' + virtualPortal + wcmLibrary + '/' + window.siteId + '?' + $.param(params);
+
+			// 3) Run the AJAX call and do something with the response
+			OHIO.ODX.actions.getAjaxDataFromURL(serviceURL).then(function (response) {
+					var resources = JSON.parse(response);
+					var topicsToRender = createDropdownSelect2Topics(resources);
+					var countiesToRender = createDropdownSelect2Counties(resources);
+
+					var component = new OhioToolkit.components.WebComponent({
+						element: '#iop-filter',
+						templateLocation:
+							'[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/opd/opd-cards-filter-topic.hbs.html"]',
+						data: {
+							items: resources,
+							noResultsImgPath: '[Component name="ohio design/agencies/opd/default-images/no-results.png" rendition="auto" format="url"]',
+							categoriesTopics: topicsToRender,
+							categoriesCounties: countiesToRender,
+							FilterTitle: 'opd-filter-title',
+							InputPlaceholder: 'opd-filter-placeholder',
+							Filter: 'odx-filter',
+							allLabelTopics: 'opd-all-topics',
+							labelTopics: 'opd-filter-topics',
+							allLabelCounties: 'opd-all-counties',
+							labelCounties: 'opd-filter-county',
+							Results: 'odx-results',
+							FilterShowing: 'odx-filter-showing',
+							ResetFilters: 'opd-reset-filters',
+							shareTitle: 'odx-share',
+							NoResultsText: 'odx-no-results-image'
+						}
+					});
+
+					component.render().then(function () {
+						console.log('Rendered!');
+						if (!jQuery.fn.select2) {
+							return;
+						}
+						jQuery('.' + 'ohio-select2' + ' select').select2({
+							dropdownParent: jQuery('body')
+						});
+						addingAriaLabels();
+
+						registerCategoryEvent('#js-select-topics', 'topics');
+						registerCategoryEvent('#js-select-counties', 'counties');
+						registerEvents();
+						showResults();
+						initializePagination();
+						[Component name="ohio design/global/copy-card-url-to-clipboard/copy-url-to-clipboard-javascript-module"]
+							[Component name="ohio design/global/utilities/share-card-actions/share-card-actions"]
+					});
+
+				},
+				function (error) {
+					console.error(error);
+				});
+
+		});
+	})( jQuery );
+
+</script>
+<!-- END: Ohio Design / Agencies / OPD / Filters / All Under Current Location / Resources By Topic / Resources Filter -->
