@@ -133,11 +133,7 @@
 				if ( cleanFilter ) {
 					multipleLettersClicked.splice(0);
 					$multipleGroupHeaders.splice(0);
-					//Clean selected indexes
-					$('.opd-alpha-directory__alphabet a span').each(function(){
-						var $itemSelected = $(this);
-						$itemSelected.removeClass('opd-index--active');
-					});
+					cleanSelectedIndexes();
 				}
 
 				var $alphabetContainer = $('.js-opd-alphabet-container');
@@ -148,7 +144,13 @@
 						target.classList.add('opd-index--active');
 					var parentTarget = target.parentElement;
 					var letter = parentTarget.getAttribute('data-target');
-					multipleLettersClicked.push(letter);
+					var wasTheLetterSelectedBefore = multipleLettersClicked.indexOf(letter);
+					if ( wasTheLetterSelectedBefore >= 0 ) {
+						multipleLettersClicked.splice( wasTheLetterSelectedBefore, 1);
+						target.classList.remove('opd-index--active');
+					} else {
+						multipleLettersClicked.push(letter);
+					}
 					if (letter != null) {
 						var $items = $('#iop-filter-cards-container .iop-filter__item');
 						$items.removeClass('iop-filter__item--visible');
@@ -172,6 +174,7 @@
 
 						});
 
+						$multipleGroupHeaders.splice(0);
 						multipleLettersClicked.forEach(function( le ) {
 							$multipleGroupHeaders.push($('[data-index="'+le+'"]'));
 						});
@@ -190,6 +193,13 @@
 						multipleLettersClicked.splice(0);
 						$multipleGroupHeaders.splice(0);
 					}
+				});
+			}
+
+			function cleanSelectedIndexes(){
+				$('.opd-alpha-directory__alphabet a span').each(function(){
+					var $itemSelected = $(this);
+					$itemSelected.removeClass('opd-index--active');
 				});
 			}
 
