@@ -61,6 +61,7 @@
 						$item.show();
 					});
 
+					filterOnClickIndex( true );
 					showResults();
 					initializePagination();
 				});
@@ -168,9 +169,10 @@
 						multipleLettersClicked.splice( wasTheLetterSelectedBefore, 1);
 						target.classList.remove('opd-index--active');
 					} else {
+						if (letter!== null)
 						multipleLettersClicked.push(letter);
 					}
-					if (letter != null && multipleLettersClicked.length > 0 ) {
+					if ( multipleLettersClicked.length > 0 ) {
 						var $items = $('#iop-filter-cards-container .iop-filter__item');
 						$items.removeClass('iop-filter__item--visible');
 						if (multipleLettersClicked.length > 0 ) {
@@ -212,6 +214,7 @@
 						showResults();
 						initializePagination();
 					} else {
+
 						multipleLettersClicked.splice(0);
 						$multipleGroupHeaders.splice(0);
 						cleanAllFilters();

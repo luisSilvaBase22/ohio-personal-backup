@@ -40,7 +40,8 @@ ul.opd-alpha-directory__alphabet li:not(:first-child) a {
     font-weight: bold;
 }
 
-.opd-alpha-directory__alphabet .ohio-odx-alpha-directory__alphabet-list-title a:hover {
+.opd-alpha-directory__alphabet .ohio-odx-alpha-directory__alphabet-list-title a:hover,
+.opd-alpha-directory__alphabet .ohio-odx-alpha-directory__alphabet-list-title a:focus {
     color: white;
     text-decoration: underline;
 }
