@@ -170,7 +170,7 @@
 						target.classList.remove('opd-index--active');
 					} else {
 						if (letter!== null)
-						multipleLettersClicked.push(letter);
+							multipleLettersClicked.push(letter);
 					}
 					if ( multipleLettersClicked.length > 0 ) {
 						var $items = $('#iop-filter-cards-container .iop-filter__item');
@@ -285,6 +285,7 @@
 
 
 			function removeDuplicatedIndex( items ){
+				var noRepeatedLetter = '';
 				if ( items.length > 1 ) {
 					for (var i = 1; i < items.length; i++) {
 						if ( items[i].hasOwnProperty('index') ) {
@@ -292,8 +293,12 @@
 							if(items[i-1].hasOwnProperty('index')) {
 								var prevItemIndex = items[i-1].index;
 								if ( currItemIndex === prevItemIndex ) {
+									noRepeatedLetter = currItemIndex;
 									delete items[i].index;
 								}
+							} else {
+								if ( noRepeatedLetter === currItemIndex )
+									delete items[i].index;
 							}
 						}
 					}
