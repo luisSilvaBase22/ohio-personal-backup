@@ -308,6 +308,10 @@
 				}
 			}
 
+			function isPair( indexAlphabet ){
+				return ( indexAlphabet > 1 && (indexAlphabet % 2 === 0) ) ? true : false;
+			}
+
 			Handlebars.registerHelper('lowercase', function (str) {
 				if(str && typeof str === "string") {
 					return str.toLowerCase();
@@ -362,6 +366,8 @@
 					var indexedResources = resources.filter( function(el, index){
 						var indexAlphabet = el.name.substring(0, 1);
 						Object.assign(el, {index: indexAlphabet});
+						if ( isPair(index) )
+							Object.assign(el, {pairItem: true});
 						return el;
 					});
 					var cleanedResources = removeDuplicatedIndex( indexedResources );
