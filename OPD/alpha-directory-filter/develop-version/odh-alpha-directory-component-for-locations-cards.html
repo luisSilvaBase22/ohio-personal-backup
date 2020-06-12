@@ -60,6 +60,7 @@
 		$( document ).on( 'ready', function() {
 			var elementsPerPage = 10;
 
+			//Deprecated
 			function addingAriaLabels() {
 				$(".select2-search__field").attr("aria-label", function () {
 					return $(this).closest("article").attr("id")
