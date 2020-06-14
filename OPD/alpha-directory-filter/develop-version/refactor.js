@@ -123,13 +123,36 @@
 				});
 
 			},
-			filterByAlphaIndex: function(){},
+			filterByAlphaIndex: function( letterIndexes ){//input an array of selected letters sorted alphabetically: ["a", "d", "f"].sort()
+				var resultIndexes = [];
+				var curPosition = 0;
+
+				for(var i=0; i<letterIndexes.length;i++){
+					var letterIndex = letterIndexes[i];
+
+					for(var j=curPosition; j<this.Counties.length;j++){
+						var countyFirstLetter = this.Counties[j].name.substring(0, 1).toLowerCase();
+						if( letterIndex === countyFirstLetter ) {
+							resultIndexes.push(j);
+							curPosition = j;
+						}
+						if (countyFirstLetter>letterIndex) {
+							curPosition = j;
+							break;
+						}
+					}
+
+				}
+
+				return resultIndexes;
+				//returns an array with the indexes of the items to show
+			},
 			getCountiesData: function(){
+				var _this = this;
 				var serviceURL = Utils.configureAjaxParameters();
 				return OHIO.ODX.actions.getAjaxDataFromURL(serviceURL).then(function( response ){
 					var resources = JSON.parse(response);
-					var items = Utils.addIndexToItems( resources );
-					return items;
+					return _this.Counties = Utils.addIndexToItems( resources );
 				},function( error ){
 					console.error(error);
 				});
@@ -185,16 +208,30 @@
 			},
 			setInputActions: function(){
 				//On click filter button, get the string
-				//Hide all the cards
-				//And then with the indexes, show only the found cards
-				var indexOfFoundItems = InstanceAlphaData.filterByTitle( input );
-				indexOfFoundItems.forEach(function( idx ){
-					els.$cards[idx].show();//I have to figure out this function
+				var els = this.elements;
+				var inputBox = els.$filterByName;
+
+				var indexOfFoundItems;
+
+				inputBox.button.on('click', function(){
+					var queryString = inputBox.input.val();
+
+					//Hide all the cards
+					els.$cards.items.removeClass('iop-filter__item--visible');
+
+					indexOfFoundItems = InstanceAlphaData.filterByTitle( queryString );
+					indexOfFoundItems.forEach(function( idx ){
+						els.$cards.items[idx].classList.add('iop-filter__item--visible');
+					});
 				});
+
+
 
 			},
 			renderComponent: function(){
 				InstanceAlphaData.getCountiesData().then(function( response ){
+					console.log("These are the Counties:", response);
+					/*
 					var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 					var component = new OhioToolkit.components.WebComponent({
 						element: '#opd-filter',
@@ -213,10 +250,13 @@
 							NoResultsText: 'odx-no-results-image'
 						}
 					});
+					*/
 				});
 			},
 			start: function(){
 				this.setElements();
+				this.renderComponent();
+				this.setInputActions();
 			}
 		};
 
