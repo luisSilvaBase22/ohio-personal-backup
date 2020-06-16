@@ -16,20 +16,22 @@
 
 <div class="iop-filter__second-section-container opd-card-location-results__second-section">
 	<div id="iop-filter-filters-container" class="row margin-bottom-sm">
-		<div class="ohio-odx-alpha-directory__alphabet-container opd-alpha-directory__index-container">
-			<ul class="js-opd-alphabet-container ohio-odx-alpha-directory__alphabet opd-alpha-directory__alphabet">
+		<div class="ohio-odx-alpha-directory__alphabet-container opd-alpha-directory__index-container js-opd-alphabet-container">
+			<ul class="ohio-odx-alpha-directory__alphabet opd-alpha-directory__alphabet">
 				<li class="ohio-odx-alpha-directory__alphabet-list-title">
 					<a href="#top" class="js-opd-alphabet-button-all odx-alpha-directory__alphabet-button-all">
 						<span>All type</span>
 					</a>
 				</li>
-				{{#each alphabetIndex}}
+			</ul>
+			<ul class="js-opd-indexes ohio-odx-alpha-directory__alphabet opd-alpha-directory__alphabet">
+			{{#each alphabetIndex}}
 				<li>
 					<a href data-target ="{{this}}" class="ohio-odx-alpha-directory__alphabet-char ohio-odx-alpha-directory__alphabet-char__{{this}}">
 						<span>{{this}}</span>
 					</a>
 				</li>
-				{{/each}}
+			{{/each}}
 			</ul>
 		</div>
 

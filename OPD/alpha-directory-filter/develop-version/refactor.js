@@ -1,3 +1,4 @@
+[Component name="ohio design/global/social-networks-configuration/share-card-javascript-module"]
 (function(){
 	var DefaultOptions = {
 		Environment: {
@@ -98,9 +99,20 @@
 			addIndexToItems: function( items ){
 				var indexedItems = items.filter( function(el, index){
 					var indexAlphabet = el.name.substring(0, 1);
-					Object.assign(el, {index: indexAlphabet});
+					el.index = indexAlphabet;
+					/*Object.defineProperty(el, 'index', {
+						writable: true,
+						configurable: true,
+						value: indexAlphabet
+					});*/
+					//{index: indexAlphabet}
 					if ( Utils.isPair(index) )
-						Object.assign(el, {pairItem: true});
+						el.pairItem = true;
+						/*Object.defineProperty(el, 'pairItem', {
+							writable: true,
+							configurable: true,
+							value: true
+						});*/
 					return el;
 				});
 				var removedDuplicatedItems = Utils.removeDuplicatedIndex( indexedItems );
@@ -114,14 +126,15 @@
 			filterByTitle: function( title ){
 				var keyword = title.trim().toLowerCase();
 				var currentTopics = [];
-				return this.Counties.map(function( Item, index ){
+				var titlesIndexes = [];
+				titlesIndexes = this.Counties.map(function( Item, index ){
 					var title = Item.name.toLowerCase();
 					if (title.indexOf(keyword)>=0)
 						return index;
 				}).filter(function( Item ){
 					return Item !== undefined;
 				});
-
+				return titlesIndexes;
 			},
 			filterByAlphaIndex: function( letterIndexes ){//input an array of selected letters sorted alphabetically: ["a", "d", "f"].sort()
 				var resultIndexes = [];
@@ -192,7 +205,8 @@
 				var $filterByAlphaindex = els.$root.find('.js-opd-alphabet-container');
 				els.$filterByAlphaindex = {
 					root: $filterByAlphaindex,
-					allTypeButton: $filterByName.find('.js-opd-alphabet-button-all')
+					allTypeButton: $filterByName.find('.js-opd-alphabet-button-all'),
+					letters: $filterByAlphaindex.find('.js-opd-indexes')
 				};
 
 				els.resultsNumber = els.$root.find('.iop-filter__results-number');
@@ -201,7 +215,8 @@
 				var $cards = els.$root.find('#iop-filter-cards-container');
 				els.$cards = {
 					root: $cards,
-					headerIndexes: $cards.find('.iop-filter__item'),
+					headerIndexes: $cards.find('.ohio-card-content-header'),
+					groupHeaders: $cards.find('.ohio-odx-alpha-directory__group-title'),
 					items: $cards.find('.iop-filter__item')
 				};
 
@@ -212,31 +227,171 @@
 				var inputBox = els.$filterByName;
 
 				var indexOfFoundItems;
+				var _this = this;
 
 				inputBox.button.on('click', function(){
 					var queryString = inputBox.input.val();
 
 					//Hide all the cards
-					els.$cards.items.removeClass('iop-filter__item--visible');
-
-					indexOfFoundItems = InstanceAlphaData.filterByTitle( queryString );
-					indexOfFoundItems.forEach(function( idx ){
-						els.$cards.items[idx].classList.add('iop-filter__item--visible');
+					els.$cards.items.each(function(){
+						var $item = $(this);
+						$item.removeClass('iop-filter__item--visible');
+						$item.hide();
 					});
+					//Hide headers
+					els.$cards.groupHeaders.each(function(){
+						var $header = $(this);
+						$header.hide();
+					});
+
+					var firstChar;
+					indexOfFoundItems = InstanceAlphaData.filterByTitle( queryString );
+					indexOfFoundItems.forEach(function( idx){
+						els.$cards.items[idx].classList.add('iop-filter__item--visible');
+						$(els.$cards.items[idx]).show();
+						var numberResults = indexOfFoundItems.length;
+						_this.renderShowResults( numberResults );
+
+						var titleHeader = $(els.$cards.headerIndexes[idx]).text();
+						firstChar = titleHeader.toLowerCase().substring(0,1);
+						els.$cards.groupHeaders.each(function(){
+							var $header = $(this);
+							if ($header.attr('data-index') === firstChar )
+							$header.show();
+						});
+
+					});
+
 				});
 
 
 
 			},
+			setIndexActions: function(){
+				var els = this.elements;
+				var directory = els.$filterByAlphaindex.letters;
+				var multipleLettersClicked = [];
+				var indexOfFoundItems;
+
+				var _this = this;
+
+				directory.on('click', function( event ) {
+					event.preventDefault();
+					var target = event.target;
+					if ( target.localName === "span" )
+						target.classList.add('opd-index--active');
+					var parentTarget = target.parentElement;
+					var letter = parentTarget.getAttribute('data-target');
+
+					var wasTheLetterSelectedBefore = multipleLettersClicked.indexOf(letter);
+					if ( wasTheLetterSelectedBefore >= 0 ) {
+						multipleLettersClicked.splice( wasTheLetterSelectedBefore, 1);
+						target.classList.remove('opd-index--active');
+					} else {
+						if (letter!== null)
+							multipleLettersClicked.push(letter);
+					}
+
+					//Hide all the cards
+					els.$cards.items.each(function(){
+						var $item = $(this);
+						$item.removeClass('iop-filter__item--visible');
+						$item.hide();
+					});
+					//Hide headers
+					els.$cards.groupHeaders.each(function(){
+						var $header = $(this);
+						$header.hide();
+					});
+					els.$cards.groupHeaders.each(function() {
+						var $header = $(this);
+						multipleLettersClicked.forEach(function( el, index ) {
+							if( $header.attr('data-index') === el )
+								$header.show();
+						});
+
+					});
+
+					var selectedLettersOrdered = multipleLettersClicked.sort();
+					indexOfFoundItems = InstanceAlphaData.filterByAlphaIndex(selectedLettersOrdered);
+					indexOfFoundItems.forEach(function( idx ){
+						els.$cards.items[idx].classList.add('iop-filter__item--visible');
+						$(els.$cards.items[idx]).show();
+						var numberResults = indexOfFoundItems.length;
+						_this.renderShowResults( numberResults );
+					});
+				});
+			},
+			setResetActions: function(){
+				var els = this.elements;
+				var resetButton = els.resetButton;
+				var allTypesButton = els.$filterByAlphaindex.allTypeButton;
+
+				var allResultsNumber;
+
+				var _this = this;
+
+				resetButton.on('click', function(){
+					//Show all the cards
+					els.$cards.items.each(function(){
+						var $item = $(this);
+						$item.addClass('iop-filter__item--visible');
+						$item.show();
+					});
+
+					//Show headers
+					els.$cards.groupHeaders.each(function(){
+						var $header = $(this);
+						$header.show();
+					});
+
+					allResultsNumber = InstanceAlphaData.Counties.length;
+					_this.renderShowResults( allResultsNumber );
+				});
+
+				allTypesButton.on('click', function(){
+					//Show all the cards
+					els.$cards.items.each(function(){
+						var $item = $(this);
+						$item.addClass('iop-filter__item--visible');
+						$item.show();
+					});
+
+					//Show headers
+					els.$cards.groupHeaders.each(function(){
+						var $header = $(this);
+						$header.show();
+					});
+
+					allResultsNumber = InstanceAlphaData.Counties.length;
+					_this.renderShowResults( allResultsNumber );
+				});
+
+			},
+			renderShowResults: function( numberResults ) {
+				var els = this.elements;
+				var resultsParagraph = els.resultsNumber;
+				//var filterShowing = OHIO.Utils.actions.getMultilingualLabelByWCMKey('odx-filter-showing');
+				var results = OHIO.Utils.actions.getMultilingualLabelByWCMKey('odx-results');
+
+				resultsParagraph.text('We found ' + numberResults + ' ' + results);
+			},
 			renderComponent: function(){
+				var _this = this;
+				Handlebars.registerHelper('lowercase', function (str) {
+					if(str && typeof str === "string") {
+						return str.toLowerCase();
+					}
+					return '';
+				});
 				InstanceAlphaData.getCountiesData().then(function( response ){
 					console.log("These are the Counties:", response);
-					/*
+
 					var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 					var component = new OhioToolkit.components.WebComponent({
 						element: '#opd-filter',
 						templateLocation:
-							'[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/opd/opd-locations-cards-filter.hbs.html"]',
+							'[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/odh/odh-locations-contact-cards-filter.hbs.html"]',
 						data: {
 							items: response,
 							noResultsImgPath: '[Component name="ohio design/agencies/opd/default-images/no-results.png" rendition="auto" format="url"]',
@@ -250,13 +405,22 @@
 							NoResultsText: 'odx-no-results-image'
 						}
 					});
-					*/
+					component.render().then(function(){
+						console.log('Rendered!');
+						if (!jQuery.fn.select2) {
+							return;
+						}
+						_this.setElements();
+						_this.setInputActions();
+						_this.setIndexActions();
+						_this.setResetActions();
+						[Component name="ohio design/global/copy-card-url-to-clipboard/copy-url-to-clipboard-javascript-module"]
+							[Component name="ohio design/global/utilities/share-card-actions/share-card-actions"]
+					});
 				});
 			},
 			start: function(){
-				this.setElements();
 				this.renderComponent();
-				this.setInputActions();
 			}
 		};
 
