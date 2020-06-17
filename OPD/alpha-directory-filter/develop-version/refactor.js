@@ -100,19 +100,8 @@
 				var indexedItems = items.filter( function(el, index){
 					var indexAlphabet = el.name.substring(0, 1);
 					el.index = indexAlphabet;
-					/*Object.defineProperty(el, 'index', {
-						writable: true,
-						configurable: true,
-						value: indexAlphabet
-					});*/
-					//{index: indexAlphabet}
 					if ( Utils.isPair(index) )
 						el.pairItem = true;
-					/*Object.defineProperty(el, 'pairItem', {
-						writable: true,
-						configurable: true,
-						value: true
-					});*/
 					return el;
 				});
 				var removedDuplicatedItems = Utils.removeDuplicatedIndex( indexedItems );
@@ -325,20 +314,20 @@
 			},
 			paginateResults: function(page, elementsPerPage) {
 				var els = this.elements;
-				var cardsContainer = els.$cards.root;//
+				var cardsContainer = els.$cards.root;
 				var visibleItems = els.visibleItems;
 				var headers = els.visibleGroupHeaders;
+
 				visibleItems.hide();
 				headers.hide();
-				//pages.find('[data-page="'+page+'"]').show();
+
+				//Show card per page number assigned
 				var itemInPage = cardsContainer.find('.iop-filter__item--visible[data-page="'+page+'"]');
 				itemInPage.show();
 
-				//$(pages + '[data-page="'+page+'"]').show();$('#iop-filter-cards-container .iop-filter__item--visible[data-page="' + page + '"]').show();
-				//headers.find('[data-page="' + page + '"]').show();
+				//Show index header per page number assigned
 				var headerInPage = cardsContainer.find('.ohio-odx-alpha-directory__group-title--visible[data-page="' + page + '"]');
 				headerInPage.show();
-				//$(headers + '[data-page="' + page + '"]').show();$('#iop-filter-cards-container .ohio-odx-alpha-directory__group-title--visible[data-page="' + page + '"]').show();
 			},
 			setInputFilterActions: function(){
 				//On click filter button, get the string
