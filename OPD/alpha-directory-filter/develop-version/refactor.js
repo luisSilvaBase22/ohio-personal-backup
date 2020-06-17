@@ -108,11 +108,11 @@
 					//{index: indexAlphabet}
 					if ( Utils.isPair(index) )
 						el.pairItem = true;
-						/*Object.defineProperty(el, 'pairItem', {
-							writable: true,
-							configurable: true,
-							value: true
-						});*/
+					/*Object.defineProperty(el, 'pairItem', {
+						writable: true,
+						configurable: true,
+						value: true
+					});*/
 					return el;
 				});
 				var removedDuplicatedItems = Utils.removeDuplicatedIndex( indexedItems );
@@ -183,8 +183,10 @@
 	//Set here the UI methods
 	//Set a promise to wait until data are retrieved and then render the data
 	window.AlphadirectoryLocationsRender = function(){
-		var InstanceAlphaData = AlphadirectoryLocationsData();
+		var AlphadirectoryData = AlphadirectoryLocationsData();
 		var $emptyDiv = document.createElement( 'div' );
+		var elementsPerPage = 3;
+		var multipleLettersClicked = [];
 
 		var Instance = {
 			elements: {},
@@ -220,8 +222,125 @@
 					items: $cards.find('.iop-filter__item')
 				};
 
+				els.pagination = els.$root.find('.odx-topic-hub-filter__pagination');
+				els.anchorPagination = els.$root.find('#js-events-search-pagination--gov a');
+				els.visibleItems = $cards.find('.iop-filter__item--visible');
+				els.visibleGroupHeaders = $cards.find('.ohio-odx-alpha-directory__group-title--visible');
+				els.noResultsImage = els.$root.find('.odx-events__img-no-results');
+
 			},
-			setInputActions: function(){
+			hideCards: function(){
+				var els = this.elements;
+				els.$cards.items.each(function(){
+					var $item = $(this);
+					$item.removeClass('iop-filter__item--visible');
+					$item.hide();
+				});
+			},
+			hideGroupHeaders: function(){
+				var els = this.elements;
+				els.$cards.groupHeaders.each(function(){
+					var $header = $(this);
+					$header.hide();
+				});
+			},
+			showAllCards: function(){
+				var els = this.elements;
+				els.$cards.items.each(function(){
+					var $item = $(this);
+					$item.addClass('iop-filter__item--visible');
+					$item.show();
+				});
+			},
+			showAllHeaders: function(){
+				var els = this.elements;
+				els.$cards.groupHeaders.each(function(){
+					var $header = $(this);
+					$header.show();
+					$header.addClass('ohio-odx-alpha-directory__group-title--visible');
+				});
+			},
+			removeActiveIndexes: function(){
+				var els = this.elements;
+
+				var alphadirectoryContainer = els.$filterByAlphaindex.letters;
+				var letters = alphadirectoryContainer.find('li');
+
+				letters.each(function() {
+					var letter = $(this);
+					var activeIndex = letter.find('span');
+					activeIndex.removeClass('opd-index--active');
+				});
+			},
+			setPagination: function(){
+				var _this = this;
+				var els = this.elements;
+
+				var $allItems = els.$cards.items;
+				var $allHeaders = els.$cards.groupHeaders;
+				var $visibleItems = els.visibleItems;
+				var $visibleHeaders = els.visibleGroupHeaders;
+				var visibleItemsNumber = $visibleItems.length;
+
+				var $pagination = els.pagination;
+
+				$allHeaders.attr('data-page', '');
+				$allItems.attr('data-page', '');
+				$allItems.attr('data-column', '');
+				$visibleItems.each(function (index) {
+					var $item = $(this);
+					index++;
+					var page = Math.ceil(index / elementsPerPage);
+					$item.attr('data-page', page);
+					if( $item.attr('data-first-item') ) {
+						var keyHeader = $item.attr('data-first-item');
+						var header = els.$cards.root.find('.' + keyHeader);//$("h3."+keyHeader);
+						header.attr('data-page', page);
+					}
+				});
+
+				$pagination.twbsPagination('destroy');
+
+				var $noResults = els.noResultsImage;
+				$noResults.hide();
+				if (visibleItemsNumber <= 0) {
+					$noResults.show();
+					return;
+				}
+
+				$pagination.twbsPagination({
+					totalPages: Math.ceil(visibleItemsNumber / elementsPerPage),
+					visiblePages: 7,
+					first: null,
+					prev: '<i class="fa fa-caret-left"></i>',
+					next: '<i class="fa fa-caret-right"></i>',
+					last: null,
+					onPageClick: function (event, page) {
+						_this.paginateResults(page, elementsPerPage);
+					}
+				});
+				var $anchorPagination = els.anchorPagination;
+				$anchorPagination.attr('aria-label', 'resources-search-pagination');
+				$anchorPagination.attr('href', '#top');
+			},
+			paginateResults: function(page, elementsPerPage) {
+				var els = this.elements;
+				var cardsContainer = els.$cards.root;//
+				var visibleItems = els.visibleItems;
+				var headers = els.visibleGroupHeaders;
+				visibleItems.hide();
+				headers.hide();
+				//pages.find('[data-page="'+page+'"]').show();
+				var itemInPage = cardsContainer.find('.iop-filter__item--visible[data-page="'+page+'"]');
+				itemInPage.show();
+
+				//$(pages + '[data-page="'+page+'"]').show();$('#iop-filter-cards-container .iop-filter__item--visible[data-page="' + page + '"]').show();
+				//headers.find('[data-page="' + page + '"]').show();
+				var headerInPage = cardsContainer.find('.ohio-odx-alpha-directory__group-title--visible[data-page="' + page + '"]');
+				headerInPage.show();
+				//$(headers + '[data-page="' + page + '"]').show();$('#iop-filter-cards-container .ohio-odx-alpha-directory__group-title--visible[data-page="' + page + '"]').show();
+			},
+			setInputFilterActions: function(){
 				//On click filter button, get the string
 				var els = this.elements;
 				var inputBox = els.$filterByName;
@@ -230,47 +349,44 @@
 				var _this = this;
 
 				inputBox.button.on('click', function(){
+
 					var queryString = inputBox.input.val();
 
 					//Hide all the cards
-					els.$cards.items.each(function(){
-						var $item = $(this);
-						$item.removeClass('iop-filter__item--visible');
-						$item.hide();
-					});
+					_this.hideCards();
 					//Hide headers
-					els.$cards.groupHeaders.each(function(){
-						var $header = $(this);
-						$header.hide();
-					});
+					_this.hideGroupHeaders();
 
 					var firstChar;
-					indexOfFoundItems = InstanceAlphaData.filterByTitle( queryString );
-					indexOfFoundItems.forEach(function( idx){
+					indexOfFoundItems = AlphadirectoryData.filterByTitle( queryString );
+					indexOfFoundItems.forEach(function( idx ){
+
+						//Show group headers that matches the cards group
+						var titleHeader = $(els.$cards.headerIndexes[idx]).text();
+						firstChar = titleHeader.toLowerCase().substring(0,1);
+						els.$cards.groupHeaders.each(function(){
+							var $header = $(this);
+
+							if ($header.attr('data-index') === firstChar ) {
+								$header.show();
+								$header.addClass('ohio-odx-alpha-directory__group-title--visible');
+							}
+						});
+
+						//Show cards matches the filter
 						els.$cards.items[idx].classList.add('iop-filter__item--visible');
 						$(els.$cards.items[idx]).show();
 						var numberResults = indexOfFoundItems.length;
 						_this.renderShowResults( numberResults );
 
-						var titleHeader = $(els.$cards.headerIndexes[idx]).text();
-						firstChar = titleHeader.toLowerCase().substring(0,1);
-						els.$cards.groupHeaders.each(function(){
-							var $header = $(this);
-							if ($header.attr('data-index') === firstChar )
-							$header.show();
-						});
-
 					});
 
 				});
 
-
-
 			},
-			setIndexActions: function(){
+			setIndexFilterActions: function(){
 				var els = this.elements;
 				var directory = els.$filterByAlphaindex.letters;
-				var multipleLettersClicked = [];
 				var indexOfFoundItems;
 
 				var _this = this;
@@ -278,9 +394,9 @@
 				directory.on('click', function( event ) {
 					event.preventDefault();
 					var target = event.target;
-					if ( target.localName === "span" )
-						target.classList.add('opd-index--active');
 					var parentTarget = target.parentElement;
+					if ( target.localName === "span" && parentTarget.classList.contains( 'ohio-odx-alpha-directory__alphabet-char' ))
+						target.classList.add('opd-index--active');
 					var letter = parentTarget.getAttribute('data-target');
 
 					var wasTheLetterSelectedBefore = multipleLettersClicked.indexOf(letter);
@@ -292,34 +408,40 @@
 							multipleLettersClicked.push(letter);
 					}
 
-					//Hide all the cards
-					els.$cards.items.each(function(){
-						var $item = $(this);
-						$item.removeClass('iop-filter__item--visible');
-						$item.hide();
-					});
-					//Hide headers
-					els.$cards.groupHeaders.each(function(){
-						var $header = $(this);
-						$header.hide();
-					});
-					els.$cards.groupHeaders.each(function() {
-						var $header = $(this);
-						multipleLettersClicked.forEach(function( el, index ) {
-							if( $header.attr('data-index') === el )
-								$header.show();
+					if( multipleLettersClicked.length > 0 ) {
+						//Hide all the cards
+						_this.hideCards();
+						//Hide headers
+						_this.hideGroupHeaders();
+						//Show group headers that matches the cards group
+						els.$cards.groupHeaders.each(function() {
+							var $header = $(this);
+							multipleLettersClicked.forEach(function( el, index ) {
+								if( $header.attr('data-index') === el ) {
+									$header.show();
+									$header.addClass('ohio-odx-alpha-directory__group-title--visible');
+								}
+							});
+
 						});
 
-					});
+						var selectedLettersOrdered = multipleLettersClicked.sort();
+						indexOfFoundItems = AlphadirectoryData.filterByAlphaIndex(selectedLettersOrdered);
+						//Show cards matches the filter
+						indexOfFoundItems.forEach(function( idx ){
+							els.$cards.items[idx].classList.add('iop-filter__item--visible');
+							$(els.$cards.items[idx]).show();
+							var numberResults = indexOfFoundItems.length;
+							_this.renderShowResults( numberResults );
+						});
+					} else {
+						multipleLettersClicked.splice(0);
+						//Show all the cards
+						_this.showAllCards();
 
-					var selectedLettersOrdered = multipleLettersClicked.sort();
-					indexOfFoundItems = InstanceAlphaData.filterByAlphaIndex(selectedLettersOrdered);
-					indexOfFoundItems.forEach(function( idx ){
-						els.$cards.items[idx].classList.add('iop-filter__item--visible');
-						$(els.$cards.items[idx]).show();
-						var numberResults = indexOfFoundItems.length;
-						_this.renderShowResults( numberResults );
-					});
+						//Show headers
+						_this.showAllHeaders();
+					}
 				});
 			},
 			setResetActions: function(){
@@ -328,43 +450,40 @@
 				var allTypesButton = els.$filterByAlphaindex.allTypeButton;
 
 				var allResultsNumber;
+				var inputBox = els.$filterByName;
 
 				var _this = this;
 
 				resetButton.on('click', function(){
 					//Show all the cards
-					els.$cards.items.each(function(){
-						var $item = $(this);
-						$item.addClass('iop-filter__item--visible');
-						$item.show();
-					});
+					_this.showAllCards();
 
 					//Show headers
-					els.$cards.groupHeaders.each(function(){
-						var $header = $(this);
-						$header.show();
-					});
+					_this.showAllHeaders();
 
-					allResultsNumber = InstanceAlphaData.Counties.length;
+					allResultsNumber = AlphadirectoryData.Counties.length;
+					inputBox.input.value = '';
+
+					multipleLettersClicked.splice(0);
+					_this.removeActiveIndexes();
 					_this.renderShowResults( allResultsNumber );
+					_this.setPagination();
 				});
 
 				allTypesButton.on('click', function(){
 					//Show all the cards
-					els.$cards.items.each(function(){
-						var $item = $(this);
-						$item.addClass('iop-filter__item--visible');
-						$item.show();
-					});
+					_this.showAllCards();
 
 					//Show headers
-					els.$cards.groupHeaders.each(function(){
-						var $header = $(this);
-						$header.show();
-					});
+					_this.showAllHeaders();
 
-					allResultsNumber = InstanceAlphaData.Counties.length;
+					allResultsNumber = AlphadirectoryData.Counties.length;
+					inputBox.input.value = '';
+
+					multipleLettersClicked.splice(0);
+					_this.removeActiveIndexes();
 					_this.renderShowResults( allResultsNumber );
+					_this.setPagination();
 				});
 
 			},
@@ -384,7 +503,7 @@
 					}
 					return '';
 				});
-				InstanceAlphaData.getCountiesData().then(function( response ){
+				AlphadirectoryData.getCountiesData().then(function( response ){
 					console.log("These are the Counties:", response);
 
 					var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
@@ -394,7 +513,7 @@
 							'[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/odh/odh-locations-contact-cards-filter.hbs.html"]',
 						data: {
 							items: response,
-							noResultsImgPath: '[Component name="ohio design/agencies/opd/default-images/no-results.png" rendition="auto" format="url"]',
+							noResultsImgPath: '[Component name="ohio design/agencies/odh/no-results.png" rendition="auto" format="url"]',
 							FilterTitle: 'opd-filter-by-name',
 							InputPlaceholder: 'opd-filter-placeholder',
 							Filter: 'opd-filter-title',
@@ -411,9 +530,10 @@
 							return;
 						}
 						_this.setElements();
-						_this.setInputActions();
-						_this.setIndexActions();
+						_this.setInputFilterActions();
+						_this.setIndexFilterActions();
 						_this.setResetActions();
+						_this.setPagination();
 						[Component name="ohio design/global/copy-card-url-to-clipboard/copy-url-to-clipboard-javascript-module"]
 							[Component name="ohio design/global/utilities/share-card-actions/share-card-actions"]
 					});

@@ -17,14 +17,12 @@
 <div class="iop-filter__second-section-container opd-card-location-results__second-section">
 	<div id="iop-filter-filters-container" class="row margin-bottom-sm">
 		<div class="ohio-odx-alpha-directory__alphabet-container opd-alpha-directory__index-container js-opd-alphabet-container">
-			<ul class="ohio-odx-alpha-directory__alphabet opd-alpha-directory__alphabet">
+			<ul class="js-opd-indexes ohio-odx-alpha-directory__alphabet opd-alpha-directory__alphabet">
 				<li class="ohio-odx-alpha-directory__alphabet-list-title">
 					<a href="#top" class="js-opd-alphabet-button-all odx-alpha-directory__alphabet-button-all">
 						<span>All type</span>
 					</a>
 				</li>
-			</ul>
-			<ul class="js-opd-indexes ohio-odx-alpha-directory__alphabet opd-alpha-directory__alphabet">
 			{{#each alphabetIndex}}
 				<li>
 					<a href data-target ="{{this}}" class="ohio-odx-alpha-directory__alphabet-char ohio-odx-alpha-directory__alphabet-char__{{this}}">
@@ -53,14 +51,17 @@
 	{{#each items}}
 	{{#if index}}
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<h3 data-index="{{lowercase index}}" class="ohio-odx-alpha-directory__group-title">{{index}}</h3>
+		<h3 data-index="{{lowercase index}}" class="ohio-odx-alpha-directory__group-title ohio-odx-alpha-directory__group-title--visible opd-header-item-{{index}}">{{index}}</h3>
 	</div>
 	{{/if}}
 	{{#if pairItem}}
 	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"></div>
 	{{/if}}
-	<div class="iop-filter__item iop-filter__item--visible col-xs-12 col-sm-12 col-md-6 col-lg-6"
-	     data-name="{{decode name}}">
+	{{#if index}}
+	<div class="iop-filter__item iop-filter__item--visible col-xs-12 col-sm-12 col-md-6 col-lg-6" data-name="{{decode name}}" data-first-item="opd-header-item-{{index}}">
+	{{else}}
+	<div class="iop-filter__item iop-filter__item--visible col-xs-12 col-sm-12 col-md-6 col-lg-6" data-name="{{decode name}}">
+	{{/if}}
 		<div class="ohio-card ohio-card--center ohio-card-container">
 			<div class="opd-card-locations-title">
 				<h3 class="ohio-card-content-header">{{decode name}}</h3>
