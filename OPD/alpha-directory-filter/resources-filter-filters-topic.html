@@ -126,8 +126,10 @@
 						$multipleGroupHeaders.each(function(){
 							var $headerIndex = $(this);
 							var attribute = $headerIndex.attr('data-index');
-							if ( attribute === title.substring(0, 1) )
+							if ( attribute === title.substring(0, 1) ) {
 								$headerIndex.show();
+								$headerIndex.addClass('ohio-odx-alpha-directory__group-title--visible');
+							}
 						});
 
 
@@ -209,6 +211,7 @@
 						});
 						$multipleGroupHeaders.forEach(function( group ){
 							group.show();
+							group.addClass('ohio-odx-alpha-directory__group-title--visible');
 						});
 
 						showResults();
@@ -232,6 +235,8 @@
 			function paginateResults(page, elementsPerPage) {
 				$('#iop-filter-cards-container .iop-filter__item--visible').hide();
 				$('#iop-filter-cards-container .iop-filter__item--visible[data-page="' + page + '"]').show();
+				$('#iop-filter-cards-container .ohio-odx-alpha-directory__group-title--visible').hide();
+				$('#iop-filter-cards-container .ohio-odx-alpha-directory__group-title--visible[data-page="' + page + '"]').show();
 			}
 
 			function initializePagination() {
@@ -240,6 +245,9 @@
 				var $visibleItems = $('#iop-filter-cards-container .iop-filter__item--visible');
 				var visibleItemsNumber = $visibleItems.length;
 
+				var $allHeaders = $('.ohio-odx-alpha-directory__group-title');
+				$allHeaders.attr('data-page', '');
+
 				$allItems.attr('data-page', '');
 				$allItems.attr('data-column', '');
 				$visibleItems.each(function (index) {
@@ -247,6 +255,12 @@
 					index++;
 					var page = Math.ceil(index / elementsPerPage);
 					$item.attr('data-page', page);
+
+					if( $item.attr('data-first-item') ) {
+						var keyHeader = $item.attr('data-first-item');
+						var header = $("h3."+keyHeader);
+						header.attr('data-page', page);
+					}
 				});
 
 				$pagination.twbsPagination('destroy');
