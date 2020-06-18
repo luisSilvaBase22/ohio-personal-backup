@@ -1,4 +1,3 @@
-[Component name="ohio design/global/social-networks-configuration/share-card-javascript-module"]
 (function(){
 	var DefaultOptions = {
 		Environment: {
@@ -523,8 +522,6 @@
 						_this.setIndexFilterActions();
 						_this.setResetActions();
 						_this.setPagination();
-						[Component name="ohio design/global/copy-card-url-to-clipboard/copy-url-to-clipboard-javascript-module"]
-							[Component name="ohio design/global/utilities/share-card-actions/share-card-actions"]
 					});
 				});
 			},
