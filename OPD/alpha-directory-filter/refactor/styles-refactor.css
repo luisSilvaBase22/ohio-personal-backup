@@ -43,9 +43,3 @@ ul.opd-alpha-directory__alphabet li:not(:first-child) a {
     color: #3D7AA9;
     font-weight: bold;
 }
-
-.opd-alpha-directory__alphabet .ohio-odx-alpha-directory__alphabet-list-title a:hover,
-.opd-alpha-directory__alphabet .ohio-odx-alpha-directory__alphabet-list-title a:focus {
-    color: white;
-    text-decoration: underline;
-}
