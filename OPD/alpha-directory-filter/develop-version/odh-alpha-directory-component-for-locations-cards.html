@@ -319,8 +319,6 @@
 					}
 				});
 
-
-
 				$pagination.twbsPagination('destroy');
 
 				var $noResults = $('#iop-filter-cards-container .js-no-results-img');
@@ -437,9 +435,9 @@
 					var resources = JSON.parse(response);
 					var indexedResources = resources.filter( function(el, index){
 						var indexAlphabet = el.name.substring(0, 1);
-						Object.assign(el, {index: indexAlphabet});
+						el.index = indexAlphabet;
 						if ( isPair(index) )
-							Object.assign(el, {pairItem: true});
+							el.pairItem = true;
 						return el;
 					});
 					var cleanedResources = removeDuplicatedIndex( indexedResources );
@@ -451,7 +449,7 @@
 							'[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/odh/odh-locations-contact-cards-filter.hbs.html"]',
 						data: {
 							items: cleanedResources,
-							noResultsImgPath: '[Component name="ohio design/agencies/odh/no-results.png" rendition="auto"]',
+							noResultsImgPath: '[Component name="ohio design/agencies/odh/no-results.png" rendition="auto" format="url"]',
 							FilterTitle: 'opd-filter-by-name',
 							InputPlaceholder: 'opd-filter-placeholder',
 							Filter: 'opd-filter-title',
@@ -476,8 +474,6 @@
 						registerEvents();
 						showResults();
 						initializePagination();
-						[Component name="ohio design/global/copy-card-url-to-clipboard/copy-url-to-clipboard-javascript-module"]
-							[Component name="ohio design/global/utilities/share-card-actions/share-card-actions"]
 					});
 
 				},

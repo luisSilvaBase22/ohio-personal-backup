@@ -114,6 +114,7 @@
 			Counties: undefined,
 			filterByTitle: function( title ){
 				var keyword = title.trim().toLowerCase();
+				var currentTopics = [];
 				var titlesIndexes = [];
 				titlesIndexes = this.Counties.map(function( Item, index ){
 					var title = Item.name.toLowerCase();
@@ -514,7 +515,8 @@
 
 					var WebComponent = new OhioToolkitWebComponent( {
 						element: '#opd-filter',
-						templateLocation: templateLocation,
+						templateLocation:
+							'[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/odh/odh-locations-contact-cards-filter.hbs.html"]',
 						data: {
 							items: response,
 							noResultsImgPath: '[Component name="ohio design/agencies/odh/no-results.png" rendition="auto" format="url"]',
