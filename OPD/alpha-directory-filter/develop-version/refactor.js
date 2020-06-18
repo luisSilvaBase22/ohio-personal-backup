@@ -409,8 +409,12 @@
 						multipleLettersClicked.splice( wasTheLetterSelectedBefore, 1);
 						target.classList.remove('opd-index--active');
 					} else {
-						if (letter!== null)
+						if (letter!== null) {
 							multipleLettersClicked.push(letter);
+						} else {
+							if ( parentTarget.classList.contains('js-opd-alphabet-button-all') )
+								_this.resetAll();
+						}
 					}
 
 					if( multipleLettersClicked.length > 0 ) {
@@ -441,55 +445,49 @@
 						});
 					} else {
 						multipleLettersClicked.splice(0);
-						//Show all the cards
-						_this.showAllCards();
-
-						//Show headers
-						_this.showAllHeaders();
+						_this.resetAll();
 					}
 				});
 			},
-			setResetActions: function(){
+			resetAll: function(){
+				var _this = this;
 				var els = this.elements;
-				var resetButton = els.resetButton;
-				var allTypesButton = els.$filterByAlphaindex.allTypeButton;
-
 				var allResultsNumber;
 				var inputBox = els.$filterByName;
 
+				//Show all the cards
+				_this.showAllCards();
+
+				//Show headers
+				_this.showAllHeaders();
+
+				allResultsNumber = AlphadirectoryData.Counties.length;
+				inputBox.input.value = '';
+
+				multipleLettersClicked.splice(0);
+				_this.removeActiveIndexes();
+				_this.renderShowResults( allResultsNumber );
+				_this.setPagination();
+
+			},
+			setResetActions: function(){
+
 				var _this = this;
 
+				var els = this.elements;
+				var resetButton = els.resetButton;
+				//var allTypesButton = els.$filterByAlphaindex.allTypeButton;
+
 				resetButton.on('click', function(){
-					//Show all the cards
-					_this.showAllCards();
-
-					//Show headers
-					_this.showAllHeaders();
-
-					allResultsNumber = AlphadirectoryData.Counties.length;
-					inputBox.input.value = '';
-
-					multipleLettersClicked.splice(0);
-					_this.removeActiveIndexes();
-					_this.renderShowResults( allResultsNumber );
-					_this.setPagination();
+					console.log("RESET button");
+					_this.resetAll();
 				});
 
+				/* Functionality at line 415, HTML design error
 				allTypesButton.on('click', function(){
-					//Show all the cards
-					_this.showAllCards();
-
-					//Show headers
-					_this.showAllHeaders();
-
-					allResultsNumber = AlphadirectoryData.Counties.length;
-					inputBox.input.value = '';
-
-					multipleLettersClicked.splice(0);
-					_this.removeActiveIndexes();
-					_this.renderShowResults( allResultsNumber );
-					_this.setPagination();
-				});
+					console.log("ALl button");
+					_this.resetAll();
+				});*/
 
 			},
 			renderShowResults: function( numberResults ) {
