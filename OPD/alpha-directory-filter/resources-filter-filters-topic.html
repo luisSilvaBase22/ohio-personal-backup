@@ -5,7 +5,6 @@
 </div>
 
 <script>
-	[Component name="ohio design/global/social-networks-configuration/share-card-javascript-module"]
 	(function( $ ) {
 		$( document ).on( 'ready', function() {
 			var elementsPerPage = 10;
@@ -379,9 +378,9 @@
 					var resources = JSON.parse(response);
 					var indexedResources = resources.filter( function(el, index){
 						var indexAlphabet = el.name.substring(0, 1);
-						Object.assign(el, {index: indexAlphabet});
+						el.index = indexAlphabet;
 						if ( isPair(index) )
-							Object.assign(el, {pairItem: true});
+							el.pairItem = true;
 						return el;
 					});
 					var cleanedResources = removeDuplicatedIndex( indexedResources );
@@ -418,8 +417,6 @@
 						registerEvents();
 						showResults();
 						initializePagination();
-						[Component name="ohio design/global/copy-card-url-to-clipboard/copy-url-to-clipboard-javascript-module"]
-							[Component name="ohio design/global/utilities/share-card-actions/share-card-actions"]
 					});
 
 				},
