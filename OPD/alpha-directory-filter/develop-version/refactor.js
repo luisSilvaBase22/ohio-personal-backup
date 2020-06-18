@@ -321,14 +321,14 @@
 					next: '<i class="fa fa-caret-right"></i>',
 					last: null,
 					onPageClick: function (event, page) {
-						_this.paginateResults(page, elementsPerPage);
+						_this.paginateResults(page);
 					}
 				});
 				var $anchorPagination = els.anchorPagination;
 				$anchorPagination.attr('aria-label', 'resources-search-pagination');
 				$anchorPagination.attr('href', '#top');
 			},
-			paginateResults: function(page, elementsPerPage) {
+			paginateResults: function(page) {
 				var els = this.elements;
 				var cardsContainer = els.$cards.root;
 				var visibleItems = els.visibleItems;
