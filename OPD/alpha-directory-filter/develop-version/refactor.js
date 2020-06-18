@@ -15,6 +15,7 @@
 		}
 	};
 
+	//Logic part from component, gets the data to fill the cards
 	window.AlphadirectoryLocationsData = function( Options ){
 
 		var LocalOptions = Options || DefaultOptions;
@@ -113,7 +114,6 @@
 			Counties: undefined,
 			filterByTitle: function( title ){
 				var keyword = title.trim().toLowerCase();
-				var currentTopics = [];
 				var titlesIndexes = [];
 				titlesIndexes = this.Counties.map(function( Item, index ){
 					var title = Item.name.toLowerCase();
@@ -168,13 +168,29 @@
 		};
 	};
 
-	//Set here the UI methods
-	//Set a promise to wait until data are retrieved and then render the data
+	//UI methods only
 	window.AlphadirectoryLocationsRender = function(){
-		var AlphadirectoryData = AlphadirectoryLocationsData();
+
+		var Utils  = {
+			inject: function( path, fallback ) {
+				try {
+					return eval( 'window.' + path );
+				} catch( e ) {
+					console.warn( 'Dependency not found: ', path );
+					return fallback;
+				}
+			}
+		};
+
+		/* Dependencies */
+		var OhioToolkitWebComponent = Utils.inject('OhioToolkit.components.WebComponent', console.log );
+		var AlphadirectoryData = Utils.inject('AlphadirectoryLocationsData');
+
+		/*Data*/
 		var $emptyDiv = document.createElement( 'div' );
 		var elementsPerPage = 3;
 		var multipleLettersClicked = [];
+
 
 		var Instance = {
 			elements: {},
@@ -495,10 +511,10 @@
 					console.log("These are the Counties:", response);
 
 					var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
-					var component = new OhioToolkit.components.WebComponent({
+
+					var WebComponent = new OhioToolkitWebComponent( {
 						element: '#opd-filter',
-						templateLocation:
-							'[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/odh/odh-locations-contact-cards-filter.hbs.html"]',
+						templateLocation: templateLocation,
 						data: {
 							items: response,
 							noResultsImgPath: '[Component name="ohio design/agencies/odh/no-results.png" rendition="auto" format="url"]',
@@ -511,8 +527,8 @@
 							ResetFilters: 'opd-reset-filters',
 							NoResultsText: 'odx-no-results-image'
 						}
-					});
-					component.render().then(function(){
+					} );
+					WebComponent.render().then(function(){
 						console.log('Rendered!');
 						if (!jQuery.fn.select2) {
 							return;
