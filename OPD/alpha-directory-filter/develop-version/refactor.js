@@ -185,7 +185,7 @@
 
 		/* Dependencies */
 		var OhioToolkitWebComponent = Utils.inject('OhioToolkit.components.WebComponent', console.log );
-		var AlphadirectoryData = Utils.inject('AlphadirectoryLocationsData');
+		var AlphadirectoryData = Utils.inject('AlphadirectoryLocationsData()', console.log);//window.AlphadirectoryLocationsData();
 
 		/*Data*/
 		var $emptyDiv = document.createElement( 'div' );
