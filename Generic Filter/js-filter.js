@@ -100,6 +100,8 @@
 						}
 					}
 				} );
+
+				console.log( "Results from filter: ", this.FilteredItems );
 			},
 			resetFilters: function(){
 				this.FilteredItems = this.AllItems;
@@ -135,17 +137,17 @@
 				var DropDownOptions = Filters.map(function( Item ){
 					if ( Item.hasOwnProperty("options") ) {
 						var ItemCleaned = {
-							id: Item.id,
+							id: Item.id.substr(0,1 ) === "#" ? Item.id.substr(1) : Item.id,
 							allLabel: Item.allLabel,
 							label: Item.label,
 							propertyName: Item.propertyName,
-							options: Item.options,
+							options: Item.options.sort(),
 							numColumns: numberOfColumns
 						};
 						return ItemCleaned;
 					} else {
 						var ItemCleaned = {
-							id: Item.id,
+							id: Item.id.substr(0,1 ) === "#" ? Item.id.substr(1) : Item.id,
 							allLabel: Item.allLabel,
 							label: Item.label,
 							propertyName: Item.propertyName,
@@ -217,6 +219,47 @@
 			prepareFiltersForTemplate: function( Filters ){
 				return  MultipleFiltersDataLogic.prepareFiltersForTemplate( Filters );
 			},
+			setEventForDropdown: function( idFilter, category ){
+
+				var id = idFilter.substr(0,1) === '#' ? idFilter : "#" + idFilter;
+
+				$( id ).select2().on('change', function( event ) {
+					event.preventDefault();
+					var categoryArray = $(this).val();
+					var lastCategorySelected = $('span.select2-selection[aria-owns="select2-js-select-' + category + '-results"]');
+					var categoryLength = 0;
+
+					if (categoryArray !== null) {
+						categoryLength = categoryArray.length;
+					}
+
+					if (lastCategorySelected.length > 0) {
+						lastCategorySelected = lastCategorySelected[0].getAttribute('aria-activedescendant').split('-').pop();
+					} else if (categoryLength === 0) {
+						categoryArray = [];
+						categoryArray[0] = 'all';
+						lastCategorySelected = 'all';
+					}
+
+					if (lastCategorySelected === 'all') {
+						categoryArray = [];
+						categoryArray[0] = 'all';
+						$( id ).val(categoryArray).trigger('change.select2');
+					} else {
+						if (categoryArray !== null && categoryArray[0] === 'all' && (categoryLength > 1 || countiesLength > 1)) {
+							categoryArray.splice(0, 1);
+							$( id ).val(categoryArray).trigger('change.select2');
+						}
+					}
+
+					var filterParameters = {
+						name: category,
+						value: categoryArray
+					};
+
+					MultipleFiltersDataLogic.filterAction( filterParameters );
+				});
+			},
 			renderComponent: function(){
 				var _this = this;
 
@@ -239,6 +282,10 @@
 
 					WebComponent.render().then(function(  ) {
 						console.log('Rendered!');
+
+						_this.FiltersForTemplate.forEach( function( Filter ) {
+							_this.setEventForDropdown( Filter.id, Filter.propertyName );
+						} );
 					});
 				});
 			},
