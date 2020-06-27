@@ -77,6 +77,9 @@
 
 				return 'b' + s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
 			},
+			removeDuplicated: function( array ) {
+				return array.filter((a, b) => array.indexOf(a) === b)
+			}
 		};
 		return {
 			AllItems: undefined,
@@ -97,6 +100,33 @@
 						}
 					}
 				} );
+			},
+			resetFilters: function(){
+				this.FilteredItems = this.AllItems;
+			},
+			getOptionsFromContent: function( propertyName ){
+
+				var dropdownOptions = this.AllItems.map( function( Item ){
+					if( Item.hasOwnProperty(propertyName) ) {
+						return Item[propertyName];
+					}
+				} );
+
+				var dropdownCleaned = Utils.removeDuplicated( dropdownOptions );
+				return dropdownCleaned.sort();
+			},
+			getDropdownOptions: function( Filters ){
+				var _this = this;
+
+				var DropDownOptions = Filters.map(function( Item ){
+					if ( Item.hasOwnProperty("options") ) {
+						return Item.options;
+					} else {
+						return _this.getOptionsFromContent( Item.propertyName );
+					}
+				});
+
+				return DropDownOptions;
 			},
 			getContentPiecesData: function(){
 				var _this = this;
@@ -131,6 +161,83 @@
 				});
 			}
 		};
+	};
+	
+	window.FiltersWidget = function(){
+
+		var Utils  = {
+			inject: function( path, fallback ) {
+				try {
+					return eval( 'window.' + path );
+				} catch( e ) {
+					console.warn( 'Dependency not found: ', path );
+					return fallback;
+				}
+			}
+		};
+
+		var OhioToolkitWebComponent = Utils.inject('OhioToolkit.components.WebComponent', console.log );
+		var MultipleFiltersDataLogic = Utils.inject('MultipleFilters()', console.log);
+		
+		var Instance = {
+			FilterInitialSettings: undefined,
+			DropDownOptions: undefined,
+			WidgetSettings: undefined,
+			getDropdownOptions: function( Filters ){
+				return  MultipleFiltersDataLogic.getDropdownOptions( Filters );
+			},
+			getFiltersId: function( Filters ){
+				var propertyNames = Filters.map( function( Item ){
+					return Item.propertyName;
+				} );
+			},
+			renderComponent: function(){
+				MultipleFiltersDataLogic.getContentPiecesData().then( function( response ){
+					console.log("The data: ", response );
+					var Filters = this.FilterInitialSettings.filters;
+					this.DropDownOptions = this.getDropdownOptions( Filters );
+					var numberOfDropdowns = this.DropDownOptions.length;
+					var propertiesNames = this.getFiltersId();
+
+					var wrapper = this.WidgetSettings.root;
+					var template = this.WidgetSettings.template;
+					var numColumns;
+
+					switch( numberOfDropdowns ) {
+						case 3:
+							numColumns = 4
+							break;
+						case 2:
+							numColumns = 6;
+							break;
+						default:
+							numColumns = 12;
+					}
+
+					var WebComponent = new OhioToolkitWebComponent({
+						element: wrapper, //'#id-container',
+						templateLocation: template,
+						data: {
+							items: response,
+							numColumns: numColumns,
+							numberOfFilters: numberOfDropdowns,
+							DropDownOptions: this.DropDownOptions,//Matrix with options
+							filterNames: propertiesNames//["topics", "utility"]
+						}
+					});
+
+					WebComponent.render().then(function(  ) {
+						console.log('Rendered!');
+					});
+				});
+			},
+			start: function( Filters, WidgetSettings ) {
+				this.FilterInitialSettings = Filters;
+				this.WidgetSettings = WidgetSettings;
+			}
+		};
+		
+		return Instance;
 	};
 
 })();
