@@ -135,6 +135,9 @@
 				var DropDownOptions = Filters.map(function( Item ){
 					if ( Item.hasOwnProperty("options") ) {
 						var ItemCleaned = {
+							id: Item.id,
+							allLabel: Item.allLabel,
+							label: Item.label,
 							propertyName: Item.propertyName,
 							options: Item.options,
 							numColumns: numberOfColumns
@@ -142,6 +145,9 @@
 						return ItemCleaned;
 					} else {
 						var ItemCleaned = {
+							id: Item.id,
+							allLabel: Item.allLabel,
+							label: Item.label,
 							propertyName: Item.propertyName,
 							options: _this.getOptionsFromContent( Item.propertyName ),
 							numColumns: numberOfColumns
@@ -208,7 +214,7 @@
 			DropDownOptions: undefined,
 			WidgetSettings: undefined,
 			FiltersForTemplate: undefined,
-			getDropdownOptions: function( Filters ){
+			prepareFiltersForTemplate: function( Filters ){
 				return  MultipleFiltersDataLogic.prepareFiltersForTemplate( Filters );
 			},
 			renderComponent: function(){
@@ -217,8 +223,7 @@
 				MultipleFiltersDataLogic.getContentPiecesData().then( function( response ){
 					console.log("The data: ", response );
 					var Filters = _this.FilterInitialSettings.filters;
-					_this.FiltersForTemplate = _this.getDropdownOptions( Filters );
-					var numberOfFilters = _this.FiltersForTemplate.length;
+					_this.FiltersForTemplate = _this.prepareFiltersForTemplate( Filters );
 
 					var wrapper = _this.WidgetSettings.root;
 					var template = _this.WidgetSettings.template;
