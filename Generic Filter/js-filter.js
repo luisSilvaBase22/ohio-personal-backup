@@ -115,14 +115,38 @@
 				var dropdownCleaned = Utils.removeDuplicated( dropdownOptions );
 				return dropdownCleaned.sort();
 			},
-			getDropdownOptions: function( Filters ){
+			prepareFiltersForTemplate: function( Filters ){
 				var _this = this;
+
+				var numberOfFilters = Filters.length;
+				var numberOfColumns;
+
+				switch( numberOfFilters ) {
+					case 3:
+						numberOfColumns = 4;
+						break;
+					case 2:
+						numberOfColumns = 6;
+						break;
+					default:
+						numberOfColumns = 12;
+				}
 
 				var DropDownOptions = Filters.map(function( Item ){
 					if ( Item.hasOwnProperty("options") ) {
-						return Item.options;
+						var ItemCleaned = {
+							propertyName: Item.propertyName,
+							options: Item.options,
+							numColumns: numberOfColumns
+						};
+						return ItemCleaned;
 					} else {
-						return _this.getOptionsFromContent( Item.propertyName );
+						var ItemCleaned = {
+							propertyName: Item.propertyName,
+							options: _this.getOptionsFromContent( Item.propertyName ),
+							numColumns: numberOfColumns
+						};
+						return ItemCleaned;
 					}
 				});
 
@@ -183,46 +207,28 @@
 			FilterInitialSettings: undefined,
 			DropDownOptions: undefined,
 			WidgetSettings: undefined,
+			FiltersForTemplate: undefined,
 			getDropdownOptions: function( Filters ){
-				return  MultipleFiltersDataLogic.getDropdownOptions( Filters );
-			},
-			getFiltersId: function( Filters ){
-				var propertyNames = Filters.map( function( Item ){
-					return Item.propertyName;
-				} );
+				return  MultipleFiltersDataLogic.prepareFiltersForTemplate( Filters );
 			},
 			renderComponent: function(){
+				var _this = this;
+
 				MultipleFiltersDataLogic.getContentPiecesData().then( function( response ){
 					console.log("The data: ", response );
-					var Filters = this.FilterInitialSettings.filters;
-					this.DropDownOptions = this.getDropdownOptions( Filters );
-					var numberOfDropdowns = this.DropDownOptions.length;
-					var propertiesNames = this.getFiltersId();
+					var Filters = _this.FilterInitialSettings.filters;
+					_this.FiltersForTemplate = _this.getDropdownOptions( Filters );
+					var numberOfFilters = _this.FiltersForTemplate.length;
 
-					var wrapper = this.WidgetSettings.root;
-					var template = this.WidgetSettings.template;
-					var numColumns;
-
-					switch( numberOfDropdowns ) {
-						case 3:
-							numColumns = 4
-							break;
-						case 2:
-							numColumns = 6;
-							break;
-						default:
-							numColumns = 12;
-					}
+					var wrapper = _this.WidgetSettings.root;
+					var template = _this.WidgetSettings.template;
 
 					var WebComponent = new OhioToolkitWebComponent({
 						element: wrapper, //'#id-container',
 						templateLocation: template,
 						data: {
 							items: response,
-							numColumns: numColumns,
-							numberOfFilters: numberOfDropdowns,
-							DropDownOptions: this.DropDownOptions,//Matrix with options
-							filterNames: propertiesNames//["topics", "utility"]
+							Filters: _this.FiltersForTemplate
 						}
 					});
 
@@ -234,6 +240,7 @@
 			start: function( Filters, WidgetSettings ) {
 				this.FilterInitialSettings = Filters;
 				this.WidgetSettings = WidgetSettings;
+				this.renderComponent();
 			}
 		};
 		

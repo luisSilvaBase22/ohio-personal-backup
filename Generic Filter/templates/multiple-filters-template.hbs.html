@@ -16,18 +16,16 @@
 <div class="iop-filter__second-section-container">
 	<div class="iop-filter__categories-title">Filter Events</div>
 	<div id="iop-filter-filters-container" class="row margin-bottom-sm componentContainer " style="">
-		<article id="All Events" class="ohio-select2 col-lg-{{numColumns}} col-md-{{numColumns}} col-sm-12 col-xs-12">
-
+		{{#each Filters}}
+		<article id="{{propertyName}}" class="ohio-select2 col-lg-{{numColumns}} col-md-{{numColumns}} col-sm-12 col-xs-12">
+			<select multiple="multiple" id="js-select-topics">
+				<option value="all" selected="selected">All Topics</option>
+				{{#each options}}
+				<option value="{{this}}">{{this}}</option>
+				{{/each}}
+			</select>
 		</article>
-		<article id="All Categories" class="ohio-select2 col-lg-{{numColumns}} col-md-{{numColumns}} col-sm-12 col-xs-12">
-
-		</article>
-		<article id="All Counties" class="ohio-select2 col-lg-{{numColumns}} col-md-{{numColumns}} col-sm-12 col-xs-12">
-
-		</article>
-		<article id="All Utilities" class="ohio-select2 col-lg-{{numColumns}} col-md-{{numColumns}} col-sm-12 col-xs-12">
-
-		</article>
+		{{/each}}
 	</div>
 </div>
 <!-- END Ohio Design / Content / Component Templates / Agencies / OPD / multiple-filters-template.hbs.html -->
