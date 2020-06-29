@@ -1,6 +1,7 @@
 <!-- START: Ohio Design / Agencies / ODH / Filter / Generic Filter / Main -->
 <div id="id-filter" class="iop-filter__container margin-bottom-md margin-top-md">
 	<span class="ohio-spinner ohio-spinner--centered"></span>
+	<div id="cards-generic-wrapper"></div>
 </div>
 
 <script>
@@ -46,7 +47,8 @@
 	var WIDGET_SETTINGS = {
 		root: "#id-filter",
 		menuCmponent: '[Component bla bla]',
-		template: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/odh/generic-template-for-filters"]'
+		template: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/odh/generic-template-for-filters"]',
+		templateItems: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/odh/generic-template-for-items"]'
 	};
 
 	document.addEventListener( 'DOMContentLoaded', function() {

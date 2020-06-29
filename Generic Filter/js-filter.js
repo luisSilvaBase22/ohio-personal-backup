@@ -334,12 +334,28 @@
 					});
 
 					WebComponent.render().then(function(  ) {
-						console.log('Rendered!');
+						console.log('Filters Rendered!');
 
 						_this.FiltersForTemplate.forEach( function( Filter ) {
 							_this.setEventForDropdown( Filter.id, Filter.propertyName );
 						} );
+
 					});
+
+					var templateItems = _this.WidgetSettings.templateItems;
+
+					var Cards = new OhioToolkitWebComponent({
+						element: "#cards-generic-wrapper",
+						templateLocation: templateItems,
+						data: {
+							items: response
+						}
+					});
+
+					Cards.render().then( function(  ) {
+						console.log("Cards rendered");
+					});
+
 				});
 			},
 			start: function( Filters, WidgetSettings ) {
