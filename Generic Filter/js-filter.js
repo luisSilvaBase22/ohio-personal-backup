@@ -84,20 +84,42 @@
 		return {
 			AllItems: undefined,
 			FilteredItems: undefined,
-			filterAction: function( FilterSelected ){
-				/*filter is an object
-					{
-						name: "topic|county|utility",
-						value: "Aircraft|Allen"
-					}
-				*/
+			hasItemAnyofTheseValues: function(itemValues, toSearchValues){
+				var categories = itemValues.split(",");
 
-				this.FilteredItems = this.FilteredItems.filter( function( Item ){
-					var filtersName = FilterSelected.name;
-					if( Item.hasOwnProperty(filtersName) ) {
-						if ( Item[filtersName] === FilterSelected.value ) {
-							return Item;
+				for( var i = 0; i < toSearchValues.length; i++ ) {
+					if ( categories.indexOf( toSearchValues[i] ) > -1 ) {
+						return true;
+					}
+				}
+
+				return false;
+			},
+			filterAction: function( FilterSelected ){
+				/*
+				FilterSelected = [
+					{
+						name: "county",
+						value: ["Orange", "Adams"]
+					},
+					{
+						name: "topic",
+						value: ["Aircraft, Allen"]
+					}
+				]
+				 */
+
+				var _this = this;
+				this.FilteredItems = this.AllItems.filter( function( Item ){
+					for( var i=0; i < FilterSelected.length; i++) {
+						var itemValues = Item[ FilterSelected[i].name];
+						var toSearchValues = FilterSelected[i].value;
+						var hasAvalidValue = _this.hasItemAnyofTheseValues( itemValues , toSearchValues );
+						if ( !hasAvalidValue ) {
+							break;
 						}
+						if ( i === FilterSelected.length - 1 )
+							return Item;
 					}
 				} );
 
@@ -113,8 +135,14 @@
 						return Item[propertyName];
 					}
 				} );
+				var items = dropdownOptions.map( function(item){
+					return item.split(",");
+				} );
 
-				var dropdownCleaned = Utils.removeDuplicated( dropdownOptions );
+				var preCategories = items.join();
+				var categories = preCategories.split(",");
+
+				var dropdownCleaned = Utils.removeDuplicated( categories );
 				return dropdownCleaned.sort();
 			},
 			prepareFiltersForTemplate: function( Filters ){
@@ -216,10 +244,37 @@
 			DropDownOptions: undefined,
 			WidgetSettings: undefined,
 			FiltersForTemplate: undefined,
+			FiltersClicked: [],
+			updateFiltersClicked: function( category, values ){
+				var _this = this;
+				if ( this.FiltersClicked.length === 0 ) {
+					var valueFromDropdownSelected = {
+						name: category,
+						value: values
+					};
+					this.FiltersClicked.push(valueFromDropdownSelected);
+				} else {
+					for( var i = 0; i < this.FiltersClicked.length; i++ ) {
+						if ( this.FiltersClicked[i].name === category ) {
+							this.FiltersClicked[i].value = values;
+							break;
+						}
+
+						if ( this.FiltersClicked[i].name !== category && i === this.FiltersClicked.length - 1 ) {
+							var valueFromDropdownSelected = {
+								name: category,
+								value: values
+							};
+							this.FiltersClicked.push(valueFromDropdownSelected);
+						}
+					}
+				}
+			},
 			prepareFiltersForTemplate: function( Filters ){
 				return  MultipleFiltersDataLogic.prepareFiltersForTemplate( Filters );
 			},
 			setEventForDropdown: function( idFilter, category ){
+				var _this = this;
 
 				var id = idFilter.substr(0,1) === '#' ? idFilter : "#" + idFilter;
 
@@ -252,12 +307,10 @@
 						}
 					}
 
-					var filterParameters = {
-						name: category,
-						value: categoryArray
-					};
+					_this.updateFiltersClicked( category, categoryArray );
 
-					MultipleFiltersDataLogic.filterAction( filterParameters );
+
+					MultipleFiltersDataLogic.filterAction( _this.FiltersClicked );
 				});
 			},
 			renderComponent: function(){
