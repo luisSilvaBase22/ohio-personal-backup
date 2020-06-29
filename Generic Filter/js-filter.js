@@ -115,10 +115,10 @@
 						var itemValues = Item[ FilterSelected[i].name];
 						var toSearchValues = FilterSelected[i].value;
 						var hasAvalidValue = _this.hasItemAnyofTheseValues( itemValues , toSearchValues );
-						if ( !hasAvalidValue ) {
+						if ( !hasAvalidValue ) {/* Item did not approved first filter */
 							break;
 						}
-						if ( i === FilterSelected.length - 1 )
+						if ( i === FilterSelected.length - 1 )/*If item has approved all filters, then the Item was found*/
 							return Item;
 					}
 				} );
