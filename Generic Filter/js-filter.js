@@ -124,6 +124,12 @@
 				} );
 
 				console.log( "Results from filter: ", this.FilteredItems );
+
+				var uuids = this.FilteredItems.map( function( el ){
+					return el.uuid;
+				} );
+
+				return uuids;
 			},
 			resetFilters: function(){
 				this.FilteredItems = this.AllItems;
@@ -240,11 +246,26 @@
 		var MultipleFiltersDataLogic = Utils.inject('MultipleFilters()', console.log);
 		
 		var Instance = {
+			elements: {},
 			FilterInitialSettings: undefined,
 			DropDownOptions: undefined,
 			WidgetSettings: undefined,
 			FiltersForTemplate: undefined,
 			FiltersClicked: [],
+			uuidsToMap: [],
+			setElements: function(){
+				var els = this.elements;
+				var idRoot = this.WidgetSettings.root;
+
+				els.$root = $( idRoot ) || $emptyDiv;//'#opd-filter'
+
+				var $cards = els.$root.find('.odx-topic__cards');
+				els.$cards = {
+					root: $cards,
+					items: $cards.find('.ohio-cards-container-grid')
+				};
+
+			},
 			updateFiltersClicked: function( category, values ){
 				var _this = this;
 				if ( this.FiltersClicked.length === 0 ) {
@@ -272,6 +293,33 @@
 			},
 			prepareFiltersForTemplate: function( Filters ){
 				return  MultipleFiltersDataLogic.prepareFiltersForTemplate( Filters );
+			},
+			hideAllCards: function(){
+				var els = this.elements;
+				var $cards = els.$cards.items;
+
+				var numberOfCards = $cards.length;
+
+				for ( var i=0; i < numberOfCards; i++ ) {
+					$( $cards[i] ).hide();
+				}
+
+			},
+			showCards: function(){
+				var els = this.elements;
+				var $cards = els.$cards.items;
+
+				this.hideAllCards();
+
+				this.uuidsToMap.forEach( function( uuid ) {
+					var numberOfCards = $cards.length;
+
+					for ( var i=0; i < numberOfCards; i++ ) {
+						if ( uuid === $cards[i].id ) {
+							$( $cards[i] ).show();
+						}
+					}
+				} );
 			},
 			setEventForDropdown: function( idFilter, category ){
 				var _this = this;
@@ -310,7 +358,9 @@
 					_this.updateFiltersClicked( category, categoryArray );
 
 
-					MultipleFiltersDataLogic.filterAction( _this.FiltersClicked );
+					_this.uuidsToMap = MultipleFiltersDataLogic.filterAction( _this.FiltersClicked );
+					_this.showCards();
+
 				});
 			},
 			renderComponent: function(){
@@ -333,7 +383,7 @@
 						}
 					});
 
-					WebComponent.render().then(function(  ) {
+					WebComponent.render().then(function() {
 						console.log('Filters Rendered!');
 
 						_this.FiltersForTemplate.forEach( function( Filter ) {
@@ -352,9 +402,10 @@
 						}
 					});
 
-					Cards.render().then( function(  ) {
+					Cards.render().then( function() {
 						console.log("Cards rendered");
-					});
+						_this.setElements();
+					} );
 
 				});
 			},
