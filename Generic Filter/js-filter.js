@@ -265,6 +265,70 @@
 					items: $cards.find('.ohio-cards-container-grid')
 				};
 
+				els.pagination = els.$root.find('.odx-topic-hub-filter__pagination');
+				els.anchorPagination = els.$root.find('#js-events-search-pagination--gov a');
+				els.visibleItems = $cards.find('.ohio-card--visible'); //.iop-filter__item--visible
+
+				els.noResultsImage = els.$root.find('.odx-events__img-no-results');
+
+			},
+			setPagination: function(){
+				var _this = this;
+				var els = this.elements;
+
+				var $allItems = els.$cards.items;
+				var $visibleItems = $('.odx-topic__cards .ohio-card--visible');//els.visibleItems;
+				var visibleItemsNumber = $visibleItems.length;
+				var $pagination = els.pagination;
+
+				var elementsPerPage = this.WidgetSettings.elementsPerPage;
+
+				$allItems.attr('data-page', '');
+				$allItems.attr('data-column', '');
+
+				$visibleItems.each(function (index) {
+					var $item = $(this);
+					index++;
+					var page = Math.ceil(index / elementsPerPage);
+					$item.attr('data-page', page);
+				});
+
+				$pagination.twbsPagination('destroy');
+
+				var $noResults = els.noResultsImage;
+				$noResults.hide();
+				if (visibleItemsNumber <= 0) {
+					$noResults.show();
+					return;
+				}
+
+				$pagination.twbsPagination({
+					totalPages: Math.ceil(visibleItemsNumber / elementsPerPage),
+					visiblePages: 7,
+					first: null,
+					prev: '<i class="fa fa-caret-left"></i>',
+					next: '<i class="fa fa-caret-right"></i>',
+					last: null,
+					onPageClick: function (event, page) {
+						_this.paginateResults(page);
+					}
+				});
+
+				var $anchorPagination = els.anchorPagination;
+				$anchorPagination.attr('aria-label', 'resources-search-pagination');
+				$anchorPagination.attr('href', '#top');
+			},
+			paginateResults: function(page) {
+				var els = this.elements;
+				var cardsContainer = els.$cards.root;
+				var visibleItems = els.visibleItems;
+
+				visibleItems.hide();
+
+				//Show card per page number assigned
+				var itemInPage = cardsContainer.find('.ohio-card--visible[data-page="'+page+'"]');
+				itemInPage.show();
+
 			},
 			updateFiltersClicked: function( category, values ){
 				var _this = this;
@@ -291,6 +355,21 @@
 					}
 				}
 			},
+			allTypesFilter: function( category ){
+
+				var allOptions;
+
+				for ( var i = 0; i < this.FiltersForTemplate.length; i++ ) {
+					if ( this.FiltersForTemplate[i].propertyName === category ) {
+						allOptions = this.FiltersForTemplate[i].options;
+					}
+				}
+
+				if ( allOptions[0] === "all" )
+					allOptions.splice(0, 1);
+
+				return allOptions;
+			},
 			prepareFiltersForTemplate: function( Filters ){
 				return  MultipleFiltersDataLogic.prepareFiltersForTemplate( Filters );
 			},
@@ -302,6 +381,7 @@
 
 				for ( var i=0; i < numberOfCards; i++ ) {
 					$( $cards[i] ).hide();
+					$( $cards[i] ).removeClass('ohio-card--visible');
 				}
 
 			},
@@ -311,12 +391,16 @@
 
 				this.hideAllCards();
 
+				if ( this.uuidsToMap )
+
 				this.uuidsToMap.forEach( function( uuid ) {
 					var numberOfCards = $cards.length;
 
 					for ( var i=0; i < numberOfCards; i++ ) {
 						if ( uuid === $cards[i].id ) {
 							$( $cards[i] ).show();
+							if ( ! $( $cards[i] ).hasClass('ohio-card--visible') )
+								$( $cards[i] ).addClass('ohio-card--visible');
 						}
 					}
 				} );
@@ -355,12 +439,24 @@
 						}
 					}
 
+					var filterAll = false;
+					for (var i=0; i<categoryArray.length; i++){
+						if (categoryArray[i] === "all") {
+							filterAll = true;
+							break;
+						}
+					}
+
+					if (filterAll) {
+						categoryArray =_this.allTypesFilter( category );
+					}
+
 					_this.updateFiltersClicked( category, categoryArray );
 
 
 					_this.uuidsToMap = MultipleFiltersDataLogic.filterAction( _this.FiltersClicked );
 					_this.showCards();
-
+					_this.setPagination();
 				});
 			},
 			renderComponent: function(){
@@ -393,18 +489,21 @@
 					});
 
 					var templateItems = _this.WidgetSettings.templateItems;
+					var imageNoResults = _this.WidgetSettings.imageNoResults;
 
 					var Cards = new OhioToolkitWebComponent({
 						element: "#cards-generic-wrapper",
 						templateLocation: templateItems,
 						data: {
-							items: response
+							items: response,
+							noResultsImgPath: imageNoResults
 						}
 					});
 
 					Cards.render().then( function() {
 						console.log("Cards rendered");
 						_this.setElements();
+						_this.setPagination();
 					} );
 
 				});

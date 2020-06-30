@@ -15,8 +15,8 @@
 				id: "#js-select-county", //Select2 Selector
 				propertyName: 'county', //Property to filter
 				allLabel: "All Counties",
-				label: "By County",
-				options: ["Allen", "Brown"] //Optional, if empty, select2 options will be based on items.
+				label: "By County"
+				//options: ["Allen", "Brown"] Optional, if empty, select2 options will be based on items.
 			},
 			{
 				id: "#js-select-topics", //Select2 Selector
@@ -48,6 +48,8 @@
 		root: "#id-filter",
 		menuCmponent: '[Component bla bla]',
 		template: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/odh/generic-template-for-filters"]',
+		elementsPerPage: 3,
+		imageNoResults: '[Component name="ohio design/agencies/odh/no-results.png" rendition="auto" format="url"]',
 		templateItems: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/odh/generic-template-for-items"]'
 	};
 
