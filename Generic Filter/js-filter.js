@@ -574,7 +574,8 @@
 						return el.uuid;
 					} );
 
-					if ( _this.uuidsToMap.length === _this.totalResources.length ) {
+					//To render all cards and not just the few results from last sorting
+					if ( _this.uuidsToMap.length === _this.totalResources ) {
 						_this.renderCards( FilteredItems );
 					}
 
