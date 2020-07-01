@@ -659,9 +659,11 @@
 							} );
 						}
 
+						_this.renderCards( response );
+
 					});
 
-					_this.renderCards( response );
+					//_this.renderCards( response );
 
 				});
 			},
