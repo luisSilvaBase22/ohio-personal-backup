@@ -125,11 +125,53 @@
 
 				console.log( "Results from filter: ", this.FilteredItems );
 
-				var uuids = this.FilteredItems.map( function( el ){
-					return el.uuid;
+
+				return this.FilteredItems;
+			},
+			sortAction: function( Sorting, noFilltersApplied ){
+
+				var _this = this;
+
+				//no filter, just do sorting
+				if ( noFilltersApplied && noFilltersApplied === true ) {
+					var SortedItems = [];
+
+					this.FilteredItems = this.AllItems.slice();
+
+					var UnsortedItems = this.FilteredItems.slice();
+
+					Sorting.forEach( function( SortObj ) {
+						SortedItems = SortObj.sortInst( UnsortedItems );
+						UnsortedItems = SortedItems;
+					} );
+
+					if ( SortedItems !== undefined )
+						this.FilteredItems =  SortedItems.slice();
+
+					if ( Sorting.length === 0 ) {
+						this.FilteredItems = this.AllItems;
+					}
+
+					console.log( "Results sorted: ", this.FilteredItems );
+					return this.FilteredItems;
+				}
+
+				//If Filters, then do filters and sort
+
+				var UnsortedItems = this.FilteredItems.slice();
+
+				Sorting.forEach( function( SortObj ) {
+					SortedItems = SortObj.sortInst( UnsortedItems );
+					UnsortedItems = SortedItems;
 				} );
 
-				return uuids;
+				if ( SortedItems !== undefined )
+					this.FilteredItems =  SortedItems.slice();
+
+				console.log( "Results sorted: ", this.FilteredItems );
+
+				return this.FilteredItems;
+
 			},
 			resetFilters: function(){
 				this.FilteredItems = this.AllItems;
@@ -252,7 +294,9 @@
 			WidgetSettings: undefined,
 			FiltersForTemplate: undefined,
 			FiltersClicked: [],
+			SortingClicked: [],
 			uuidsToMap: [],
+			totalResources: undefined,
 			setElements: function(){
 				var els = this.elements;
 				var idRoot = this.WidgetSettings.root;
@@ -355,6 +399,72 @@
 					}
 				}
 			},
+			updateSortingOptionsSelected: function( id, SortItem ){//Inserta o remueve la function de sorting clickead por el usuario
+
+				var sortingFunction;
+
+				if ( SortItem.hasOwnProperty('sortFn') && SortItem.sortFn !== undefined ) {
+					sortingFunction = SortItem.sortFn;
+				} else if ( SortItem.hasOwnProperty('order') ) {
+					//Add sorting methods
+					if ( SortItem.order === "ASC" ) {
+
+						sortingFunction = function( ItemsToSort ) {
+							ItemsToSort.sort( function( a, b ) {
+								var titleA = a.title;
+								var titleB = b.title;
+								return titleA.localeCompare(titleB);
+							} );
+
+							return ItemsToSort;
+						};
+					}
+
+					if ( SortItem.order === "DESC" ) {
+
+						sortingFunction = function( ItemsToSort ) {
+							ItemsToSort.sort( function( a, b ) {
+								var titleA = a.title;
+								var titleB = b.title;
+								return titleB.localeCompare(titleA);
+							} );
+
+							return ItemsToSort;
+						};
+					}
+				}
+
+				//Search to include or remove SortingClicked
+
+				if ( this.SortingClicked.length === 0 ) {
+					var SortMethod = {
+						name: id,
+						sortInst: sortingFunction
+					};
+					this.SortingClicked.push(SortMethod);
+				} else {
+					for( var i = 0; i < this.SortingClicked.length; i++ ) {
+						//If I've found the item then I remove it
+						if ( this.SortingClicked[i].name === id ) {
+							this.SortingClicked.splice( i, 1 );
+							break;
+						}
+
+						//If last element and item was not found, then I add it
+						if (  this.SortingClicked[i].name !== id && this.SortingClicked.length - 1 === i ) {
+
+							var SortMethod = {
+								name: id,
+								sortInst: sortingFunction
+							};
+
+							this.SortingClicked.push( SortMethod );
+						}
+					}
+				}
+
+				// this.SortingClicked updated no return
+			},
 			allTypesFilter: function( category ){
 
 				var allOptions;
@@ -454,10 +564,54 @@
 					_this.updateFiltersClicked( category, categoryArray );
 
 
-					_this.uuidsToMap = MultipleFiltersDataLogic.filterAction( _this.FiltersClicked );
+					//Return Items completed
+					var FilteredItems = MultipleFiltersDataLogic.filterAction( _this.FiltersClicked );
+					if ( _this.SortingClicked.length > 0 ) {
+						FilteredItems = MultipleFiltersDataLogic.sortAction( _this.SortingClicked );
+					}
+
+					_this.uuidsToMap = FilteredItems.map( function( el ) {
+						return el.uuid;
+					} );
+
+					if ( _this.uuidsToMap.length === _this.totalResources.length ) {
+						_this.renderCards( FilteredItems );
+					}
+
 					_this.showCards();
 					_this.setPagination();
 				});
+			},
+			setEventForSorting: function( idSortEl, propertyName, SortObj ){
+
+				var _this = this;
+
+				var id = idSortEl.substr(0,1) === '#' ? idSortEl : "#" + idSortEl;
+
+				var FilteredItems = [];
+				var SortObj = SortObj;
+
+				$( id ).on( "click", function(){
+					_this.updateSortingOptionsSelected( id, SortObj );//Update sort function for filtering global variable
+					var hasAnyFilterBeingApplied = _this.FiltersClicked.length;
+					if ( hasAnyFilterBeingApplied === 0 ) {
+						var noFiltersApplied = true;
+						FilteredItems = MultipleFiltersDataLogic.sortAction( _this.SortingClicked, noFiltersApplied );
+					} else {
+						FilteredItems = MultipleFiltersDataLogic.filterAction( _this.FiltersClicked );
+						FilteredItems = MultipleFiltersDataLogic.sortAction( _this.SortingClicked );
+					}
+
+					_this.uuidsToMap = FilteredItems.map( function( el ) {
+						return el.uuid;
+					} );
+					//_this.showCards();
+					//_this.setPagination();
+
+					_this.renderCards( FilteredItems );
+
+				} );
+
 			},
 			renderComponent: function(){
 				var _this = this;
@@ -465,7 +619,18 @@
 				MultipleFiltersDataLogic.getContentPiecesData().then( function( response ){
 					console.log("The data: ", response );
 					var Filters = _this.FilterInitialSettings.filters;
+					_this.totalResources = response.length;
 					_this.FiltersForTemplate = _this.prepareFiltersForTemplate( Filters );
+
+					var sorting = _this.FilterInitialSettings.sorting;
+
+					if ( sorting ) {
+						for( var i=0; i<sorting.length; i++ ) {
+							if ( sorting[i].id.substr(0,1) === '#' ) {
+								sorting[i].id = sorting[i].id.substr(1);
+							}
+						}
+					}
 
 					var wrapper = _this.WidgetSettings.root;
 					var template = _this.WidgetSettings.template;
@@ -474,8 +639,8 @@
 						element: wrapper, //'#id-container',
 						templateLocation: template,
 						data: {
-							items: response,
-							Filters: _this.FiltersForTemplate
+							Filters: _this.FiltersForTemplate,
+							sorting: sorting
 						}
 					});
 
@@ -486,27 +651,38 @@
 							_this.setEventForDropdown( Filter.id, Filter.propertyName );
 						} );
 
-					});
-
-					var templateItems = _this.WidgetSettings.templateItems;
-					var imageNoResults = _this.WidgetSettings.imageNoResults;
-
-					var Cards = new OhioToolkitWebComponent({
-						element: "#cards-generic-wrapper",
-						templateLocation: templateItems,
-						data: {
-							items: response,
-							noResultsImgPath: imageNoResults
+						//validate if defined
+						if ( _this.FilterInitialSettings.hasOwnProperty('sorting')  ) {
+							_this.FilterInitialSettings.sorting.forEach( function( Sort ) {
+								_this.setEventForSorting( Sort.id, Sort.propertyName, Sort );
+							} );
 						}
+
 					});
 
-					Cards.render().then( function() {
-						console.log("Cards rendered");
-						_this.setElements();
-						_this.setPagination();
-					} );
+					_this.renderCards( response );
 
 				});
+			},
+			renderCards: function( response ){
+				var _this = this;
+				var templateItems = _this.WidgetSettings.templateItems;
+				var imageNoResults = _this.WidgetSettings.imageNoResults;
+
+				var Cards = new OhioToolkitWebComponent({
+					element: "#cards-generic-wrapper",
+					templateLocation: templateItems,
+					data: {
+						items: response,
+						noResultsImgPath: imageNoResults
+					}
+				});
+
+				Cards.render().then( function() {
+					console.log("Cards rendered");
+					_this.setElements();
+					_this.setPagination();
+				} );
 			},
 			start: function( Filters, WidgetSettings ) {
 				this.FilterInitialSettings = Filters;
