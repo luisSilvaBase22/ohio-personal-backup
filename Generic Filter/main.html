@@ -46,7 +46,7 @@
 
 	var WIDGET_SETTINGS = {
 		root: "#id-filter",
-		menuCmponent: '[Component bla bla]',
+		menuComponentId: '[Component name="ohio design/agencies/odh/filter/generic-filter/json-data-getter" resultsPerPage="" startPage="" format="id"]',
 		template: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/odh/generic-template-for-filters"]',
 		elementsPerPage: 3,
 		imageNoResults: '[Component name="ohio design/agencies/odh/no-results.png" rendition="auto" format="url"]',
@@ -54,7 +54,7 @@
 	};
 
 	document.addEventListener( 'DOMContentLoaded', function() {
-		var multiplesFiltersInstance = window.FiltersWidget();
+		var multiplesFiltersInstance = window.FiltersWidget( WIDGET_SETTINGS.menuComponentId );
 		multiplesFiltersInstance.start( FILTERS, WIDGET_SETTINGS );
 	} );
 

@@ -16,9 +16,11 @@
 	};
 
 	//Logic part from component, gets the data to fill the cards
-	window.MultipleFilters = function( Options ){
+	window.MultipleFilters = function( cmpntid ){
 
-		var LocalOptions = Options || DefaultOptions;
+		//var LocalOptions = Options || DefaultOptions;
+		var LocalOptions = DefaultOptions;
+		LocalOptions.AjaxParameters.cmpntid = cmpntid;
 
 
 		var Utils = {
@@ -271,7 +273,7 @@
 		};
 	};
 	
-	window.FiltersWidget = function(){
+	window.FiltersWidget = function( componentID ){
 
 		var Utils  = {
 			inject: function( path, fallback ) {
@@ -285,7 +287,7 @@
 		};
 
 		var OhioToolkitWebComponent = Utils.inject('OhioToolkit.components.WebComponent', console.log );
-		var MultipleFiltersDataLogic = Utils.inject('MultipleFilters()', console.log);
+		var MultipleFiltersDataLogic = Utils.inject('MultipleFilters(componentID)', console.log);
 		
 		var Instance = {
 			elements: {},
