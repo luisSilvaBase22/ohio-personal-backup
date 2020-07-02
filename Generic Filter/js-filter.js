@@ -130,12 +130,12 @@
 
 				return this.FilteredItems;
 			},
-			sortAction: function( Sorting, noFilltersApplied ){
+			sortAction: function( Sorting, noFiltersApplied ){
 
 				var _this = this;
 
 				//no filter, just do sorting
-				if ( noFilltersApplied && noFilltersApplied === true ) {
+				if ( noFiltersApplied && noFiltersApplied === true ) {
 					var SortedItems = [];
 
 					this.FilteredItems = this.AllItems.slice();
@@ -174,6 +174,34 @@
 
 				return this.FilteredItems;
 
+			},
+			filterByTitle: function( keyword, noFiltersApplied ){
+				var currentTopics = [];
+				var FoundItems = [];
+
+				if ( noFiltersApplied && noFiltersApplied === true ) {
+
+					this.FilteredItems = this.AllItems.slice();
+					FoundItems = this.FilteredItems = this.searchOperation( this.FilteredItems, keyword );
+				} else {
+					FoundItems = this.FilteredItems = this.searchOperation( this.FilteredItems, keyword );
+				}
+
+				console.log( "Results sorted: ", FoundItems );
+
+				return FoundItems;
+			},
+			searchOperation: function( Items, keyword ){
+
+				var FoundItems = Items.map(function( Item ){
+					var title = Item.title.toLowerCase();
+					if (title.indexOf(keyword)>=0)
+						return Item;
+				}).filter(function( Item ){
+					return Item !== undefined;
+				});
+
+				return FoundItems;
 			},
 			resetFilters: function(){
 				this.FilteredItems = this.AllItems;
@@ -238,7 +266,7 @@
 
 				return DropDownOptions;
 			},
-			getContentPiecesData: function(){
+			getContentPiecesData: function( itemsMapping ){
 				var _this = this;
 				var serviceURL = Utils.configureAjaxParameters();
 				return OHIO.ODX.actions.getAjaxDataFromURL(serviceURL).then(function( response ){
@@ -247,6 +275,11 @@
 						Item.uuid = Utils.generatePieceId();
 						return Item;
 					} );
+
+					if ( itemsMapping ) {
+						contentPieces = itemsMapping( contentPieces );
+					}
+
 					return _this.AllItems = _this.FilteredItems = contentPieces;
 				},function( error ){
 					console.error(error);
@@ -304,6 +337,9 @@
 				var idRoot = this.WidgetSettings.root;
 
 				els.$root = $( idRoot ) || $emptyDiv;//'#opd-filter'
+
+				els.input = els.$root.find('.iop-filter__input-filter');
+				els.searchButton = els.$root.find('.iop-filter__input-filter-btn');
 
 				var $cards = els.$root.find('.odx-topic__cards');
 				els.$cards = {
@@ -503,7 +539,7 @@
 
 				this.hideAllCards();
 
-				if ( this.uuidsToMap )
+				//if ( this.uuidsToMap )
 
 				this.uuidsToMap.forEach( function( uuid ) {
 					var numberOfCards = $cards.length;
@@ -553,6 +589,7 @@
 
 					var filterAll = false;
 
+					//Fix when removing more than 2 box and input left empty
 					if ( categoryArray === null ) {
 						categoryArray.push('all');
 					}
@@ -621,10 +658,47 @@
 				} );
 
 			},
+			setEventForInput: function(){
+				var _this = this;
+
+				var els = this.elements;
+				var searchButton = els.searchButton;
+				var input = els.input;
+
+				searchButton.on('click', function(){
+					var keyword = input.val();
+					keyword.trim().toLowerCase();
+
+					var hasAnyFilterBeingApplied = _this.FiltersClicked.length;
+
+					var FilteredItems = [];
+
+					if ( hasAnyFilterBeingApplied === 0 ) {
+						var noFiltersApplied = true;
+						FilteredItems = MultipleFiltersDataLogic.filterByTitle( keyword, noFiltersApplied );
+					} else {
+						FilteredItems = MultipleFiltersDataLogic.filterByTitle( keyword );
+					}
+
+					_this.uuidsToMap = FilteredItems.map( function( el ) {
+						return el.uuid;
+					} );
+
+					_this.showCards();
+					_this.setPagination();
+
+				});
+			},
 			renderComponent: function(){
 				var _this = this;
 
-				MultipleFiltersDataLogic.getContentPiecesData().then( function( response ){
+				var itemsMapping;
+
+				if ( this.FilterInitialSettings.hasOwnProperty('itemsMapping') && typeof this.FilterInitialSettings.itemsMapping === "function" ) {
+					itemsMapping = this.FilterInitialSettings.itemsMapping;
+				}
+
+				MultipleFiltersDataLogic.getContentPiecesData( itemsMapping ).then( function( response ){
 					console.log("The data: ", response );
 					var Filters = _this.FilterInitialSettings.filters;
 					_this.totalResources = response.length;
@@ -665,7 +739,6 @@
 								_this.setEventForSorting( Sort.id, Sort.propertyName, Sort );
 							} );
 						}
-
 						_this.renderCards( response );
 
 					});
@@ -692,6 +765,7 @@
 				Cards.render().then( function() {
 					console.log("Cards rendered");
 					_this.setElements();
+					_this.setEventForInput();
 					_this.setPagination();
 				} );
 			},

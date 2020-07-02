@@ -33,7 +33,12 @@
 				order: "DESC" //ASC,DESC Applies only if sortFn is not defined
 			}
 		],
-		itemsMapping: 'mappingFunction', // A function excecuted after the data AJAX retrieval
+		itemsMapping: function ( Events ){
+			return Events.map(function( Item ) {
+				Item.title = Item.eventName;
+				return Item;
+			});
+		},//'mappingFunction', // A function excecuted after the data AJAX retrieval
 		customFilter: [
 			{
 				id: "#sort-by-number", //Click listener will be added to this selector
