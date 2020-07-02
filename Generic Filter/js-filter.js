@@ -673,9 +673,10 @@
 				var _this = this;
 				var templateItems = _this.WidgetSettings.templateItems;
 				var imageNoResults = _this.WidgetSettings.imageNoResults;
+				var idTemplateItems = _this.WidgetSettings.idTemplateItems;
 
 				var Cards = new OhioToolkitWebComponent({
-					element: "#cards-generic-wrapper",
+					element: idTemplateItems,
 					templateLocation: templateItems,
 					data: {
 						items: response,
