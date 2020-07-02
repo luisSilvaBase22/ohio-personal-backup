@@ -175,26 +175,30 @@
 				return this.FilteredItems;
 
 			},
-			filterByTitle: function( keyword, noFiltersApplied ){
-				var currentTopics = [];
+			filterByKeyword: function( keyword, Filters, noFiltersApplied ){
 				var FoundItems = [];
 
-				if ( noFiltersApplied && noFiltersApplied === true ) {
+				var categories = Filters.map( function( Filter ) {
+					return Filter.propertyName;
+				} );
 
+				if ( noFiltersApplied && noFiltersApplied === true ) {
 					this.FilteredItems = this.AllItems.slice();
-					FoundItems = this.FilteredItems = this.searchOperation( this.FilteredItems, keyword );
+					FoundItems = this.FilteredItems = this.searchTerms( this.FilteredItems,  keyword, categories );
 				} else {
-					FoundItems = this.FilteredItems = this.searchOperation( this.FilteredItems, keyword );
+					FoundItems = this.FilteredItems = this.searchTerms( this.FilteredItems, keyword, categories );
 				}
 
 				console.log( "Results sorted: ", FoundItems );
 
 				return FoundItems;
 			},
-			searchOperation: function( Items, keyword ){
+			searchTerms: function( Items, keyword, categories ){
+				var _this = this;
 
 				var FoundItems = Items.map(function( Item ){
 					var title = Item.title.toLowerCase();
+					title = title + _this.getCategoriesFromItem( Item, categories  );
 					if (title.indexOf(keyword)>=0)
 						return Item;
 				}).filter(function( Item ){
@@ -202,6 +206,15 @@
 				});
 
 				return FoundItems;
+			},
+			getCategoriesFromItem: function( Item, categories ){
+				var allCategoriesFromItem = "";
+
+				categories.forEach( function( category ) {
+					allCategoriesFromItem = allCategoriesFromItem + Item[category];
+				} );
+
+				return allCategoriesFromItem.toLowerCase();
 			},
 			resetFilters: function(){
 				this.FilteredItems = this.AllItems;
@@ -271,16 +284,16 @@
 				var serviceURL = Utils.configureAjaxParameters();
 				return OHIO.ODX.actions.getAjaxDataFromURL(serviceURL).then(function( response ){
 					var resources = JSON.parse(response);
-					var contentPieces = resources.filter( function( Item, index ){
+					var ContentPieces = resources.filter( function( Item, index ){
 						Item.uuid = Utils.generatePieceId();
 						return Item;
 					} );
 
 					if ( itemsMapping ) {
-						contentPieces = itemsMapping( contentPieces );
+						ContentPieces = itemsMapping( ContentPieces );
 					}
 
-					return _this.AllItems = _this.FilteredItems = contentPieces;
+					return _this.AllItems = _this.FilteredItems = ContentPieces;
 				},function( error ){
 					console.error(error);
 				});
@@ -675,9 +688,9 @@
 
 					if ( hasAnyFilterBeingApplied === 0 ) {
 						var noFiltersApplied = true;
-						FilteredItems = MultipleFiltersDataLogic.filterByTitle( keyword, noFiltersApplied );
+						FilteredItems = MultipleFiltersDataLogic.filterByKeyword( keyword, _this.FiltersForTemplate, noFiltersApplied );
 					} else {
-						FilteredItems = MultipleFiltersDataLogic.filterByTitle( keyword );
+						FilteredItems = MultipleFiltersDataLogic.filterByKeyword( keyword, _this.FiltersForTemplate );
 					}
 
 					_this.uuidsToMap = FilteredItems.map( function( el ) {
