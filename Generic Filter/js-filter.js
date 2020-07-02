@@ -552,6 +552,11 @@
 					}
 
 					var filterAll = false;
+
+					if ( categoryArray === null ) {
+						categoryArray.push('all');
+					}
+
 					for (var i=0; i<categoryArray.length; i++){
 						if (categoryArray[i] === "all") {
 							filterAll = true;
