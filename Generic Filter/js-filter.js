@@ -453,7 +453,7 @@
 					}
 				}
 			},
-			updateSortingOptionsSelected: function( id, SortItem ){//Inserta o remueve la function de sorting clickead por el usuario
+			updateSortingOptionsSelected: function( id, SortItem ){//Inserta o remueve la function de sorting clickeada por el usuario
 
 				var sortingFunction;
 
@@ -461,7 +461,7 @@
 					sortingFunction = SortItem.sortFn;
 				} else if ( SortItem.hasOwnProperty('order') ) {
 					//Add sorting methods
-					if ( SortItem.order === "ASC" ) {
+					if ( SortItem.order.toUpperCase() === "ASC" ) {
 
 						sortingFunction = function( ItemsToSort ) {
 							ItemsToSort.sort( function( a, b ) {
@@ -474,7 +474,7 @@
 						};
 					}
 
-					if ( SortItem.order === "DESC" ) {
+					if ( SortItem.order.toUpperCase() === "DESC" ) {
 
 						sortingFunction = function( ItemsToSort ) {
 							ItemsToSort.sort( function( a, b ) {
@@ -723,6 +723,74 @@
 
 				});
 			},
+			setResetActions: function(){
+
+				var _this = this;
+
+				var els = this.elements;
+				var resetButton = els.resetButton;
+
+				resetButton.on('click', function(){
+					console.log("RESET button");
+					_this.resetAll();
+				});
+
+				/* Functionality at line 415, HTML design error
+				allTypesButton.on('click', function(){
+					console.log("ALl button");
+					_this.resetAll();
+				});*/
+
+			},
+			resetAll: function(){
+				var _this = this;
+				var els = this.elements;
+				var allResultsNumber;
+				var inputBox = els.input;
+
+				inputBox.val('');
+
+				var Categories = this.FiltersForTemplate.map( function( Filter ) {
+					var Category = {
+						category: Filter.propertyName,
+						categoryArray: Filter.options
+					};
+					return Category;
+				} );
+
+				Categories.forEach( function( Category ) {
+					_this.updateFiltersClicked( Category.category, Category.categoryArray );
+				} );
+
+				if ( this.FilterInitialSettings.hasOwnProperty('sorting')  ) {
+					this.FilterInitialSettings.sorting.forEach( function( Sort ) {
+						_this.updateSortingOptionsSelected( Sort.id, Sort );
+					} );
+				}
+
+				MultipleFiltersDataLogic.resetFilters();
+
+				//Return Items completed
+				var FilteredItems = MultipleFiltersDataLogic.filterAction( this.FiltersClicked );
+				if ( this.SortingClicked.length > 0 ) {
+					FilteredItems = MultipleFiltersDataLogic.sortAction( this.SortingClicked );
+				}
+
+				this.uuidsToMap = FilteredItems.map( function( el ) {
+					return el.uuid;
+				} );
+
+				//To render all cards and not just the few results from last sorting
+				if ( this.uuidsToMap.length === this.totalResources ) {
+					this.renderCards( FilteredItems );
+				}
+
+				allResultsNumber = this.totalResources;
+
+				this.renderShowResults( allResultsNumber );
+				this.setPagination();
+
+			},
 			renderComponent: function(){
 				var _this = this;
 
@@ -800,6 +868,7 @@
 					console.log("Cards rendered");
 					_this.setElements();
 					_this.setEventForInput();
+					_this.setResetActions();
 					_this.setPagination();
 				} );
 			},
