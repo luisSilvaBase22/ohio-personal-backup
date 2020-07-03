@@ -218,6 +218,7 @@
 			},
 			resetFilters: function(){
 				this.FilteredItems = this.AllItems;
+				return this.FilteredItems;
 			},
 			getOptionsFromContent: function( propertyName ){
 
@@ -616,7 +617,9 @@
 
 					//Fix when removing more than 2 box and input left empty
 					if ( categoryArray === null ) {
+						categoryArray = [];
 						categoryArray.push('all');
+						$( id ).val(categoryArray).trigger('change.select2');
 					}
 
 					for (var i=0; i<categoryArray.length; i++){
@@ -759,7 +762,7 @@
 				} );
 
 				Categories.forEach( function( Category ) {
-					_this.updateFiltersClicked( Category.category, Category.categoryArray );
+					$( Category.Category ).val( ["all"] ).trigger( 'change.select2' );
 				} );
 
 				if ( this.FilterInitialSettings.hasOwnProperty('sorting')  ) {
@@ -768,13 +771,17 @@
 					} );
 				}
 
-				MultipleFiltersDataLogic.resetFilters();
-
 				//Return Items completed
-				var FilteredItems = MultipleFiltersDataLogic.filterAction( this.FiltersClicked );
+				//var FilteredItems = MultipleFiltersDataLogic.filterAction( this.FiltersClicked );
+				var FilteredItems = MultipleFiltersDataLogic.resetFilters();
+				this.FiltersClicked.splice(0);
+				this.SortingClicked.splice(0);
+
+				/*
 				if ( this.SortingClicked.length > 0 ) {
 					FilteredItems = MultipleFiltersDataLogic.sortAction( this.SortingClicked );
 				}
+				 */
 
 				this.uuidsToMap = FilteredItems.map( function( el ) {
 					return el.uuid;
