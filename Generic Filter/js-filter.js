@@ -220,7 +220,7 @@
 				this.FilteredItems = this.AllItems;
 				return this.FilteredItems;
 			},
-			getOptionsFromContent: function( propertyName ){
+			getOptionsFromContentToFillDropdown: function( propertyName ){
 
 				var dropdownOptions = this.AllItems.map( function( Item ){
 					if( Item.hasOwnProperty(propertyName) ) {
@@ -237,7 +237,7 @@
 				var dropdownCleaned = Utils.removeDuplicated( categories );
 				return dropdownCleaned.sort();
 			},
-			prepareFiltersForTemplate: function( Filters ){
+			preProcessFilters: function( Filters ){
 				var _this = this;
 
 				var numberOfFilters = Filters.length;
@@ -254,33 +254,23 @@
 						numberOfColumns = 12;
 				}
 
-				var DropDownOptions = Filters.map(function( Item ){
+				var FiltersWithColumnsAndOptions = Filters.map(function( Item ){
 					if ( Item.hasOwnProperty("options") ) {
-						var ItemCleaned = {
-							id: Item.id.substr(0,1 ) === "#" ? Item.id.substr(1) : Item.id,
-							allLabel: Item.allLabel,
-							label: Item.label,
-							propertyName: Item.propertyName,
-							options: Item.options.sort(),
-							numColumns: numberOfColumns
-						};
-						return ItemCleaned;
+						Item.id = Item.id.substr(0,1 ) === "#" ? Item.id.substr(1) : Item.id;
+						Item.options = Item.options.sort();
+						Item.numColumns = numberOfColumns;
+						return Item;
 					} else {
-						var ItemCleaned = {
-							id: Item.id.substr(0,1 ) === "#" ? Item.id.substr(1) : Item.id,
-							allLabel: Item.allLabel,
-							label: Item.label,
-							propertyName: Item.propertyName,
-							options: _this.getOptionsFromContent( Item.propertyName ),
-							numColumns: numberOfColumns
-						};
-						return ItemCleaned;
+						Item.id = Item.id.substr(0,1 ) === "#" ? Item.id.substr(1) : Item.id;
+						Item.options = _this.getOptionsFromContentToFillDropdown( Item.propertyName );
+						Item.numColumns = numberOfColumns;
+						return Item;
 					}
 				});
 
-				return DropDownOptions;
+				return FiltersWithColumnsAndOptions;
 			},
-			getContentPiecesData: function( itemsMapping ){
+			getContentPiecesData: function( mappingFunction ){
 				var _this = this;
 				var serviceURL = Utils.configureAjaxParameters();
 				return OHIO.ODX.actions.getAjaxDataFromURL(serviceURL).then(function( response ){
@@ -290,8 +280,8 @@
 						return Item;
 					} );
 
-					if ( itemsMapping ) {
-						ContentPieces = itemsMapping( ContentPieces );
+					if ( mappingFunction ) {
+						ContentPieces = mappingFunction( ContentPieces );
 					}
 
 					return _this.AllItems = _this.FilteredItems = ContentPieces;
@@ -319,7 +309,7 @@
 			}
 		};
 	};
-	
+
 	window.FiltersWidget = function( componentID ){
 
 		var Utils  = {
@@ -335,13 +325,13 @@
 
 		var OhioToolkitWebComponent = Utils.inject('OhioToolkit.components.WebComponent', console.log );
 		var MultipleFiltersDataLogic = Utils.inject('MultipleFilters(componentID)', console.log);
-		
+
 		var Instance = {
 			elements: {},
 			FilterInitialSettings: undefined,
 			DropDownOptions: undefined,
 			WidgetSettings: undefined,
-			FiltersForTemplate: undefined,
+			Filters: undefined,
 			FiltersClicked: [],
 			SortingClicked: [],
 			uuidsToMap: [],
@@ -454,7 +444,7 @@
 					}
 				}
 			},
-			updateSortingOptionsSelected: function( id, SortItem ){//Inserta o remueve la function de sorting clickeada por el usuario
+			updateSortingOptionsSelected: function( SelectorId, SortItem ){//Insert or remove to the array, the Sorting function clicked by the user
 
 				var sortingFunction;
 
@@ -462,54 +452,30 @@
 					sortingFunction = SortItem.sortFn;
 				} else if ( SortItem.hasOwnProperty('order') ) {
 					//Add sorting methods
-					if ( SortItem.order.toUpperCase() === "ASC" ) {
-
-						sortingFunction = function( ItemsToSort ) {
-							ItemsToSort.sort( function( a, b ) {
-								var titleA = a.title;
-								var titleB = b.title;
-								return titleA.localeCompare(titleB);
-							} );
-
-							return ItemsToSort;
-						};
-					}
-
-					if ( SortItem.order.toUpperCase() === "DESC" ) {
-
-						sortingFunction = function( ItemsToSort ) {
-							ItemsToSort.sort( function( a, b ) {
-								var titleA = a.title;
-								var titleB = b.title;
-								return titleB.localeCompare(titleA);
-							} );
-
-							return ItemsToSort;
-						};
-					}
+					sortingFunction = this.addDefaultSortingFunction( SortItem );
 				}
 
 				//Search to include or remove SortingClicked
 
 				if ( this.SortingClicked.length === 0 ) {
 					var SortMethod = {
-						name: id,
+						name: SelectorId,
 						sortInst: sortingFunction
 					};
 					this.SortingClicked.push(SortMethod);
 				} else {
 					for( var i = 0; i < this.SortingClicked.length; i++ ) {
 						//If I've found the item then I remove it
-						if ( this.SortingClicked[i].name === id ) {
+						if ( this.SortingClicked[i].name === SelectorId ) {
 							this.SortingClicked.splice( i, 1 );
 							break;
 						}
 
 						//If last element and item was not found, then I add it
-						if (  this.SortingClicked[i].name !== id && this.SortingClicked.length - 1 === i ) {
+						if (  this.SortingClicked[i].name !== SelectorId && this.SortingClicked.length - 1 === i ) {
 
 							var SortMethod = {
-								name: id,
+								name: SelectorId,
 								sortInst: sortingFunction
 							};
 
@@ -518,15 +484,48 @@
 					}
 				}
 
-				// this.SortingClicked updated no return
+				// this.SortingClicked updated
 			},
+			addDefaultSortingFunction: function( SortItem ){
+
+				var ascendingOrDescendigSortFunction;
+
+				if ( SortItem.order.toUpperCase() === "ASC" ) {
+
+					ascendingOrDescendigSortFunction = function( ItemsToSort ) {
+						ItemsToSort.sort( function( a, b ) {
+							var titleA = a.title;
+							var titleB = b.title;
+							return titleA.localeCompare(titleB);
+						} );
+
+						return ItemsToSort;
+					};
+				}
+
+				if ( SortItem.order.toUpperCase() === "DESC" ) {
+
+					ascendingOrDescendigSortFunction = function( ItemsToSort ) {
+						ItemsToSort.sort( function( a, b ) {
+							var titleA = a.title;
+							var titleB = b.title;
+							return titleB.localeCompare(titleA);
+						} );
+
+						return ItemsToSort;
+					};
+				}
+
+				return ascendingOrDescendigSortFunction;
+			},
+
 			allTypesFilter: function( category ){
 
 				var allOptions;
 
-				for ( var i = 0; i < this.FiltersForTemplate.length; i++ ) {
-					if ( this.FiltersForTemplate[i].propertyName === category ) {
-						allOptions = this.FiltersForTemplate[i].options;
+				for ( var i = 0; i < this.Filters.length; i++ ) {
+					if ( this.Filters[i].propertyName === category ) {
+						allOptions = this.Filters[i].options;
 					}
 				}
 
@@ -535,8 +534,10 @@
 
 				return allOptions;
 			},
-			prepareFiltersForTemplate: function( Filters ){
-				return  MultipleFiltersDataLogic.prepareFiltersForTemplate( Filters );
+			addPropertiesToFiltersForTemplate: function( Filters ){
+				//Infer number of columns for Bootstrap and get options from content if not specified in the FILTER
+				var ProcessedFilters = MultipleFiltersDataLogic.preProcessFilters( Filters );
+				return ProcessedFilters;
 			},
 			hideAllCards: function(){
 				var els = this.elements;
@@ -658,19 +659,16 @@
 					_this.setPagination();
 				});
 			},
-			setEventForSorting: function( idSortEl, propertyName, SortObj ){
+			setEventForSorting: function( sortingSelector, propertyName, SortObject ){
 
 				var _this = this;
-
-				var id = idSortEl.substr(0,1) === '#' ? idSortEl : "#" + idSortEl;
-
 				var FilteredItems = [];
-				var SortObj = SortObj;
+				var SortObj = SortObject;
 
-				$( id ).on( "click", function(){
-					_this.updateSortingOptionsSelected( id, SortObj );//Update sort function for filtering global variable
-					var hasAnyFilterBeingApplied = _this.FiltersClicked.length;
-					if ( hasAnyFilterBeingApplied === 0 ) {
+				$( sortingSelector ).on( "click", function(){
+					_this.updateSortingOptionsSelected( sortingSelector, SortObj );//Update sort function for filtering global variable
+					var hasAnyFilterApplied = _this.FiltersClicked.length;
+					if ( hasAnyFilterApplied === 0 ) {
 						var noFiltersApplied = true;
 						FilteredItems = MultipleFiltersDataLogic.sortAction( _this.SortingClicked, noFiltersApplied );
 					} else {
@@ -681,9 +679,7 @@
 					_this.uuidsToMap = FilteredItems.map( function( el ) {
 						return el.uuid;
 					} );
-					//_this.showCards();
-					//_this.setPagination();
-
+					
 					var numberOfResults = _this.uuidsToMap.length;
 
 					_this.renderShowResults( numberOfResults );
@@ -709,9 +705,9 @@
 
 					if ( hasAnyFilterBeingApplied === 0 ) {
 						var noFiltersApplied = true;
-						FilteredItems = MultipleFiltersDataLogic.filterByKeyword( keyword, _this.FiltersForTemplate, noFiltersApplied );
+						FilteredItems = MultipleFiltersDataLogic.filterByKeyword( keyword, _this.Filters, noFiltersApplied );
 					} else {
-						FilteredItems = MultipleFiltersDataLogic.filterByKeyword( keyword, _this.FiltersForTemplate );
+						FilteredItems = MultipleFiltersDataLogic.filterByKeyword( keyword, _this.Filters );
 					}
 
 					_this.uuidsToMap = FilteredItems.map( function( el ) {
@@ -737,13 +733,6 @@
 					console.log("RESET button");
 					_this.resetAll();
 				});
-
-				/* Functionality at line 415, HTML design error
-				allTypesButton.on('click', function(){
-					console.log("ALl button");
-					_this.resetAll();
-				});*/
-
 			},
 			resetAll: function(){
 				var _this = this;
@@ -753,7 +742,7 @@
 
 				inputBox.val('');
 
-				var categoriesId = this.FiltersForTemplate.map( function( Filter ) {
+				var categoriesId = this.Filters.map( function( Filter ) {
 					return Filter.id;
 				} );
 
@@ -798,51 +787,55 @@
 			renderComponent: function(){
 				var _this = this;
 
-				var itemsMapping;
+				var mappingFunction;
 
 				if ( this.FilterInitialSettings.hasOwnProperty('itemsMapping') && typeof this.FilterInitialSettings.itemsMapping === "function" ) {
-					itemsMapping = this.FilterInitialSettings.itemsMapping;
+					mappingFunction = this.FilterInitialSettings.itemsMapping;
 				}
 
-				MultipleFiltersDataLogic.getContentPiecesData( itemsMapping ).then( function( response ){
+				MultipleFiltersDataLogic.getContentPiecesData( mappingFunction ).then( function( response ){
 					console.log("The data: ", response );
+
 					var Filters = _this.FilterInitialSettings.filters;
+					var container = _this.WidgetSettings.root;
+					var template = _this.WidgetSettings.template;
+					var Sorting = _this.FilterInitialSettings.sorting;
+
+					_this.Filters = _this.addPropertiesToFiltersForTemplate( Filters );
 					_this.totalResources = response.length;
-					_this.FiltersForTemplate = _this.prepareFiltersForTemplate( Filters );
 
-					var sorting = _this.FilterInitialSettings.sorting;
-
-					if ( sorting ) {
-						for( var i=0; i<sorting.length; i++ ) {
-							if ( sorting[i].id.substr(0,1) === '#' ) {
-								sorting[i].id = sorting[i].id.substr(1);
+					if ( Sorting ) {
+						for( var i=0; i<Sorting.length; i++ ) {
+							if ( Sorting[i].id.substr(0,1) === '#' ) {
+								Sorting[i].id = Sorting[i].id.substr(1);
 							}
 						}
 					}
 
-					var wrapper = _this.WidgetSettings.root;
-					var template = _this.WidgetSettings.template;
-
 					var WebComponent = new OhioToolkitWebComponent({
-						element: wrapper, //'#id-container',
+						element: container, //'#id-container',
 						templateLocation: template,
 						data: {
-							Filters: _this.FiltersForTemplate,
-							sorting: sorting
+							Filters: _this.Filters,
+							sorting: Sorting
 						}
 					});
 
 					WebComponent.render().then(function() {
 						console.log('Filters Rendered!');
 
-						_this.FiltersForTemplate.forEach( function( Filter ) {
-							_this.setEventForDropdown( Filter.id, Filter.propertyName );
+						_this.Filters.forEach( function( Filter ) {
+							var categorySelector = Filter.id;
+							var categoryName = Filter.propertyName;
+							_this.setEventForDropdown( categorySelector, categoryName );
 						} );
 
 						//validate if defined
-						if ( _this.FilterInitialSettings.hasOwnProperty('sorting')  ) {
-							_this.FilterInitialSettings.sorting.forEach( function( Sort ) {
-								_this.setEventForSorting( Sort.id, Sort.propertyName, Sort );
+						if ( Sorting  ) {
+							Sorting.forEach( function( SortObject ) {
+								var sortSelector = SortObject.id.substr(0,1) === '#' ? SortObject.id : "#" + SortObject.id;
+								var sortName = SortObject.propertyName;
+								_this.setEventForSorting( sortSelector, sortName, SortObject );
 							} );
 						}
 						_this.renderCards( response );
@@ -882,7 +875,7 @@
 				this.renderComponent();
 			}
 		};
-		
+
 		return Instance;
 	};
 
