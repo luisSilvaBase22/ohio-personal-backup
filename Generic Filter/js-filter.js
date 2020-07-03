@@ -130,12 +130,12 @@
 
 				return this.FilteredItems;
 			},
-			sortAction: function( Sorting, noFilltersApplied ){
+			sortAction: function( Sorting, noFiltersApplied ){
 
 				var _this = this;
 
 				//no filter, just do sorting
-				if ( noFilltersApplied && noFilltersApplied === true ) {
+				if ( noFiltersApplied && noFiltersApplied === true ) {
 					var SortedItems = [];
 
 					this.FilteredItems = this.AllItems.slice();
@@ -175,8 +175,50 @@
 				return this.FilteredItems;
 
 			},
+			filterByKeyword: function( keyword, Filters, noFiltersApplied ){
+				var FoundItems = [];
+
+				var categories = Filters.map( function( Filter ) {
+					return Filter.propertyName;
+				} );
+
+				if ( noFiltersApplied && noFiltersApplied === true ) {
+					this.FilteredItems = this.AllItems.slice();
+					FoundItems = this.FilteredItems = this.searchTerms( this.FilteredItems,  keyword, categories );
+				} else {
+					FoundItems = this.FilteredItems = this.searchTerms( this.FilteredItems, keyword, categories );
+				}
+
+				console.log( "Results sorted: ", FoundItems );
+
+				return FoundItems;
+			},
+			searchTerms: function( Items, keyword, categories ){
+				var _this = this;
+
+				var FoundItems = Items.map(function( Item ){
+					var title = Item.title.toLowerCase();
+					title = title + _this.getCategoriesFromItem( Item, categories  );
+					if (title.indexOf(keyword)>=0)
+						return Item;
+				}).filter(function( Item ){
+					return Item !== undefined;
+				});
+
+				return FoundItems;
+			},
+			getCategoriesFromItem: function( Item, categories ){
+				var allCategoriesFromItem = "";
+
+				categories.forEach( function( category ) {
+					allCategoriesFromItem = allCategoriesFromItem + Item[category];
+				} );
+
+				return allCategoriesFromItem.toLowerCase();
+			},
 			resetFilters: function(){
 				this.FilteredItems = this.AllItems;
+				return this.FilteredItems;
 			},
 			getOptionsFromContent: function( propertyName ){
 
@@ -238,16 +280,21 @@
 
 				return DropDownOptions;
 			},
-			getContentPiecesData: function(){
+			getContentPiecesData: function( itemsMapping ){
 				var _this = this;
 				var serviceURL = Utils.configureAjaxParameters();
 				return OHIO.ODX.actions.getAjaxDataFromURL(serviceURL).then(function( response ){
 					var resources = JSON.parse(response);
-					var contentPieces = resources.filter( function( Item, index ){
+					var ContentPieces = resources.filter( function( Item, index ){
 						Item.uuid = Utils.generatePieceId();
 						return Item;
 					} );
-					return _this.AllItems = _this.FilteredItems = contentPieces;
+
+					if ( itemsMapping ) {
+						ContentPieces = itemsMapping( ContentPieces );
+					}
+
+					return _this.AllItems = _this.FilteredItems = ContentPieces;
 				},function( error ){
 					console.error(error);
 				});
@@ -305,11 +352,17 @@
 
 				els.$root = $( idRoot ) || $emptyDiv;//'#opd-filter'
 
+				els.input = els.$root.find('.iop-filter__input-filter');
+				els.searchButton = els.$root.find('.iop-filter__input-filter-btn');
+
 				var $cards = els.$root.find('.odx-topic__cards');
 				els.$cards = {
 					root: $cards,
 					items: $cards.find('.ohio-cards-container-grid')
 				};
+
+				els.resultsNumber = els.$root.find('.iop-filter__results-number');
+				els.resetButton = els.$root.find('.iop-filter__reset-btn');
 
 				els.pagination = els.$root.find('.odx-topic-hub-filter__pagination');
 				els.anchorPagination = els.$root.find('#js-events-search-pagination--gov a');
@@ -401,7 +454,7 @@
 					}
 				}
 			},
-			updateSortingOptionsSelected: function( id, SortItem ){//Inserta o remueve la function de sorting clickead por el usuario
+			updateSortingOptionsSelected: function( id, SortItem ){//Inserta o remueve la function de sorting clickeada por el usuario
 
 				var sortingFunction;
 
@@ -409,7 +462,7 @@
 					sortingFunction = SortItem.sortFn;
 				} else if ( SortItem.hasOwnProperty('order') ) {
 					//Add sorting methods
-					if ( SortItem.order === "ASC" ) {
+					if ( SortItem.order.toUpperCase() === "ASC" ) {
 
 						sortingFunction = function( ItemsToSort ) {
 							ItemsToSort.sort( function( a, b ) {
@@ -422,7 +475,7 @@
 						};
 					}
 
-					if ( SortItem.order === "DESC" ) {
+					if ( SortItem.order.toUpperCase() === "DESC" ) {
 
 						sortingFunction = function( ItemsToSort ) {
 							ItemsToSort.sort( function( a, b ) {
@@ -503,7 +556,7 @@
 
 				this.hideAllCards();
 
-				if ( this.uuidsToMap )
+				//if ( this.uuidsToMap )
 
 				this.uuidsToMap.forEach( function( uuid ) {
 					var numberOfCards = $cards.length;
@@ -516,6 +569,15 @@
 						}
 					}
 				} );
+			},
+			renderShowResults: function( numberResults ) {
+				var els = this.elements;
+				var resultsParagraph = els.resultsNumber;
+				//var filterShowing = OHIO.Utils.actions.getMultilingualLabelByWCMKey('odx-filter-showing');
+				//var results = OHIO.Utils.actions.getMultilingualLabelByWCMKey('odx-results');
+
+				//resultsParagraph.text('We found ' + numberResults + ' ' + results);
+				resultsParagraph.text('We found ' + numberResults + ' ' + 'results');
 			},
 			setEventForDropdown: function( idFilter, category ){
 				var _this = this;
@@ -552,6 +614,14 @@
 					}
 
 					var filterAll = false;
+
+					//Fix when removing more than 2 box and input left empty
+					if ( categoryArray === null ) {
+						categoryArray = [];
+						categoryArray.push('all');
+						$( id ).val(categoryArray).trigger('change.select2');
+					}
+
 					for (var i=0; i<categoryArray.length; i++){
 						if (categoryArray[i] === "all") {
 							filterAll = true;
@@ -581,7 +651,10 @@
 						_this.renderCards( FilteredItems );
 					}
 
+					var numberOfResults = _this.uuidsToMap.length;
+
 					_this.showCards();
+					_this.renderShowResults( numberOfResults );
 					_this.setPagination();
 				});
 			},
@@ -611,15 +684,127 @@
 					//_this.showCards();
 					//_this.setPagination();
 
+					var numberOfResults = _this.uuidsToMap.length;
+
+					_this.renderShowResults( numberOfResults );
 					_this.renderCards( FilteredItems );
 
 				} );
 
 			},
+			setEventForInput: function(){
+				var _this = this;
+
+				var els = this.elements;
+				var searchButton = els.searchButton;
+				var input = els.input;
+
+				searchButton.on('click', function(){
+					var keyword = input.val();
+					keyword.trim().toLowerCase();
+
+					var hasAnyFilterBeingApplied = _this.FiltersClicked.length;
+
+					var FilteredItems = [];
+
+					if ( hasAnyFilterBeingApplied === 0 ) {
+						var noFiltersApplied = true;
+						FilteredItems = MultipleFiltersDataLogic.filterByKeyword( keyword, _this.FiltersForTemplate, noFiltersApplied );
+					} else {
+						FilteredItems = MultipleFiltersDataLogic.filterByKeyword( keyword, _this.FiltersForTemplate );
+					}
+
+					_this.uuidsToMap = FilteredItems.map( function( el ) {
+						return el.uuid;
+					} );
+
+					var numberOfResults = _this.uuidsToMap.length;
+
+					_this.renderShowResults( numberOfResults );
+					_this.showCards();
+					_this.setPagination();
+
+				});
+			},
+			setResetActions: function(){
+
+				var _this = this;
+
+				var els = this.elements;
+				var resetButton = els.resetButton;
+
+				resetButton.on('click', function(){
+					console.log("RESET button");
+					_this.resetAll();
+				});
+
+				/* Functionality at line 415, HTML design error
+				allTypesButton.on('click', function(){
+					console.log("ALl button");
+					_this.resetAll();
+				});*/
+
+			},
+			resetAll: function(){
+				var _this = this;
+				var els = this.elements;
+				var allResultsNumber;
+				var inputBox = els.input;
+
+				inputBox.val('');
+
+				var categoriesId = this.FiltersForTemplate.map( function( Filter ) {
+					return Filter.id;
+				} );
+
+				categoriesId.forEach( function( idFilter ) {
+					var id = idFilter.substr(0,1) === '#' ? idFilter : "#" + idFilter;
+					$( id ).val( ["all"] ).trigger( 'change.select2' );
+				} );
+
+				if ( this.FilterInitialSettings.hasOwnProperty('sorting')  ) {
+					this.FilterInitialSettings.sorting.forEach( function( Sort ) {
+						_this.updateSortingOptionsSelected( Sort.id, Sort );
+					} );
+				}
+
+				//Return Items completed
+				//var FilteredItems = MultipleFiltersDataLogic.filterAction( this.FiltersClicked );
+				var FilteredItems = MultipleFiltersDataLogic.resetFilters();
+				this.FiltersClicked.splice(0);
+				this.SortingClicked.splice(0);
+
+				/*
+				if ( this.SortingClicked.length > 0 ) {
+					FilteredItems = MultipleFiltersDataLogic.sortAction( this.SortingClicked );
+				}
+				 */
+
+				this.uuidsToMap = FilteredItems.map( function( el ) {
+					return el.uuid;
+				} );
+
+				//To render all cards and not just the few results from last sorting
+				if ( this.uuidsToMap.length === this.totalResources ) {
+					this.renderCards( FilteredItems );
+				}
+
+				allResultsNumber = this.totalResources;
+
+				this.renderShowResults( allResultsNumber );
+				this.setPagination();
+
+			},
 			renderComponent: function(){
 				var _this = this;
 
-				MultipleFiltersDataLogic.getContentPiecesData().then( function( response ){
+				var itemsMapping;
+
+				if ( this.FilterInitialSettings.hasOwnProperty('itemsMapping') && typeof this.FilterInitialSettings.itemsMapping === "function" ) {
+					itemsMapping = this.FilterInitialSettings.itemsMapping;
+				}
+
+				MultipleFiltersDataLogic.getContentPiecesData( itemsMapping ).then( function( response ){
 					console.log("The data: ", response );
 					var Filters = _this.FilterInitialSettings.filters;
 					_this.totalResources = response.length;
@@ -660,7 +845,6 @@
 								_this.setEventForSorting( Sort.id, Sort.propertyName, Sort );
 							} );
 						}
-
 						_this.renderCards( response );
 
 					});
@@ -673,9 +857,10 @@
 				var _this = this;
 				var templateItems = _this.WidgetSettings.templateItems;
 				var imageNoResults = _this.WidgetSettings.imageNoResults;
+				var idTemplateItems = _this.WidgetSettings.idTemplateItems;
 
 				var Cards = new OhioToolkitWebComponent({
-					element: "#cards-generic-wrapper",
+					element: idTemplateItems,
 					templateLocation: templateItems,
 					data: {
 						items: response,
@@ -686,6 +871,8 @@
 				Cards.render().then( function() {
 					console.log("Cards rendered");
 					_this.setElements();
+					_this.setEventForInput();
+					_this.setResetActions();
 					_this.setPagination();
 				} );
 			},

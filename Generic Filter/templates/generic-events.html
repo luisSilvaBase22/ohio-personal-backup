@@ -1,0 +1,24 @@
+<div class="odx-section-resources-cards-list odx-gov-cards__component row js-common-card-wrapper">
+	<p class="odx-section-resources-card-list__results"></p>
+	<div class="list-unstyled odx-topic__cards">
+		{{#each items}}
+		<div id = {{uuid}} class="ohio-cards-container-grid ohio-card--visible odx-gov-resources__card odx-carousel-cards-item col-xs-12 col-sm-4 col-md-4 col-lg-3" >
+			<div class="ohio-card ohio-card--center ohio-card-container">
+				<section class="ohio-card-content">
+					<a class="ohio-card-wrapper-anchor" href="{{getURIPathFromWCMURL eventLink}}">
+						<h3 class="ohio-card-content-header">{{decode eventName}}</h3>
+					</a>
+					<p class="ohio-card-content-summary">{{decode description}}</p>
+				</section>
+			</div>
+		</div>
+		{{/each}}
+		<div class="js-no-results-img odx-events__img-no-results" style="display: none;">
+			<img src="{{{noResultsImgPath}}}" alt="No results for events search">
+			<p class="odx-card-no-result__message odx-bold">{{ getMultilingualLabelByWCMKey ./noResults }}</p>
+		</div>
+	</div>
+</div>
+<div class="odx-topic-hub-resources__pagination">
+	<ul id="js-events-search-pagination--gov" class="odx-events__search-pagination odx-topic-hub-filter__pagination pagination-sm"></ul>
+</div>
