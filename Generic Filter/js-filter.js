@@ -753,16 +753,13 @@
 
 				inputBox.val('');
 
-				var Categories = this.FiltersForTemplate.map( function( Filter ) {
-					var Category = {
-						category: Filter.propertyName,
-						categoryArray: Filter.options
-					};
-					return Category;
+				var categoriesId = this.FiltersForTemplate.map( function( Filter ) {
+					return Filter.id;
 				} );
 
-				Categories.forEach( function( Category ) {
-					$( Category.Category ).val( ["all"] ).trigger( 'change.select2' );
+				categoriesId.forEach( function( idFilter ) {
+					var id = idFilter.substr(0,1) === '#' ? idFilter : "#" + idFilter;
+					$( id ).val( ["all"] ).trigger( 'change.select2' );
 				} );
 
 				if ( this.FilterInitialSettings.hasOwnProperty('sorting')  ) {
