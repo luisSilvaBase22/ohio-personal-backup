@@ -360,6 +360,9 @@
 					items: $cards.find('.ohio-cards-container-grid')
 				};
 
+				els.resultsNumber = els.$root.find('.iop-filter__results-number');
+				els.resetButton = els.$root.find('.iop-filter__reset-btn');
+
 				els.pagination = els.$root.find('.odx-topic-hub-filter__pagination');
 				els.anchorPagination = els.$root.find('#js-events-search-pagination--gov a');
 				els.visibleItems = $cards.find('.ohio-card--visible'); //.iop-filter__item--visible
@@ -566,6 +569,15 @@
 					}
 				} );
 			},
+			renderShowResults: function( numberResults ) {
+				var els = this.elements;
+				var resultsParagraph = els.resultsNumber;
+				//var filterShowing = OHIO.Utils.actions.getMultilingualLabelByWCMKey('odx-filter-showing');
+				//var results = OHIO.Utils.actions.getMultilingualLabelByWCMKey('odx-results');
+
+				//resultsParagraph.text('We found ' + numberResults + ' ' + results);
+				resultsParagraph.text('We found ' + numberResults + ' ' + 'results');
+			},
 			setEventForDropdown: function( idFilter, category ){
 				var _this = this;
 
@@ -636,7 +648,10 @@
 						_this.renderCards( FilteredItems );
 					}
 
+					var numberOfResults = _this.uuidsToMap.length;
+
 					_this.showCards();
+					_this.renderShowResults( numberOfResults );
 					_this.setPagination();
 				});
 			},
@@ -666,6 +681,9 @@
 					//_this.showCards();
 					//_this.setPagination();
 
+					var numberOfResults = _this.uuidsToMap.length;
+
+					_this.renderShowResults( numberOfResults );
 					_this.renderCards( FilteredItems );
 
 				} );
@@ -697,6 +715,9 @@
 						return el.uuid;
 					} );
 
+					var numberOfResults = _this.uuidsToMap.length;
+
+					_this.renderShowResults( numberOfResults );
 					_this.showCards();
 					_this.setPagination();
 
