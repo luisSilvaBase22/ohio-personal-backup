@@ -130,13 +130,9 @@
 
 				return this.FilteredItems;
 			},
-			sortAction: function( Sorting, noFiltersApplied ){
-
-				var _this = this;
-
-				//no filter, just do sorting
-				if ( noFiltersApplied && noFiltersApplied === true ) {
-					var SortedItems = [];
+			sortAction: function( Sorting, sortAllItems ){
+				var SortedItems = [];
+				if ( sortAllItems && sortAllItems === true ) {
 
 					this.FilteredItems = this.AllItems.slice();
 
@@ -154,21 +150,17 @@
 						this.FilteredItems = this.AllItems;
 					}
 
-					console.log( "Results sorted: ", this.FilteredItems );
-					return this.FilteredItems;
+				} else {
+					var UnsortedItems = this.FilteredItems.slice();
+
+					Sorting.forEach( function( SortObj ) {
+						SortedItems = SortObj.sortInst( UnsortedItems );
+						UnsortedItems = SortedItems;
+					} );
+
+					if ( SortedItems !== undefined )
+						this.FilteredItems =  SortedItems.slice();
 				}
-
-				//If Filters, then do filters and sort
-
-				var UnsortedItems = this.FilteredItems.slice();
-
-				Sorting.forEach( function( SortObj ) {
-					SortedItems = SortObj.sortInst( UnsortedItems );
-					UnsortedItems = SortedItems;
-				} );
-
-				if ( SortedItems !== undefined )
-					this.FilteredItems =  SortedItems.slice();
 
 				console.log( "Results sorted: ", this.FilteredItems );
 
@@ -344,7 +336,6 @@
 			FiltersForTemplate: undefined,
 			FiltersClicked: [],
 			SortingClicked: [],
-			uuidsToMap: [],
 			totalResources: undefined,
 			setElements: function(){
 				var els = this.elements;
@@ -520,21 +511,6 @@
 
 				// this.SortingClicked updated no return
 			},
-			allTypesFilter: function( category ){
-
-				var allOptions;
-
-				for ( var i = 0; i < this.FiltersForTemplate.length; i++ ) {
-					if ( this.FiltersForTemplate[i].propertyName === category ) {
-						allOptions = this.FiltersForTemplate[i].options;
-					}
-				}
-
-				if ( allOptions[0] === "all" )
-					allOptions.splice(0, 1);
-
-				return allOptions;
-			},
 			prepareFiltersForTemplate: function( Filters ){
 				return  MultipleFiltersDataLogic.prepareFiltersForTemplate( Filters );
 			},
@@ -550,15 +526,13 @@
 				}
 
 			},
-			showCards: function(){
+			showCards: function( uuidsToMap ){
 				var els = this.elements;
 				var $cards = els.$cards.items;
 
 				this.hideAllCards();
 
-				//if ( this.uuidsToMap )
-
-				this.uuidsToMap.forEach( function( uuid ) {
+				uuidsToMap.forEach( function( uuid ) {
 					var numberOfCards = $cards.length;
 
 					for ( var i=0; i < numberOfCards; i++ ) {
@@ -579,115 +553,130 @@
 				//resultsParagraph.text('We found ' + numberResults + ' ' + results);
 				resultsParagraph.text('We found ' + numberResults + ' ' + 'results');
 			},
-			setEventForDropdown: function( idFilter, category ){
+			setEventForDropdown: function( idFilter, taxonomy ){
 				var _this = this;
 
 				var id = idFilter.substr(0,1) === '#' ? idFilter : "#" + idFilter;
 
 				$( id ).select2().on('change', function( event ) {
 					event.preventDefault();
-					var categoryArray = $(this).val();
-					var lastCategorySelected = $('span.select2-selection[aria-owns="select2-js-select-' + category + '-results"]');
-					var categoryLength = 0;
+					var categoriesSelectedFromDropdown = $(this).val();
+					var lastCategorySelected = $('span.select2-selection[aria-owns="select2-js-select-' + taxonomy + '-results"]');
+					var numberOfSelectedCategories = 0;
 
-					if (categoryArray !== null) {
-						categoryLength = categoryArray.length;
+					if (categoriesSelectedFromDropdown !== null) {
+						numberOfSelectedCategories = categoriesSelectedFromDropdown.length;
 					}
 
 					if (lastCategorySelected.length > 0) {
 						lastCategorySelected = lastCategorySelected[0].getAttribute('aria-activedescendant').split('-').pop();
-					} else if (categoryLength === 0) {
-						categoryArray = [];
-						categoryArray[0] = 'all';
+					} else if (numberOfSelectedCategories === 0) {
+						categoriesSelectedFromDropdown = [];
+						categoriesSelectedFromDropdown[0] = 'all';
 						lastCategorySelected = 'all';
 					}
 
 					if (lastCategorySelected === 'all') {
-						categoryArray = [];
-						categoryArray[0] = 'all';
-						$( id ).val(categoryArray).trigger('change.select2');
+						categoriesSelectedFromDropdown = [];
+						categoriesSelectedFromDropdown[0] = 'all';
+						$( id ).val(categoriesSelectedFromDropdown).trigger('change.select2');
 					} else {
-						if (categoryArray !== null && categoryArray[0] === 'all' && (categoryLength > 1 || countiesLength > 1)) {
-							categoryArray.splice(0, 1);
-							$( id ).val(categoryArray).trigger('change.select2');
+						if (categoriesSelectedFromDropdown !== null && categoriesSelectedFromDropdown[0] === 'all' && ( numberOfSelectedCategories > 1 )) {
+							categoriesSelectedFromDropdown.splice(0, 1);
+							$( id ).val(categoriesSelectedFromDropdown).trigger('change.select2');
 						}
 					}
 
 					var filterAll = false;
 
 					//Fix when removing more than 2 box and input left empty
-					if ( categoryArray === null ) {
-						categoryArray = [];
-						categoryArray.push('all');
-						$( id ).val(categoryArray).trigger('change.select2');
+					if ( categoriesSelectedFromDropdown === null ) {
+						categoriesSelectedFromDropdown = [];
+						categoriesSelectedFromDropdown.push('all');
+						$( id ).val(categoriesSelectedFromDropdown).trigger('change.select2');
 					}
 
-					for (var i=0; i<categoryArray.length; i++){
-						if (categoryArray[i] === "all") {
+					for (var i=0; i<categoriesSelectedFromDropdown.length; i++){
+						if (categoriesSelectedFromDropdown[i] === "all") {
 							filterAll = true;
 							break;
 						}
 					}
 
 					if (filterAll) {
-						categoryArray =_this.allTypesFilter( category );
+						categoriesSelectedFromDropdown =_this.allCategoriesFrom( taxonomy );
 					}
 
-					_this.updateFiltersClicked( category, categoryArray );
+					_this.updateFiltersClicked( taxonomy, categoriesSelectedFromDropdown );
 
 
 					//Return Items completed
 					var FilteredItems = MultipleFiltersDataLogic.filterAction( _this.FiltersClicked );
-					if ( _this.SortingClicked.length > 0 ) {
+
+					var isAnySortingActive = _this.SortingClicked.length > 0;
+
+					if ( isAnySortingActive ) {
 						FilteredItems = MultipleFiltersDataLogic.sortAction( _this.SortingClicked );
 					}
 
-					_this.uuidsToMap = FilteredItems.map( function( el ) {
-						return el.uuid;
+					var uuidsToMap = FilteredItems.map( function( Item ) {
+						return Item.uuid;
 					} );
 
-					//To render all cards and not just the few results from last sorting
-					if ( _this.uuidsToMap.length === _this.totalResources ) {
-						_this.renderCards( FilteredItems );
-					}
+					var numberOfResults = uuidsToMap.length;
 
-					var numberOfResults = _this.uuidsToMap.length;
-
-					_this.showCards();
+					_this.showCards( uuidsToMap );
 					_this.renderShowResults( numberOfResults );
 					_this.setPagination();
+
+					/*
+					if ( removedAllCategoriesFromBox && isAnySortingActive ) {
+						_this.renderCards( FilteredItems );
+						_this.renderShowResults( numberOfResults );
+					} else {
+						_this.showCards( uuidsToMap );
+						_this.renderShowResults( numberOfResults );
+						_this.setPagination();
+					}
+					*/
+
+
 				});
 			},
 			setEventForSorting: function( idSortEl, propertyName, SortObj ){
 
 				var _this = this;
-
-				var id = idSortEl.substr(0,1) === '#' ? idSortEl : "#" + idSortEl;
-
+				var SortedItems = [];
 				var FilteredItems = [];
 				var SortObj = SortObj;
 
-				$( id ).on( "click", function(){
-					_this.updateSortingOptionsSelected( id, SortObj );//Update sort function for filtering global variable
-					var hasAnyFilterBeingApplied = _this.FiltersClicked.length;
-					if ( hasAnyFilterBeingApplied === 0 ) {
-						var noFiltersApplied = true;
-						FilteredItems = MultipleFiltersDataLogic.sortAction( _this.SortingClicked, noFiltersApplied );
-					} else {
-						FilteredItems = MultipleFiltersDataLogic.filterAction( _this.FiltersClicked );
-						FilteredItems = MultipleFiltersDataLogic.sortAction( _this.SortingClicked );
-					}
+				$( sortingSelector ).on( "click", function(){
+					_this.updateSortingOptionsSelected( sortingSelector, SortObj );//Update sort function for filtering global variable
+					var sortAllItems = true; //To render all and not just those from last filtered applied
+					SortedItems = MultipleFiltersDataLogic.sortAction( _this.SortingClicked, sortAllItems );
+					var deferred = $.Deferred();
+					_this.renderCards( SortedItems, deferred ).done( function(){
 
-					_this.uuidsToMap = FilteredItems.map( function( el ) {
-						return el.uuid;
+						var uuidsToMap = [];
+
+						var filteredWasApplied = _this.FiltersClicked.length > 0;
+						if ( filteredWasApplied ) {
+							FilteredItems = MultipleFiltersDataLogic.filterAction( _this.FiltersClicked );
+							uuidsToMap = FilteredItems.map( function( el ) {
+								return el.uuid;
+							} );
+
+							var numberOfResults = uuidsToMap.length;
+							_this.showCards( uuidsToMap );
+							_this.renderShowResults( numberOfResults );
+							_this.setPagination();
+
+						}
+
 					} );
-					//_this.showCards();
-					//_this.setPagination();
 
-					var numberOfResults = _this.uuidsToMap.length;
-
-					_this.renderShowResults( numberOfResults );
-					_this.renderCards( FilteredItems );
+					//_this.renderShowResults( numberOfResults );
+					//_this.renderCards( FilteredItems );
 
 				} );
 
@@ -714,14 +703,14 @@
 						FilteredItems = MultipleFiltersDataLogic.filterByKeyword( keyword, _this.FiltersForTemplate );
 					}
 
-					_this.uuidsToMap = FilteredItems.map( function( el ) {
+					var uuidsToMap = FilteredItems.map( function( el ) {
 						return el.uuid;
 					} );
 
-					var numberOfResults = _this.uuidsToMap.length;
+					var numberOfResults = uuidsToMap.length;
 
 					_this.renderShowResults( numberOfResults );
-					_this.showCards();
+					_this.showCards( uuidsToMap );
 					_this.setPagination();
 
 				});
@@ -780,12 +769,12 @@
 				}
 				 */
 
-				this.uuidsToMap = FilteredItems.map( function( el ) {
+				var uuidsToMap = FilteredItems.map( function( el ) {
 					return el.uuid;
 				} );
 
 				//To render all cards and not just the few results from last sorting
-				if ( this.uuidsToMap.length === this.totalResources ) {
+				if ( uuidsToMap.length === this.totalResources ) {
 					this.renderCards( FilteredItems );
 				}
 
@@ -834,9 +823,10 @@
 
 					WebComponent.render().then(function() {
 						console.log('Filters Rendered!');
-
-						_this.FiltersForTemplate.forEach( function( Filter ) {
-							_this.setEventForDropdown( Filter.id, Filter.propertyName );
+						_this.Filters.forEach( function( Filter ) {
+							var categorySelector = Filter.id;
+							var taxonomy = Filter.propertyName;
+							_this.setEventForDropdown( categorySelector, taxonomy );
 						} );
 
 						//validate if defined
@@ -853,7 +843,7 @@
 
 				});
 			},
-			renderCards: function( response ){
+			renderCards: function( response, deferred ){
 				var _this = this;
 				var templateItems = _this.WidgetSettings.templateItems;
 				var imageNoResults = _this.WidgetSettings.imageNoResults;
@@ -874,7 +864,12 @@
 					_this.setEventForInput();
 					_this.setResetActions();
 					_this.setPagination();
+
+					if (deferred)
+						deferred.resolve();
 				} );
+
+				return deferred;
 			},
 			start: function( Filters, WidgetSettings ) {
 				this.FilterInitialSettings = Filters;
