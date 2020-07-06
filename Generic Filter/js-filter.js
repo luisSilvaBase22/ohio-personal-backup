@@ -509,7 +509,6 @@
 
 				return ascendingOrDescendigSortFunction;
 			},
-
 			allCategoriesFrom: function( taxonomy ){
 
 				var allOptions;
@@ -547,7 +546,6 @@
 				var $cards = els.$cards.items;
 
 				this.hideAllCards();
-
 				uuidsToMap.forEach( function( uuid ) {
 					var numberOfCards = $cards.length;
 
@@ -670,12 +668,14 @@
 					_this.updateSortingOptionsSelected( sortingSelector, SortObj );//Update sort function for filtering global variable
 					var sortAllItems = true; //To render all and not just those from last filtered applied
 					SortedItems = MultipleFiltersDataLogic.sortAction( _this.SortingClicked, sortAllItems );
+
+					var filteredWasApplied = _this.FiltersClicked.length > 0;
+
 					var deferred = $.Deferred();
 					_this.renderCards( SortedItems, deferred ).done( function(){
 
 						var uuidsToMap = [];
 
-						var filteredWasApplied = _this.FiltersClicked.length > 0;
 						if ( filteredWasApplied ) {
 							FilteredItems = MultipleFiltersDataLogic.filterAction( _this.FiltersClicked );
 							uuidsToMap = FilteredItems.map( function( el ) {
@@ -685,7 +685,7 @@
 							var numberOfResults = uuidsToMap.length;
 							_this.showCards( uuidsToMap );
 							_this.renderShowResults( numberOfResults );
-							_this.setPagination();
+							//_this.setPagination();
 
 						}
 
@@ -784,13 +784,14 @@
 
 				//To render all cards and not just the few results from last sorting
 				if ( uuidsToMap.length === this.totalResources ) {
-					this.renderCards( FilteredItems );
+					var deferred = $.Deferred();
+					this.renderCards( FilteredItems, deferred ).done( function(  ) {
+						allResultsNumber = _this.totalResources;
+
+						_this.renderShowResults( allResultsNumber );
+						//_this.setPagination();
+					} );
 				}
-
-				allResultsNumber = this.totalResources;
-
-				this.renderShowResults( allResultsNumber );
-				this.setPagination();
 
 			},
 			renderComponent: function(){
@@ -847,7 +848,13 @@
 								_this.setEventForSorting( sortSelector, sortName, SortObject );
 							} );
 						}
-						_this.renderCards( response );
+						var deferred = $.Deferred();
+						_this.renderCards( response, deferred ).done( function() {
+							//_this.setElements();
+							_this.setEventForInput();
+							_this.setResetActions();
+							//_this.setPagination();
+						} );
 
 					});
 
@@ -872,15 +879,15 @@
 
 				Cards.render().then( function() {
 					console.log("Cards rendered");
-					_this.setElements();
-					_this.setEventForInput();
-					_this.setResetActions();
-					_this.setPagination();
 
+					_this.setElements();
+					_this.setPagination();
 					if (deferred)
 						deferred.resolve();
 				} );
 
+				if (deferred)
+					return deferred.promise();
 				return deferred;
 			},
 			start: function( Filters, WidgetSettings ) {
