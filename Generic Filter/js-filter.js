@@ -199,6 +199,34 @@
 
 				return FoundItems;
 			},
+			filterByDate: function( startTimeInput, endTimeInput, noFiltersApplied ){
+				var FoundItems = [];
+
+				if ( noFiltersApplied && noFiltersApplied === true ) {
+					this.FilteredItems = this.AllItems.slice();
+					FoundItems = this.FilteredItems = this.searchEventWithDate( this.FilteredItems,  startTimeInput, endTimeInput );
+				} else {
+					FoundItems = this.FilteredItems = this.searchEventWithDate( this.FilteredItems, startTimeInput, endTimeInput );
+				}
+
+				console.log( "Results sorted: ", FoundItems );
+
+				return FoundItems;
+
+			},
+			searchEventWithDate: function( Events, startTimeInput, endTimeInput ){
+				var FoundEvents = Events.map( function( Event ){
+					var startTime = new Date ( Event.startTimeWCM );
+					if ( ((startTime >= startTimeInput && startTimeInput !== '') &&
+						(startTime <= endTimeInput && endTimeInput !== '')) ) {
+						return Event;
+					}
+				} ).filter(function( Item ){
+					return Item !== undefined;
+				});
+
+				return FoundEvents;
+			},
 			getCategoriesFromItem: function( Item, categories ){
 				var allCategoriesFromItem = "";
 
@@ -316,7 +344,8 @@
 		};
 
 		var OhioToolkitWebComponent = Utils.inject('OhioToolkit.components.WebComponent', console.log );
-		var MultipleFiltersDataLogic = Utils.inject('MultipleFilters(componentID)', console.log);
+		var MultipleFiltersDataLogic = Utils.inject('MultipleFilters(componentID)', console.log );
+		var FormioInstance = Utils.inject('Formio', console.log );
 
 		var Instance = {
 			elements: {},
@@ -731,6 +760,63 @@
 
 				});
 			},
+			setEventForDateFilter: function(){
+				var _this = this;
+
+				var els = this.elements;
+				var searchButton = els.searchButton;
+				var input = els.input;
+
+				searchButton.on('click', function(){
+					var keyword = input.val();
+					keyword.trim().toLowerCase();
+
+					var startTimeInput = $('.iop-filter__input-date-1 .flatpickr-input').val();
+					var endTimeInput = $('.iop-filter__input-date-2 .flatpickr-input').val();
+
+					if ( startTimeInput != '') {
+						startTimeInput = new Date ( startTimeInput ) || '';
+					} else {
+						startTimeInput = '';
+					}
+					if ( endTimeInput != '') {
+						endTimeInput = new Date ( endTimeInput ) || '';
+					} else {
+						endTimeInput = '';
+					}
+
+					var hasAnyFilterBeingApplied = _this.FiltersClicked.length;
+
+					var FilteredItems = [];
+
+					if ( startTimeInput != '' && endTimeInput != '' ) {
+						if ( hasAnyFilterBeingApplied === 0 ) {
+							var noFiltersApplied = true;
+							FilteredItems = MultipleFiltersDataLogic.filterByDate( startTimeInput, endTimeInput, noFiltersApplied );
+						} else {
+							FilteredItems = MultipleFiltersDataLogic.filterByDate( startTimeInput, endTimeInput );
+						}
+					} else {
+						if ( hasAnyFilterBeingApplied === 0 ) {
+							var noFiltersApplied = true;
+							FilteredItems = MultipleFiltersDataLogic.filterByKeyword( keyword, _this.Filters, noFiltersApplied );
+						} else {
+							FilteredItems = MultipleFiltersDataLogic.filterByKeyword( keyword, _this.Filters );
+						}
+					}
+
+					var uuidsToMap = FilteredItems.map( function( el ) {
+						return el.uuid;
+					} );
+
+					var numberOfResults = uuidsToMap.length;
+
+					_this.renderShowResults( numberOfResults );
+					_this.showCards( uuidsToMap );
+					_this.setPagination();
+
+				});
+			},
 			setResetActions: function(){
 
 				var _this = this;
@@ -794,6 +880,44 @@
 				}
 
 			},
+			buildFieldsForEventPicker: function( EventFilter ){
+				if ( EventFilter.hasOwnProperty('id') && EventFilter.id !== undefined ) {
+					var id = EventFilter.id.substr(0,1) === '#' ? EventFilter.id.substr(1) : EventFilter.id;
+					this.getForm( EventFilter.formName, id );
+				} else {
+					this.getForm( EventFilter.formName, "calendar-field" );
+				}
+			},
+			getForm: function( formName, container ){
+				// 1) Render the instance of Formio
+
+				var formURL = global.formioBaseURL + '/' + global.formioProject + '/' + formName;
+
+				try {
+					FormioInstance.createForm(document.getElementById(container), formURL, {
+						hooks: {
+							beforeSubmit: function(submission, next) {
+								// Alter the submission
+								// Only call next when we are ready to submit
+								console.log(submission.data);
+								next();
+								console.log('Current State: Before Summit');
+							}
+						}
+					}).then(function(form) {
+						// Adding required structure to wrap the email validation control
+						form.nosubmit = true;
+
+						form.on('submit', function(submission) {
+							console.log('Current State:  Sbmitted!');
+							//console.log(submission.data);
+						});
+					});
+				} catch( e ) {
+					console.error( "ID for event picker was not found in the template or div" );
+					console.error( e );
+				}
+			},
 			renderComponent: function(){
 				var _this = this;
 
@@ -810,6 +934,7 @@
 					var container = _this.WidgetSettings.root;
 					var template = _this.WidgetSettings.template;
 					var Sorting = _this.FilterInitialSettings.sorting;
+					var EventFilter = _this.FilterInitialSettings.events;
 
 					_this.Filters = _this.addPropertiesToFiltersForTemplate( Filters );
 					_this.totalResources = response.length;
@@ -827,7 +952,8 @@
 						templateLocation: template,
 						data: {
 							Filters: _this.Filters,
-							sorting: Sorting
+							sorting: Sorting,
+							eventFilter: EventFilter
 						}
 					});
 
@@ -851,7 +977,12 @@
 						var deferred = $.Deferred();
 						_this.renderCards( response, deferred ).done( function() {
 							//_this.setElements();
-							_this.setEventForInput();
+							if ( EventFilter ) {
+								_this.buildFieldsForEventPicker( EventFilter );
+								_this.setEventForDateFilter();
+							} else {
+								_this.setEventForInput();
+							}
 							_this.setResetActions();
 							//_this.setPagination();
 						} );
