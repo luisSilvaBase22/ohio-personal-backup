@@ -33,6 +33,10 @@
 				order: "DESC" //ASC,DESC Applies only if sortFn is not defined
 			}
 		],
+		events: {
+			formName: '[Element key="formName" type="content" context="selected" name="ohio content english/puco/forms/calendar-field-2" id="d1374884-b9db-4873-b59d-e8a293787f06:MS9vaGlvIGNvbnRlbnQgZW5nbGlzaC9wdWNvL2Zvcm1zL2NhbGVuZGFyLWZpZWxkLTI="]',
+			id: 'calendar-field'//optional, by default in the template it is defined as "calendar-field"
+		},
 		itemsMapping: function ( Events ){
 			return Events.map(function( Item ) {
 				Item.title = Item.eventName;
