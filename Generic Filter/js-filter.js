@@ -227,6 +227,10 @@
 
 				return FoundEvents;
 			},
+			filterCustom: function( filterFn ){
+				var FoundItems = filterFn( this.FilteredItems );
+				return FoundItems;
+			},
 			getCategoriesFromItem: function( Item, categories ){
 				var allCategoriesFromItem = "";
 
@@ -817,6 +821,64 @@
 
 				});
 			},
+			setListenerCustom: function( id, eventName, filterFn, urlParam ){
+				var _this = this;
+				$( id ).on( eventName, function( event ) {
+					//event.preventDefault();
+					console.log("Click custom");
+					var FilteredItems;
+
+					FilteredItems = MultipleFiltersDataLogic.filterCustom( filterFn );
+
+					var uuidsToMap = FilteredItems.map( function( el ) {
+						return el.uuid;
+					} );
+
+					var numberOfResults = uuidsToMap.length;
+
+					_this.renderShowResults( numberOfResults );
+					_this.showCards( uuidsToMap );
+					_this.setPagination();
+					var hashParam = _this.getHashParameters();
+					hashParam[ urlParam ] = 'value X';
+					_this.setHashParameters( hashParam );
+
+				} );
+			},
+			getHashParameters: function(){
+				var hash = window.location.href.split( "#" );
+				hash = hash[ 1 ] ? hash[ 1 ] : "";
+				var hashParameters = '';
+				hashParameters = hash.split( '&' ).reduce( function( hashParameters, item ) {
+					var parts = item.split( '=' );
+					hashParameters[ parts[ 0 ] ] = decodeURI( parts[ 1 ] );
+					return hashParameters;
+				}, {} );
+				return hashParameters;
+			},
+			setHashParameters: function( params ){
+				params = params || {};
+				params.page = params.page || 1;
+				var stringParameters = [];
+
+				var $charsActive = $( '.js-resources-alphabet-list li.isActive' );
+				var charActiveArray = '';
+
+				$charsActive.each( function() {
+					charActiveArray += $( this ).attr( 'id' ) + '_';
+				} );
+
+				params.alpha = charActiveArray;
+
+				for( var param in params ) {
+					if( ! params.hasOwnProperty( param ) ) continue;
+					if( param && params[ param ] ) stringParameters.push( param + "=" + params[ param ] );
+				}
+
+				stringParameters = stringParameters.length > 0 ? '#' + stringParameters.join( "&" ) : "";
+
+				window.location.href = window.location.href.split( '#' )[ 0 ] + stringParameters;
+			},
 			setResetActions: function(){
 
 				var _this = this;
@@ -935,6 +997,7 @@
 					var template = _this.WidgetSettings.template;
 					var Sorting = _this.FilterInitialSettings.sorting;
 					var EventFilter = _this.FilterInitialSettings.events;
+					var CustomFilters = _this.FilterInitialSettings.customFilter;
 
 					_this.Filters = _this.addPropertiesToFiltersForTemplate( Filters );
 					_this.totalResources = response.length;
@@ -953,7 +1016,8 @@
 						data: {
 							Filters: _this.Filters,
 							sorting: Sorting,
-							eventFilter: EventFilter
+							eventFilter: EventFilter,
+							CustomFilter: CustomFilters
 						}
 					});
 
@@ -974,6 +1038,13 @@
 								_this.setEventForSorting( sortSelector, sortName, SortObject );
 							} );
 						}
+
+						if ( CustomFilters ) {
+							CustomFilters.forEach( function( CstmFilter ) {
+								_this.setListenerCustom( CstmFilter.id, CstmFilter.eventName, CstmFilter.filterFn, CstmFilter.urlParam );
+							} );
+						}
+
 						var deferred = $.Deferred();
 						_this.renderCards( response, deferred ).done( function() {
 							//_this.setElements();
