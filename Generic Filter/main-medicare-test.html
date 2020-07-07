@@ -51,10 +51,19 @@
 		},//'mappingFunction',  A function excecuted after the data AJAX retrieval
 		customFilter: [
 			{
-				id: "#sort-by-number", //Click listener will be added to this selector
+				id: "#sort-by-date", //Click listener will be added to this selector
 				eventName: "click", // "click" default
 				urlParam: "by-something", // This will allow the user to set URL paramaters, #by-something=value
-				filterFn: 'filterFn' // A function to be excecuted after settings filters are applied, this function will receive the filtered items and must return the new array of items.
+				filterFn: function( Events ){
+
+					var SortedEvents = Events.sort( function( a, b){
+						var aDate = new Date( a.startTimeWCM );
+						var bDate = new Date( b.startTimeWCM );
+						return ((aDate < bDate) ? -1 : ((aDate > bDate) ? 1 : 0));
+					} );
+
+					return SortedEvents;
+				} // A function to be executed after settings filters are applied, this function will receive the filtered items and must return the new array of items.
 			}
 		]
 	};
