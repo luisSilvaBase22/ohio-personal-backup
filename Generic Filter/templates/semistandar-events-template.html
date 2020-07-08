@@ -1,7 +1,7 @@
-<div class="odx-topic__cards">
+<div class="base22-filter-component">
 {{#each items}}
 	<!-- <div class="iop-event-item__container iop-filter__item iop-filter__item--visible" data-name="{{id}}" data-counties="{{county}}" data-topics="{{topic}}" data-types="{{type}}" data-startTime="{{startTimeWCM}}"> -->
-	<div class="iop-event-item__container ohio-cards-container-grid ohio-card--visible" data-name="{{id}}" data-topics="{{topic}}" data-startTime="{{startTimeWCM}}">
+	<div id = {{uuid}} class="iop-event-item__container base22-filter-container__item-grid base22-filter-container--visible" data-name="{{id}}" data-topics="{{topic}}" data-startTime="{{startTimeWCM}}">
 		<div class="iop-month-label" data-month="{{month}}">
 			<span class="iop-month-label__text">{{month}}</span>
 		</div>

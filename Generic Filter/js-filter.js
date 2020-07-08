@@ -369,10 +369,10 @@
 				els.input = els.$root.find('.iop-filter__input-filter');
 				els.searchButton = els.$root.find('.iop-filter__input-filter-btn');
 
-				var $cards = els.$root.find('.odx-topic__cards');
+				var $cards = els.$root.find('.base22-filter-component');
 				els.$cards = {
 					root: $cards,
-					items: $cards.find('.ohio-cards-container-grid')
+					items: $cards.find('.base22-filter-container__item-grid')
 				};
 
 				els.resultsNumber = els.$root.find('.iop-filter__results-number');
@@ -380,7 +380,7 @@
 
 				els.pagination = els.$root.find('.odx-topic-hub-filter__pagination');
 				els.anchorPagination = els.$root.find('#js-events-search-pagination--gov a');
-				els.visibleItems = $cards.find('.ohio-card--visible'); //.iop-filter__item--visible
+				els.visibleItems = $cards.find('.base22-filter-container--visible'); //.iop-filter__item--visible
 
 				els.noResultsImage = els.$root.find('.odx-events__img-no-results');
 
@@ -390,7 +390,7 @@
 				var els = this.elements;
 
 				var $allItems = els.$cards.items;
-				var $visibleItems = $('.odx-topic__cards .ohio-card--visible');//els.visibleItems;
+				var $visibleItems = $('.base22-filter-component .base22-filter-container--visible');//els.visibleItems;
 				var visibleItemsNumber = $visibleItems.length;
 				var $pagination = els.pagination;
 
@@ -439,7 +439,7 @@
 				visibleItems.hide();
 
 				//Show card per page number assigned
-				var itemInPage = cardsContainer.find('.ohio-card--visible[data-page="'+page+'"]');
+				var itemInPage = cardsContainer.find('.base22-filter-container--visible[data-page="'+page+'"]');
 				itemInPage.show();
 
 			},
@@ -570,7 +570,7 @@
 
 				for ( var i=0; i < numberOfCards; i++ ) {
 					$( $cards[i] ).hide();
-					$( $cards[i] ).removeClass('ohio-card--visible');
+					$( $cards[i] ).removeClass('base22-filter-container--visible');
 				}
 
 			},
@@ -585,8 +585,8 @@
 					for ( var i=0; i < numberOfCards; i++ ) {
 						if ( uuid === $cards[i].id ) {
 							$( $cards[i] ).show();
-							if ( ! $( $cards[i] ).hasClass('ohio-card--visible') )
-								$( $cards[i] ).addClass('ohio-card--visible');
+							if ( ! $( $cards[i] ).hasClass('base22-filter-container--visible') )
+								$( $cards[i] ).addClass('base22-filter-container--visible');
 						}
 					}
 				} );
