@@ -1,10 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>$Title$</title>
-</head>
-<body>
-	$END$
-</body>
-</html>
+<div class="odx-topic__cards">
+{{#each items}}
+	<!-- <div class="iop-event-item__container iop-filter__item iop-filter__item--visible" data-name="{{id}}" data-counties="{{county}}" data-topics="{{topic}}" data-types="{{type}}" data-startTime="{{startTimeWCM}}"> -->
+	<div class="iop-event-item__container ohio-cards-container-grid ohio-card--visible" data-name="{{id}}" data-topics="{{topic}}" data-startTime="{{startTimeWCM}}">
+		<div class="iop-month-label" data-month="{{month}}">
+			<span class="iop-month-label__text">{{month}}</span>
+		</div>
+		<div class="iop-event-item">
+			<div class="iop-event-item__start-date">
+				<span class="iop-event-item__day-number">{{number}}</span>
+				<span class="iop-event-item__day-name">{{weekDay}}</span>
+				<span class="iop-event-item__time">{{time}}</span>
+			</div>
+			<div class="iop-event-item__main">
+				{{#if type}}<div class="iop-event-item__topic">{{type}}</div>{{/if}}
+				<a href="{{getURIPathFromWCMURL path}}"><p class="iop-event-item__title">{{eventName}}</p></a>
+				<div class="iop-event-item__labels">
+					{{#if topic}}
+					<a href="{{path}}" target="_blank">
+						<div class="iop-event-item__label">
+							<span class="iop-event-item__label-text">{{topic}}</span>
+						</div>
+					</a>
+					{{/if}}
+				</div>
+			</div>
+		</div>
+	</div>
+{{/each}}
+	<div class="js-no-results-img odx-events__img-no-results" style="display: none;">
+		<img src="{{{noResultsImgPath}}}" alt="No results for events search">
+		<p class="odx-card-no-result__message odx-bold">{{ getMultilingualLabelByWCMKey ./noResults }}</p>
+	</div>
+</div>
+<div class="odx-topic-hub-resources__pagination">
+	<ul id="js-events-search-pagination--gov" class="odx-events__search-pagination odx-topic-hub-filter__pagination pagination-sm"></ul>
+</div>
+
+
+
+
+
+
+
+
+
