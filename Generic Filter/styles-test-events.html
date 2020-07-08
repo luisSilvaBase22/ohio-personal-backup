@@ -1,10 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>$Title$</title>
-</head>
-<body>
-	$END$
-</body>
-</html>
+<style>
+	.ohio-cards-container-grid{
+		height: 30px;
+		margin-top: 20px;
+	}
+	.iop-month-label {
+		transition: all 0.3s ease-in-out;
+		height: 0px;
+		background-color: #f2f2f2;
+		text-align: center;
+		overflow: hidden;
+		width: 100px;
+	}
+	.iop-month-label__text {
+		color: #4A4A4A;
+		font-size: 14px;
+		font-weight: bold;
+		line-height: 30px;
+		text-transform: uppercase;
+	}
+	.iop-event-item {
+		position: relative;
+		overflow: hidden;
+		display: flex;
+	}
+	.iop-event-item__start-date {
+		position: relative;
+		width: 100px;
+		padding: 16px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		background-color: #f2f2f2;
+		margin-right: 15px;
+	}
+	.iop-event-item__day-number {
+		color: #4A4A4A;
+		font-size: 18px;
+		font-weight: 600;
+		text-align: center;
+		display: block;
+		text-transform: uppercase;
+		line-height: 1.2em;
+	}
+	.iop-event-item__day-name {
+		color: #4A4A4A;
+		font-size: 18px;
+		font-weight: 600;
+		text-align: center;
+		display: block;
+		text-transform: uppercase;
+		line-height: 1.2em;
+	}
+	.iop-event-item__time {
+		color: #4A4A4A;
+		line-height: 1.2em;
+		display: block;
+		font-size: 14px;
+		text-align: center;
+	}
+	.iop-event-item__main {
+		width: calc(100% - 120px);
+		position: relative;
+		border-left: 1px solid #d8d8d8;
+		padding: 10px 16px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	.iop-event-item__topic {
+		font-size: 10px;
+		color: #000AB9;
+	}
+	body .content-body .iop-event-item__main a {
+		text-decoration: none;
+	}
+	.iop-event-item__labels {
+		position: relative;
+	}
+</style>
