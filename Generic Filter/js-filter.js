@@ -294,7 +294,12 @@
 
 				return FiltersWithColumnsAndOptions;
 			},
-			getContentPiecesData: function( mappingFunction ){
+			sortByDateForEventsTypeContentOnly: function( a, b ){
+				var aDate = new Date( a.startTimeWCM );
+				var bDate = new Date( b.startTimeWCM );
+				return ((aDate < bDate) ? -1 : ((aDate > bDate) ? 1 : 0));
+			},
+			getContentPiecesData: function( mappingFunction, sortByDate ){
 				var _this = this;
 				var serviceURL = Utils.configureAjaxParameters();
 				return OHIO.ODX.actions.getAjaxDataFromURL(serviceURL).then(function( response ){
@@ -306,6 +311,10 @@
 
 					if ( mappingFunction ) {
 						ContentPieces = mappingFunction( ContentPieces );
+					}
+
+					if ( sortByDate ) {
+						ContentPieces = ContentPieces.sort(_this.sortByDateForEventsTypeContentOnly);
 					}
 
 					return _this.AllItems = _this.FilteredItems = ContentPieces;
@@ -676,6 +685,10 @@
 					_this.renderShowResults( numberOfResults );
 					_this.setPagination();
 
+					var hashParam = _this.getHashParameters();
+					hashParam[ taxonomy ] = categoriesSelectedFromDropdown.join( ',' );
+					_this.setHashParameters( hashParam );
+
 					/*
 					if ( removedAllCategoriesFromBox && isAnySortingActive ) {
 						_this.renderCards( FilteredItems );
@@ -815,6 +828,11 @@
 
 					var numberOfResults = uuidsToMap.length;
 
+					//var hashParam = _this.getHashParameters();
+					//hashParam[ startTime ] = startTimeInput;
+					//hashParam[ endTime ] = endTimeInput;
+					//_this.setHashParameters( hashParam );
+
 					_this.renderShowResults( numberOfResults );
 					_this.showCards( uuidsToMap );
 					_this.setPagination();
@@ -836,9 +854,15 @@
 
 					var numberOfResults = uuidsToMap.length;
 
-					_this.renderShowResults( numberOfResults );
-					_this.showCards( uuidsToMap );
-					_this.setPagination();
+					var deferred = $.Deferred();
+					_this.renderCards( FilteredItems, deferred ).done( function() {
+						_this.renderShowResults( numberOfResults );
+						//_this.setPagination();
+					} );
+
+					//_this.renderShowResults( numberOfResults );
+					//_this.showCards( uuidsToMap );
+					//_this.setPagination();
 					var hashParam = _this.getHashParameters();
 					hashParam[ urlParam ] = 'value X';
 					_this.setHashParameters( hashParam );
@@ -941,6 +965,8 @@
 					} );
 				}
 
+				this.setHashParameters( {} );
+
 			},
 			buildFieldsForEventPicker: function( EventFilter ){
 				if ( EventFilter.hasOwnProperty('id') && EventFilter.id !== undefined ) {
@@ -989,14 +1015,20 @@
 					mappingFunction = this.FilterInitialSettings.itemsMapping;
 				}
 
-				MultipleFiltersDataLogic.getContentPiecesData( mappingFunction ).then( function( response ){
+				var EventFilter = _this.FilterInitialSettings.events;
+				var sortByDate = false;
+
+				if ( EventFilter ) {
+					sortByDate = true;
+				}
+
+				MultipleFiltersDataLogic.getContentPiecesData( mappingFunction, sortByDate ).then( function( response ){
 					console.log("The data: ", response );
 
 					var Filters = _this.FilterInitialSettings.filters;
 					var container = _this.WidgetSettings.root;
 					var template = _this.WidgetSettings.template;
 					var Sorting = _this.FilterInitialSettings.sorting;
-					var EventFilter = _this.FilterInitialSettings.events;
 					var CustomFilters = _this.FilterInitialSettings.customFilter;
 
 					_this.Filters = _this.addPropertiesToFiltersForTemplate( Filters );
