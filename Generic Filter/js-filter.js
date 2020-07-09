@@ -81,6 +81,32 @@
 			},
 			removeDuplicated: function( array ) {
 				return array.filter((a, b) => array.indexOf(a) === b)
+			},
+			removeDuplicatedIndex: function( items ){
+				var noRepeatedLetter = '';
+				if ( items.length > 1 ) {
+					for (var i = 1; i < items.length; i++) {
+						if ( items[i].hasOwnProperty('index') ) {
+							var currItemIndex = items[i].index;
+							if(items[i-1].hasOwnProperty('index')) {
+								var prevItemIndex = items[i-1].index;
+								if ( currItemIndex === prevItemIndex ) {
+									noRepeatedLetter = currItemIndex;
+									delete items[i].index;
+								}
+							} else {
+								if ( noRepeatedLetter === currItemIndex )
+									delete items[i].index;
+							}
+						}
+					}
+					return items;
+				} else {
+					return items;
+				}
+			},
+			isPair: function( indexAlphabet ){
+				return ( indexAlphabet > 1 && (indexAlphabet % 2 === 0) ) ? true : false;
 			}
 		};
 		return {
@@ -299,7 +325,43 @@
 				var bDate = new Date( b.startTimeWCM );
 				return ((aDate < bDate) ? -1 : ((aDate > bDate) ? 1 : 0));
 			},
-			getContentPiecesData: function( mappingFunction, sortByDate ){
+			filterByAlphaIndex: function( letterIndexes ){//input an array of selected letters sorted alphabetically: ["a", "d", "f"].sort()
+				var resultIndexes = [];
+				var curPosition = 0;
+
+				for(var i=0; i<letterIndexes.length;i++){
+					var letterIndex = letterIndexes[i];
+
+					for(var j=curPosition; j<this.AllItems.length;j++){
+						var countyFirstLetter = this.AllItems[j].name.substring(0, 1).toLowerCase();
+						if( letterIndex === countyFirstLetter ) {
+							resultIndexes.push(j);
+							curPosition = j;
+						}
+						if (countyFirstLetter>letterIndex) {
+							curPosition = j;
+							break;
+						}
+					}
+
+				}
+
+				return resultIndexes;
+				//returns an array with the indexes of the items to show
+			},
+			addIndexToItems: function( Items ){
+				var indexedItems = Items.filter( function(el, index){
+					var indexAlphabet = el.name.substring(0, 1);
+					el.index = indexAlphabet;
+					if ( Utils.isPair(index) )
+						el.pairItem = true;
+					return el;
+				});
+				var removedDuplicatedItems = Utils.removeDuplicatedIndex( indexedItems );
+
+				return removedDuplicatedItems;
+			},
+			getContentPiecesData: function( mappingFunction, sortByDate, setAlphabeticIndexes ){
 				var _this = this;
 				var serviceURL = Utils.configureAjaxParameters();
 				return OHIO.ODX.actions.getAjaxDataFromURL(serviceURL).then(function( response ){
@@ -315,6 +377,10 @@
 
 					if ( sortByDate ) {
 						ContentPieces = ContentPieces.sort(_this.sortByDateForEventsTypeContentOnly);
+					}
+
+					if ( setAlphabeticIndexes ) {
+						ContentPieces = _this.addIndexToItems( ContentPieces );
 					}
 
 					return _this.AllItems = _this.FilteredItems = ContentPieces;
@@ -368,6 +434,7 @@
 			Filters: undefined,
 			FiltersClicked: [],
 			SortingClicked: [],
+			multipleLettersClicked: [],
 			totalResources: undefined,
 			setElements: function(){
 				var els = this.elements;
@@ -381,7 +448,16 @@
 				var $cards = els.$root.find('.base22-filter-component');
 				els.$cards = {
 					root: $cards,
+					headerIndexes: $cards.find('.ohio-card-content-header'),
+					groupHeaders: $cards.find('.ohio-odx-alpha-directory__group-title'),
 					items: $cards.find('.base22-filter-container__item-grid')
+				};
+
+				var $filterByAlphaindex = els.$root.find('.js-opd-alphabet-container');
+				els.$filterByAlphaindex = {
+					root: $filterByAlphaindex,
+					allTypeButton: $filterByAlphaindex.find('.js-opd-alphabet-button-all'),
+					letters: $filterByAlphaindex.find('.js-opd-indexes')
 				};
 
 				els.resultsNumber = els.$root.find('.iop-filter__results-number');
@@ -390,7 +466,7 @@
 				els.pagination = els.$root.find('.odx-topic-hub-filter__pagination');
 				els.anchorPagination = els.$root.find('#js-events-search-pagination--gov a');
 				els.visibleItems = $cards.find('.base22-filter-container--visible'); //.iop-filter__item--visible
-
+				els.visibleGroupHeaders = $cards.find('.ohio-odx-alpha-directory__group-title--visible');
 				els.noResultsImage = els.$root.find('.odx-events__img-no-results');
 
 			},
@@ -399,12 +475,14 @@
 				var els = this.elements;
 
 				var $allItems = els.$cards.items;
+				var $allHeaders = els.$cards.groupHeaders;
 				var $visibleItems = $('.base22-filter-component .base22-filter-container--visible');//els.visibleItems;
 				var visibleItemsNumber = $visibleItems.length;
 				var $pagination = els.pagination;
 
 				var elementsPerPage = this.WidgetSettings.elementsPerPage;
 
+				$allHeaders.attr('data-page', '');
 				$allItems.attr('data-page', '');
 				$allItems.attr('data-column', '');
 
@@ -413,6 +491,13 @@
 					index++;
 					var page = Math.ceil(index / elementsPerPage);
 					$item.attr('data-page', page);
+
+					if( $item.attr('data-first-item') ) {
+						var keyHeader = $item.attr('data-first-item');
+						var header = els.$cards.root.find('.' + keyHeader);//$("h3."+keyHeader);
+						header.attr('data-page', page);
+					}
+
 				});
 
 				$pagination.twbsPagination('destroy');
@@ -444,12 +529,18 @@
 				var els = this.elements;
 				var cardsContainer = els.$cards.root;
 				var visibleItems = els.visibleItems;
+				var headers = els.visibleGroupHeaders;
 
 				visibleItems.hide();
+				headers.hide();
 
 				//Show card per page number assigned
 				var itemInPage = cardsContainer.find('.base22-filter-container--visible[data-page="'+page+'"]');
 				itemInPage.show();
+
+				//Show index header per page number assigned
+				var headerInPage = cardsContainer.find('.ohio-odx-alpha-directory__group-title--visible[data-page="' + page + '"]');
+				headerInPage.show();
 
 			},
 			updateFiltersClicked: function( category, values ){
@@ -527,8 +618,8 @@
 
 					ascendingOrDescendigSortFunction = function( ItemsToSort ) {
 						ItemsToSort.sort( function( a, b ) {
-							var titleA = a.title;
-							var titleB = b.title;
+							var titleA = a.name;
+							var titleB = b.name;
 							return titleA.localeCompare(titleB);
 						} );
 
@@ -583,6 +674,13 @@
 				}
 
 			},
+			hideGroupHeaders: function(){
+				var els = this.elements;
+				els.$cards.groupHeaders.each(function(){
+					var $header = $(this);
+					$header.hide();
+				});
+			},
 			showCards: function( uuidsToMap ){
 				var els = this.elements;
 				var $cards = els.$cards.items;
@@ -599,6 +697,14 @@
 						}
 					}
 				} );
+			},
+			showAllHeaders: function(){
+				var els = this.elements;
+				els.$cards.groupHeaders.each(function(){
+					var $header = $(this);
+					$header.show();
+					$header.addClass('ohio-odx-alpha-directory__group-title--visible');
+				});
 			},
 			renderShowResults: function( numberResults ) {
 				var els = this.elements;
@@ -869,6 +975,78 @@
 
 				} );
 			},
+			removeActiveIndexes: function(){
+				var els = this.elements;
+
+				var alphadirectoryContainer = els.$filterByAlphaindex.letters;
+				var letters = alphadirectoryContainer.find('li');
+
+				letters.each(function() {
+					var letter = $(this);
+					var activeIndex = letter.find('span');
+					activeIndex.removeClass('opd-index--active');
+				});
+			},
+			setIndexFilterActions: function(){
+				var els = this.elements;
+				var directory = els.$filterByAlphaindex.letters;
+				var indexOfFoundItems;
+
+				var _this = this;
+
+				directory.on('click', function( event ) {
+					event.preventDefault();
+					var target = event.target;
+					var parentTarget = target.parentElement;
+					if ( target.localName === "span" && parentTarget.classList.contains( 'ohio-odx-alpha-directory__alphabet-char' ))
+						target.classList.add('opd-index--active');
+					var letter = parentTarget.getAttribute('data-target');
+
+					var wasTheLetterSelectedBefore = _this.multipleLettersClicked.indexOf(letter);
+					if ( wasTheLetterSelectedBefore >= 0 ) {
+						_this.multipleLettersClicked.splice( wasTheLetterSelectedBefore, 1);
+						target.classList.remove('opd-index--active');
+					} else {
+						if (letter!== null) {
+							_this.multipleLettersClicked.push(letter);
+						} else {
+							if ( parentTarget.classList.contains('js-opd-alphabet-button-all') )
+								_this.resetAll();
+						}
+					}
+
+					if( _this.multipleLettersClicked.length > 0 ) {
+						//Hide all the cards
+						_this.hideCards();
+						//Hide headers
+						_this.hideGroupHeaders();
+						//Show group headers that matches the cards group
+						els.$cards.groupHeaders.each(function() {
+							var $header = $(this);
+							multipleLettersClicked.forEach(function( el, index ) {
+								if( $header.attr('data-index') === el ) {
+									$header.show();
+									$header.addClass('ohio-odx-alpha-directory__group-title--visible');
+								}
+							});
+
+						});
+
+						var selectedLettersOrdered = _this.multipleLettersClicked.sort();
+						indexOfFoundItems = MultipleFiltersDataLogic.filterByAlphaIndex(selectedLettersOrdered);
+						//Show cards matches the filter
+						indexOfFoundItems.forEach(function( idx ){
+							els.$cards.items[idx].classList.add('iop-filter__item--visible');
+							$(els.$cards.items[idx]).show();
+							var numberResults = indexOfFoundItems.length;
+							_this.renderShowResults( numberResults );
+						});
+					} else {
+						_this.multipleLettersClicked.splice(0);
+						_this.resetAll();
+					}
+				});
+			},
 			getHashParameters: function(){
 				var hash = window.location.href.split( "#" );
 				hash = hash[ 1 ] ? hash[ 1 ] : "";
@@ -950,6 +1128,14 @@
 				}
 				 */
 
+				// If alphabetic list filter is set then do this reset:
+				if (this.FilterInitialSettings.alpha) {
+					this.multipleLettersClicked.splice(0);
+					this.removeActiveIndexes();
+					this.showAllHeaders();
+				}
+				//End if
+
 				var uuidsToMap = FilteredItems.map( function( el ) {
 					return el.uuid;
 				} );
@@ -1022,7 +1208,17 @@
 					sortByDate = true;
 				}
 
-				MultipleFiltersDataLogic.getContentPiecesData( mappingFunction, sortByDate ).then( function( response ){
+				var alphabeticalFilter = _this.FilterInitialSettings.alpha;
+
+				var setAlphabeticIndexes = false;
+
+				if ( alphabeticalFilter ) {
+					setAlphabeticIndexes = true;
+				}
+
+				var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+
+				MultipleFiltersDataLogic.getContentPiecesData( mappingFunction, sortByDate, setAlphabeticIndexes ).then( function( response ){
 					console.log("The data: ", response );
 
 					var Filters = _this.FilterInitialSettings.filters;
@@ -1049,6 +1245,7 @@
 							Filters: _this.Filters,
 							sorting: Sorting,
 							eventFilter: EventFilter,
+							alphabeticalList: alphabet,
 							CustomFilter: CustomFilters
 						}
 					});
@@ -1086,6 +1283,11 @@
 							} else {
 								_this.setEventForInput();
 							}
+
+							if ( alphabeticalFilter ) {
+								_this.setIndexFilterActions();
+							}
+
 							_this.setResetActions();
 							//_this.setPagination();
 						} );
