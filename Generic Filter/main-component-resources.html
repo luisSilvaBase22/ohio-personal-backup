@@ -1,0 +1,84 @@
+<!-- START: Ohio Design / Agencies / ODH / Filter / Generic Filter / Main -->
+
+<div id="id-filter" class="iop-filter__container margin-bottom-md margin-top-md">
+	<span class="ohio-spinner ohio-spinner--centered"></span>
+	<div id="cards-generic-wrapper"></div>
+</div>
+
+<script>
+
+	[Component name="ohio design/agencies/medicaid/multiple-filters-generic-js"]
+
+	var FILTERS = {
+		alpha: "#selector", //Alpha List Selector
+		filters: [
+			{
+				id: "#js-select-county", //Select2 Selector
+				propertyName: 'calendar', //Property to filter
+				allLabel: "All Events",
+				label: "By Events"
+				//options: ["Allen", "Brown"] Optional, if empty, select2 options will be based on items.
+			},
+			{
+				id: "#js-select-topics", //Select2 Selector
+				propertyName: 'topic', //Property to filter
+				allLabel: "All Topics",
+				label: "By Topic"
+			}
+		],
+		sorting: [
+			{
+				id: "#sort-by-number", //Click listener will be added to this selector
+				//sortFn: 'sortFn', Optional, a sorting function
+				propertyName: "value", // Property Name, applies only if sortFn is not defined
+				order: "DESC" //ASC,DESC Applies only if sortFn is not defined
+			}
+		],
+		itemsMapping: function ( Resources ){
+			var unsortedAlphabhetically = Resources.map(function( Item ) {
+				Item.name =  Item.eventName;
+				return Item;
+			});
+			var sortedToWorkPropertlyWithAlphaIndex = unsortedAlphabhetically.sort(function(a, b){
+				return a.name.localeCompare( b.name );
+			});
+
+			return sortedToWorkPropertlyWithAlphaIndex;
+		},  //A function excecuted after the data AJAX retrieval
+		customFilter: [
+			{
+				id: "#sort-by-date", //Click listener will be added to this selector
+				eventName: "click", // "click" default
+				urlParam: "by-something", // This will allow the user to set URL paramaters, #by-something=value
+				filterFn: function( Events ){
+
+					var SortedEvents = Events.sort( function( a, b){
+						var aDate = new Date( a.startTimeWCM );
+						var bDate = new Date( b.startTimeWCM );
+						return ((aDate < bDate) ? -1 : ((aDate > bDate) ? 1 : 0));
+					} );
+
+					return SortedEvents;
+				} // A function to be executed after settings filters are applied, this function will receive the filtered items and must return the new array of items.
+			}
+		]
+	};
+
+	var WIDGET_SETTINGS = {
+		root: "#id-filter",
+		menuComponentId: '[Component name="ohio design/agencies/puco/events/calendar-view/all-events/events-json-all-events" resultsPerPage="" startPage="" format="id"]',
+		template: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/opd/alphabetical-list"]',
+		elementsPerPage: 3,
+		idTemplateItems: "#cards-generic-wrapper",
+		imageNoResults: '[Component name="ohio design/agencies/odh/no-results.png" rendition="auto" format="url"]',
+		templateItems: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/opd/alphabetical-items"]'
+	};
+
+	document.addEventListener( 'DOMContentLoaded', function() {
+		var multiplesFiltersInstance = window.FiltersWidget( WIDGET_SETTINGS.menuComponentId );
+		multiplesFiltersInstance.start( FILTERS, WIDGET_SETTINGS );
+	} );
+
+</script>
+<!-- END: Ohio Design / Agencies / ODH / Filter / Generic Filter / Main -->
+<!-- Main component for filter -->
