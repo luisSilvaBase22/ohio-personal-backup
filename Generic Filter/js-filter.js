@@ -202,9 +202,9 @@
 
 				if ( noFiltersApplied && noFiltersApplied === true ) {
 					this.FilteredItems = this.AllItems.slice();
-					FoundItems = this.FilteredItems = this.searchTerms( this.FilteredItems,  keyword, categories );
+					FoundItems = this.FilteredItems = this.searchTerms( this.FilteredItems,  keyword.toLowerCase(), categories );
 				} else {
-					FoundItems = this.FilteredItems = this.searchTerms( this.FilteredItems, keyword, categories );
+					FoundItems = this.FilteredItems = this.searchTerms( this.FilteredItems, keyword.toLowerCase(), categories );
 				}
 
 				console.log( "Results sorted: ", FoundItems );
@@ -215,7 +215,7 @@
 				var _this = this;
 
 				var FoundItems = Items.map(function( Item ){
-					var title = Item.title.toLowerCase();
+					var title = Item.name.toLowerCase();
 					title = title + _this.getCategoriesFromItem( Item, categories  );
 					if (title.indexOf(keyword)>=0)
 						return Item;
@@ -506,6 +506,7 @@
 				$noResults.hide();
 				if (visibleItemsNumber <= 0) {
 					$noResults.show();
+					$allHeaders.hide();
 					return;
 				}
 
@@ -631,8 +632,8 @@
 
 					ascendingOrDescendigSortFunction = function( ItemsToSort ) {
 						ItemsToSort.sort( function( a, b ) {
-							var titleA = a.title;
-							var titleB = b.title;
+							var titleA = a.name;
+							var titleB = b.name;
 							return titleB.localeCompare(titleA);
 						} );
 
@@ -1211,12 +1212,12 @@
 				var alphabeticalFilter = _this.FilterInitialSettings.alpha;
 
 				var setAlphabeticIndexes = false;
+				var alphabet = undefined;
 
 				if ( alphabeticalFilter ) {
 					setAlphabeticIndexes = true;
+					alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 				}
-
-				var alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
 				MultipleFiltersDataLogic.getContentPiecesData( mappingFunction, sortByDate, setAlphabeticIndexes ).then( function( response ){
 					console.log("The data: ", response );
