@@ -36,11 +36,11 @@
 		],
 		itemsMapping: function ( Resources ){
 			var unsortedAlphabhetically = Resources.map(function( Item ) {
-				Item.name =  Item.eventName;
+				Item.title =  Item.eventName;
 				return Item;
 			});
 			var sortedToWorkPropertlyWithAlphaIndex = unsortedAlphabhetically.sort(function(a, b){
-				return a.name.localeCompare( b.name );
+				return a.title.localeCompare( b.title );
 			});
 
 			return sortedToWorkPropertlyWithAlphaIndex;

@@ -49,6 +49,7 @@
 		},
 		itemsMapping: function ( Events ){
 			return Events.map(function( Item ) {
+				Item.title = Item.eventName;
 				Item.startTimeWCM = moment ( Item.startDate ).format( "MM/DD/YY" ) ;
 				var eventDate = moment(new Date(Item.startDate));
 				var month = eventDate.format('MMMM');

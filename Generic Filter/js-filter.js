@@ -215,7 +215,7 @@
 				var _this = this;
 
 				var FoundItems = Items.map(function( Item ){
-					var title = Item.name.toLowerCase();
+					var title = Item.title.toLowerCase();
 					title = title + _this.getCategoriesFromItem( Item, categories  );
 					if (title.indexOf(keyword)>=0)
 						return Item;
@@ -333,7 +333,7 @@
 					var letterIndex = letterIndexes[i];
 
 					for(var j=curPosition; j<this.AllItems.length;j++){
-						var countyFirstLetter = this.AllItems[j].name.substring(0, 1).toLowerCase();
+						var countyFirstLetter = this.AllItems[j].title.substring(0, 1).toLowerCase();
 						if( letterIndex === countyFirstLetter ) {
 							resultIndexes.push(j);
 							curPosition = j;
@@ -351,7 +351,7 @@
 			},
 			addIndexToItems: function( Items ){
 				var indexedItems = Items.filter( function(el, index){
-					var indexAlphabet = el.name.substring(0, 1);
+					var indexAlphabet = el.title.substring(0, 1);
 					el.index = indexAlphabet;
 					if ( Utils.isPair(index) )
 						el.pairItem = true;
@@ -366,8 +366,10 @@
 				var serviceURL = Utils.configureAjaxParameters();
 				return OHIO.ODX.actions.getAjaxDataFromURL(serviceURL).then(function( response ){
 					var resources = JSON.parse(response);
-					var ContentPieces = resources.filter( function( Item, index ){
-						Item.uuid = Utils.generatePieceId();
+					var ContentPieces = resources.filter( function( Item ){
+						if ( ! Item.hasOwnProperty('uuid') ) {
+							Item.uuid = Utils.generatePieceId();
+						}
 						return Item;
 					} );
 
@@ -619,8 +621,8 @@
 
 					ascendingOrDescendigSortFunction = function( ItemsToSort ) {
 						ItemsToSort.sort( function( a, b ) {
-							var titleA = a.name;
-							var titleB = b.name;
+							var titleA = a.title;
+							var titleB = b.title;
 							return titleA.localeCompare(titleB);
 						} );
 
@@ -632,8 +634,8 @@
 
 					ascendingOrDescendigSortFunction = function( ItemsToSort ) {
 						ItemsToSort.sort( function( a, b ) {
-							var titleA = a.name;
-							var titleB = b.name;
+							var titleA = a.title;
+							var titleB = b.title;
 							return titleB.localeCompare(titleA);
 						} );
 
