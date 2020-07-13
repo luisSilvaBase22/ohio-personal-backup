@@ -571,7 +571,7 @@
 					}
 				}
 			},
-			updateSortingOptionsSelected: function( SelectorId, SortItem ){//Insert or remove to the array, the Sorting function clicked by the user
+			updateSortingOptionsSelected: function( SelectorId, SortItem, propertyName ){//Insert or remove to the array, the Sorting function clicked by the user
 
 				var sortingFunction;
 
@@ -579,7 +579,7 @@
 					sortingFunction = SortItem.sortFn;
 				} else if ( SortItem.hasOwnProperty('order') ) {
 					//Add sorting methods
-					sortingFunction = this.addDefaultSortingFunction( SortItem );
+					sortingFunction = this.addDefaultSortingFunction( SortItem, propertyName );
 				}
 
 				//Search to include or remove SortingClicked
@@ -613,7 +613,7 @@
 
 				// this.SortingClicked updated
 			},
-			addDefaultSortingFunction: function( SortItem ){
+			addDefaultSortingFunction: function( SortItem, propertyName ){
 
 				var ascendingOrDescendigSortFunction;
 
@@ -621,9 +621,9 @@
 
 					ascendingOrDescendigSortFunction = function( ItemsToSort ) {
 						ItemsToSort.sort( function( a, b ) {
-							var titleA = a.title;
-							var titleB = b.title;
-							return titleA.localeCompare(titleB);
+							var propertyItemA = a[propertyName];
+							var propertyItemB = b[propertyName];
+							return propertyItemA.localeCompare( propertyItemB );
 						} );
 
 						return ItemsToSort;
@@ -634,9 +634,9 @@
 
 					ascendingOrDescendigSortFunction = function( ItemsToSort ) {
 						ItemsToSort.sort( function( a, b ) {
-							var titleA = a.title;
-							var titleB = b.title;
-							return titleB.localeCompare(titleA);
+							var propertyItemA = a[propertyName];
+							var propertyItemB = b[propertyName];
+							return propertyItemB.localeCompare( propertyItemA );
 						} );
 
 						return ItemsToSort;
@@ -820,7 +820,7 @@
 				var SortObj = SortObject;
 
 				$( sortingSelector ).on( "click", function(){
-					_this.updateSortingOptionsSelected( sortingSelector, SortObj );//Update sort function for filtering global variable
+					_this.updateSortingOptionsSelected( sortingSelector, SortObj, propertyName );//Update sort function for filtering global variable
 					var sortAllItems = true; //To render all and not just those from last filtered applied
 					SortedItems = MultipleFiltersDataLogic.sortAction( _this.SortingClicked, sortAllItems );
 
@@ -1266,8 +1266,8 @@
 						if ( Sorting  ) {
 							Sorting.forEach( function( SortObject ) {
 								var sortSelector = SortObject.id.substr(0,1) === '#' ? SortObject.id : "#" + SortObject.id;
-								var sortName = SortObject.propertyName;
-								_this.setEventForSorting( sortSelector, sortName, SortObject );
+								var propertyName = SortObject.propertyName;
+								_this.setEventForSorting( sortSelector, propertyName, SortObject );
 							} );
 						}
 
