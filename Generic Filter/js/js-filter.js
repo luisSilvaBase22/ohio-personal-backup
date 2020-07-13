@@ -8,10 +8,7 @@
 			source: 'library',
 			srv: 'cmpnt',
 			cmpntid: '[Component name="ohio design/agencies/odh/filter/generic-filter/json-data-getter" resultsPerPage="" startPage="" format="id"]',
-			'WCM_Page.ResetAll': 'TRUE',
-			CACHE: 'NONE',
-			CONTENTCACHE: 'NONE',
-			CONNECTORCACHE: 'NONE',
+			'WCM_Page.ResetAll': 'TRUE'
 		}
 	};
 

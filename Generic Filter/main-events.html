@@ -39,7 +39,7 @@
 			{
 				id: "#sort-by-number", //Click listener will be added to this selector
 				//sortFn: 'sortFn', Optional, a sorting function
-				propertyName: "title", // Property Name, applies only if sortFn is not defined
+				propertyName: "eventName", // Property Name, applies only if sortFn is not defined
 				order: "DESC" //ASC,DESC Applies only if sortFn is not defined
 			}
 		],
@@ -49,7 +49,6 @@
 		},
 		itemsMapping: function ( Events ){
 			return Events.map(function( Item ) {
-				Item.title = Item.eventName;
 				Item.startTimeWCM = moment ( Item.startDate ).format( "MM/DD/YY" ) ;
 				var eventDate = moment(new Date(Item.startDate));
 				var month = eventDate.format('MMMM');
