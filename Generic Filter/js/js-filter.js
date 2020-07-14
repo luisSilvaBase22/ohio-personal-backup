@@ -441,30 +441,30 @@
 
 				els.$root = $( idRoot ) || $emptyDiv;//'#opd-filter'
 
-				els.input = els.$root.find('.iop-filter__input-filter');
-				els.searchButton = els.$root.find('.iop-filter__input-filter-btn');
+				els.input = els.$root.find('.js-b22-input');
+				els.searchButton = els.$root.find('.js-b22-filter-button');
 
-				var $cards = els.$root.find('.base22-filter-component');
+				var $cards = els.$root.find('.js-b22-items-container');
 				els.$cards = {
 					root: $cards,
-					headerIndexes: $cards.find('.ohio-card-content-header'),
-					groupHeaders: $cards.find('.ohio-odx-alpha-directory__group-title'),
-					items: $cards.find('.base22-filter-container__item-grid')
+					headerIndexes: $cards.find('.js-b22-item-header'),
+					groupHeaders: $cards.find('.js-b22-index-header'),
+					items: $cards.find('.js-b22-item')
 				};
 
-				var $filterByAlphaindex = els.$root.find('.js-opd-alphabet-container');
+				var $filterByAlphaindex = els.$root.find('.js-b22-alphabet-container');
 				els.$filterByAlphaindex = {
 					root: $filterByAlphaindex,
-					allTypeButton: $filterByAlphaindex.find('.js-opd-alphabet-button-all'),
-					letters: $filterByAlphaindex.find('.js-opd-indexes')
+					allTypeButton: $filterByAlphaindex.find('.js-b22-alphabet-button-all'),
+					letters: $filterByAlphaindex.find('.js-b22-indexes')
 				};
 
-				els.resultsNumber = els.$root.find('.iop-filter__results-number');
-				els.resetButton = els.$root.find('.iop-filter__reset-btn');
+				els.resultsNumber = els.$root.find('.js-b22-results-number');
+				els.resetButton = els.$root.find('.js-b22-reset-button');
 
 				els.pagination = els.$root.find('.odx-topic-hub-filter__pagination');
 				els.anchorPagination = els.$root.find('#js-events-search-pagination--gov a');
-				els.visibleItems = $cards.find('.base22-filter-container--visible'); //.iop-filter__item--visible
+				els.visibleItems = $cards.find('.js-b22-item--visible'); //.iop-filter__item--visible
 				els.visibleGroupHeaders = $cards.find('.ohio-odx-alpha-directory__group-title--visible');
 				els.noResultsImage = els.$root.find('.odx-events__img-no-results');
 
@@ -475,7 +475,7 @@
 
 				var $allItems = els.$cards.items;
 				var $allHeaders = els.$cards.groupHeaders;
-				var $visibleItems = $('.base22-filter-component .base22-filter-container--visible');//els.visibleItems;
+				var $visibleItems = $('.js-b22-items-container .js-b22-item--visible');//els.visibleItems;
 				var visibleItemsNumber = $visibleItems.length;
 				var $pagination = els.pagination;
 
@@ -535,11 +535,11 @@
 				headers.hide();
 
 				//Show card per page number assigned
-				var itemInPage = cardsContainer.find('.base22-filter-container--visible[data-page="'+page+'"]');
+				var itemInPage = cardsContainer.find('.js-b22-item--visible[data-page="'+page+'"]');
 				itemInPage.show();
 
 				//Show index header per page number assigned
-				var headerInPage = cardsContainer.find('.ohio-odx-alpha-directory__group-title--visible[data-page="' + page + '"]');
+				var headerInPage = cardsContainer.find('.js-b22-index-header[data-page="' + page + '"]');
 				headerInPage.show();
 
 			},
@@ -670,7 +670,7 @@
 
 				for ( var i=0; i < numberOfCards; i++ ) {
 					$( $cards[i] ).hide();
-					$( $cards[i] ).removeClass('base22-filter-container--visible');
+					$( $cards[i] ).removeClass('js-b22-item--visible');
 				}
 
 			},
@@ -692,8 +692,8 @@
 					for ( var i=0; i < numberOfCards; i++ ) {
 						if ( uuid === $cards[i].id ) {
 							$( $cards[i] ).show();
-							if ( ! $( $cards[i] ).hasClass('base22-filter-container--visible') )
-								$( $cards[i] ).addClass('base22-filter-container--visible');
+							if ( ! $( $cards[i] ).hasClass('js-b22-item--visible') )
+								$( $cards[i] ).addClass('js-b22-item--visible');
 						}
 					}
 				} );
@@ -1017,13 +1017,13 @@
 
 					if( _this.multipleLettersClicked.length > 0 ) {
 						//Hide all the cards
-						_this.hideCards();
+						_this.hideAllCards();
 						//Hide headers
 						_this.hideGroupHeaders();
 						//Show group headers that matches the cards group
 						els.$cards.groupHeaders.each(function() {
 							var $header = $(this);
-							multipleLettersClicked.forEach(function( el, index ) {
+							_this.multipleLettersClicked.forEach(function( el, index ) {
 								if( $header.attr('data-index') === el ) {
 									$header.show();
 									$header.addClass('ohio-odx-alpha-directory__group-title--visible');
@@ -1036,7 +1036,7 @@
 						indexOfFoundItems = MultipleFiltersDataLogic.filterByAlphaIndex(selectedLettersOrdered);
 						//Show cards matches the filter
 						indexOfFoundItems.forEach(function( idx ){
-							els.$cards.items[idx].classList.add('iop-filter__item--visible');
+							els.$cards.items[idx].classList.add('js-b22-item--visible');
 							$(els.$cards.items[idx]).show();
 							var numberResults = indexOfFoundItems.length;
 							_this.renderShowResults( numberResults );

@@ -1,3 +1,156 @@
 <style>
+	/*.iop-filter__first-section-container*/
+	.b22-filter__first-section {
+		background-color: #f2f2f2;
+		border: 1px solid #d8d8d8;
+		padding: 0 20px;
+		border-radius: 3px 3px 0 0;
+	}
+
+	/*iop-filter__title-container*/
+	.b22-filter__title-container {
+		display: inline;
+	}
+
+	.b22-filter__title-container div {
+		display: inline-block;
+		font-size: 21px;
+		font-style: normal;
+		margin: 15px 0 10px;
+		line-height: 1.5;
+		font-weight: 600;
+	}
+
+	.b22-filter__title-container span {
+		display: none;
+		float: right;
+		margin: 15px 0 15px;
+	}
+
+	.b22-filter__title-container i {
+		color: #3D7AA9;
+	}
+
+	.b22-filter__input-filter {
+		border: 1px solid #d8d8d8;
+		width: calc(100% - 150px);
+		display: inline-block;
+		border-radius: 5px 0 0 5px;
+		border-right: 0;
+		outline: none;
+		font-size: 12px;
+		line-height: 15px;
+		padding: 0 12px;
+		height: 40px;
+	}
+
+	.b22-filter__input-filter-btn, b22-filter__input-filter-btn:hover {
+		font-size: 16px;
+		font-weight: 600;
+		height: 40px;
+		width: 150px;
+		float: right;
+		text-transform: uppercase;
+		border-radius: 0px 5px 5px 0;
+		border-top: 1px solid #3D7AA9;
+		border-bottom: 1px solid #3D7AA9;
+		border-right: 1px solid #3D7AA9;
+		border-left: 0px;
+		outline: none;
+		background-color: #3D7AA9;
+	}
+
+	.b22-alphalist__index-container {
+		margin-bottom: 0px;
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+
+	ul.b22-alphalist__alphabet {
+		list-style: none;
+		margin: 0;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		padding: 0;
+		background-color: #FFFFFF;
+		display: block;
+	}
+
+	ul.b22-alphalist__alphabet > li {
+		display: inline-block;
+	}
+
+	ul.b22-alphalist__alphabet li {
+		padding: 5px 7px;
+	}
+
+	ul.b22-alphalist__alphabet li:not(:first-child) a{
+		color: #9B9B9B !important;
+		text-transform: uppercase;
+		text-decoration: none;
+	}
+
+	.b22-alphalist__alphabet-list-title {
+		background-color: #3d7aa9;
+		border-radius: 5px 0 0 5px;
+	}
+
+	.b22-alphalist__alphabet-list-title a.b22-alphalist-button-all {
+		padding: 5px 10px;
+		display: block;
+		text-transform: uppercase;
+		color: white;
+		text-decoration: none;
+	}
+
+	.b22-alphalist__alphabet-list-title a.b22-alphalist-button-all:visited,
+	.b22-alphalist__alphabet-list-title a.b22-alphalist-button-all:focus {
+		color: white;
+		text-decoration: none;
+	}
+
+	.b22-filter__second-section {
+		border: 1px solid #d8d8d8;
+		padding: 0 20px 20px;
+		border-radius: 0 0 3px 3px;
+		border-top: 0;
+	}
+
+	.b22-filter__categories-title {
+		display: inline-block;
+		font-size: 21px;
+		font-style: normal;
+		margin: 15px 0 10px;
+		line-height: 1.5;
+		font-weight: 600;
+	}
+
+	.b22-filter-taxonomies-container {
+
+	}
+
+	.b22-filter__results-number-container {
+		height: 40px;
+		line-height: 40px;
+		white-space: nowrap;
+	}
+
+	.b22-filter__results-number {
+		font-size: 14px;
+		color: #5C5C5C;
+	}
+
+	.b22-filter__reset-btn-container {
+		text-align: right;
+	}
+
+	.b22-filter__reset-btn {
+		border: 1px solid #5C5C5C;
+		text-transform: uppercase;
+		border-radius: 3px;
+		padding: 9px 30px 5px;
+		font-weight: 600;
+		background: transparent;
+	}
 
 </style>

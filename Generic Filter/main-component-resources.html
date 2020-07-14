@@ -10,7 +10,7 @@
 	[Component name="ohio design/agencies/medicaid/multiple-filters-generic-js"]
 
 	var FILTERS = {
-		//alpha: "#selector", //Alpha List Selector
+		alpha: "#selector", //Alpha List Selector
 		filters: [
 			{
 				id: "#js-select-county", //Select2 Selector
@@ -36,7 +36,7 @@
 		],
 		itemsMapping: function ( Resources ){
 			var unsortedAlphabhetically = Resources.map(function( Item ) {
-				Item.title =  Item.eventName;
+				Item.title = Item.eventName;
 				return Item;
 			});
 			var sortedToWorkPropertlyWithAlphaIndex = unsortedAlphabhetically.sort(function(a, b){

@@ -19,7 +19,7 @@
 	[Component name="ohio design/agencies/medicaid/multiple-filters-generic-js"]
 
 	var FILTERS = {
-		//alpha: "#selector", //Alpha List Selector
+		alpha: "#selector", //Alpha List Selector
 		filters: [
 			{
 				id: "#js-select-county", //Select2 Selector
@@ -55,6 +55,7 @@
 				var weekDay = eventDate.format('ddd');
 				var dayOfMonth = eventDate.format('DD');
 				var time = eventDate.format('hh:mm A');
+				Item.title = Item.eventName;
 				Item.startTime = eventDate;
 				Item.month = month;
 				Item.weekDay = weekDay;//name
