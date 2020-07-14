@@ -1,32 +1,33 @@
 <!-- START Ohio Design / Content / Component Templates / Agencies / OPD / multiple-filters-template.hbs.html -->
-<div class="iop-filter__first-section-container">
-	<div class="iop-filter__title-container">
+<!-- This template does not allow to use alphabetic index, remove before LIVE -->
+<div class="b22-filter__first-section">
+	<div class="b22-filter__title-container">
 		<div>Filter Title</div>
 		<span><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
 	</div>
-	<div class="row iop-filter__input-container">
+	<div class="row b22-filter__input-container">
 		{{#if eventFilter}}
 			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 margin-bottom-sm">
-				<label for="iop-input-search" class="sr-only">Filter</label>
-				<input id="iop-input-search" class="iop-filter__input-filter" type="text" placeholder="Search by keyboard...">
-				<button class="iop-filter__input-filter-btn btn btn-primary">Filter</button>
+				<label for="b22-input-search" class="sr-only">Filter</label>
+				<input id="b22-input-search" class="js-b22-input b22-filter__input-filter" type="text" placeholder="Search by keyboard...">
+				<button class="js-b22-filter-button b22-filter__input-filter-btn btn btn-primary">Filter</button>
 			</div>
 			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 				<div id="{{eventFilter.id}}"></div>
 			</div>
 		{{else}}
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 margin-bottom-sm">
-			<label for="iop-input-search" class="sr-only">Filter</label>
-			<input id="iop-input-search" class="iop-filter__input-filter" type="text" placeholder="Search by keyboard...">
-			<button class="iop-filter__input-filter-btn btn btn-primary">Filter</button>
+			<label for="b22-input-search" class="sr-only">Filter</label>
+			<input id="b22-input-search" class="js-b22-input b22-filter__input-filter" type="text" placeholder="Search by keyboard...">
+			<button class="js-b22-filter-button b22-filter__input-filter-btn btn btn-primary">Filter</button>
 		</div>
 		{{/if}}
 	</div>
 </div>
 
-<div class="iop-filter__second-section-container">
-	<div class="iop-filter__categories-title">Filter Events</div>
-	<div id="iop-filter-filters-container" class="row margin-bottom-sm componentContainer " style="">
+<div class="b22-filter__second-section">
+	<div class="b22-filter__categories-title">Filter Events</div>
+	<div id="b22-filter-taxonomies-container" class="row margin-bottom-sm componentContainer " style="">
 		{{#each Filters}}
 		<article id="{{propertyName}}" class="ohio-select2 col-lg-{{numColumns}} col-md-{{numColumns}} col-sm-12 col-xs-12">
 			<select multiple="multiple" id="{{id}}">
@@ -44,14 +45,14 @@
 		{{/each}}
 	</div>
 	<div class="row">
-		<div class="iop-filter__results-number-container col-xs-12 col-sm-6 col-md-6 col-lg-6">
-			<div class="iop-filter__results-number"></div>
+		<div class="b22-filter__results-number-container col-xs-12 col-sm-6 col-md-6 col-lg-6">
+			<div class="js-b22-results-number b22-filter__results-number"></div>
 		</div>
 		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 			<button id="sort-by-date" class="btn">Sort by date</button>
 		</div>
-		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 iop-filter__reset-btn-container">
-			<button class="iop-filter__reset-btn btn">Reset Filters</button>
+		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 b22-filter__reset-btn-container">
+			<button class="js-b22-reset-button b22-filter__reset-btn btn">Reset Filters</button>
 		</div>
 	</div>
 </div>
