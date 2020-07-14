@@ -462,11 +462,11 @@
 				els.resultsNumber = els.$root.find('.js-b22-results-number');
 				els.resetButton = els.$root.find('.js-b22-reset-button');
 
-				els.pagination = els.$root.find('.odx-topic-hub-filter__pagination');
-				els.anchorPagination = els.$root.find('#js-events-search-pagination--gov a');
+				els.pagination = els.$root.find('.js-b22-filter-pagination');//odx-topic-hub-filter__pagination
+				els.anchorPagination = els.$root.find('.js-b22-filter-pagination a');
 				els.visibleItems = $cards.find('.js-b22-item--visible'); //.iop-filter__item--visible
-				els.visibleGroupHeaders = $cards.find('.ohio-odx-alpha-directory__group-title--visible');
-				els.noResultsImage = els.$root.find('.odx-events__img-no-results');
+				els.visibleGroupHeaders = $cards.find('.js-b22-index-header--visible');
+				els.noResultsImage = els.$root.find('.js-b22-image-no-results');//odx-events__img-no-results
 
 			},
 			setPagination: function(){
@@ -703,7 +703,7 @@
 				els.$cards.groupHeaders.each(function(){
 					var $header = $(this);
 					$header.show();
-					$header.addClass('ohio-odx-alpha-directory__group-title--visible');
+					$header.addClass('js-b22-index-header--visible');
 				});
 			},
 			renderShowResults: function( numberResults ) {
@@ -984,7 +984,7 @@
 				letters.each(function() {
 					var letter = $(this);
 					var activeIndex = letter.find('span');
-					activeIndex.removeClass('opd-index--active');
+					activeIndex.removeClass('js-b22-filter-index--active');
 				});
 			},
 			setIndexFilterActions: function(){
@@ -998,19 +998,19 @@
 					event.preventDefault();
 					var target = event.target;
 					var parentTarget = target.parentElement;
-					if ( target.localName === "span" && parentTarget.classList.contains( 'ohio-odx-alpha-directory__alphabet-char' ))
-						target.classList.add('opd-index--active');
+					if ( target.localName === "span" && parentTarget.classList.contains( 'js-b22-alphabet-char' ))
+						target.classList.add('js-b22-filter-index--active');
 					var letter = parentTarget.getAttribute('data-target');
 
 					var wasTheLetterSelectedBefore = _this.multipleLettersClicked.indexOf(letter);
 					if ( wasTheLetterSelectedBefore >= 0 ) {
 						_this.multipleLettersClicked.splice( wasTheLetterSelectedBefore, 1);
-						target.classList.remove('opd-index--active');
+						target.classList.remove('js-b22-filter-index--active');
 					} else {
 						if (letter!== null) {
 							_this.multipleLettersClicked.push(letter);
 						} else {
-							if ( parentTarget.classList.contains('js-opd-alphabet-button-all') )
+							if ( parentTarget.classList.contains('js-b22-alphabet-button-all') )
 								_this.resetAll();
 						}
 					}
@@ -1026,7 +1026,7 @@
 							_this.multipleLettersClicked.forEach(function( el, index ) {
 								if( $header.attr('data-index') === el ) {
 									$header.show();
-									$header.addClass('ohio-odx-alpha-directory__group-title--visible');
+									$header.addClass('js-b22-index-header--visible');
 								}
 							});
 
