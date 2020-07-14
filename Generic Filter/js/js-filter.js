@@ -1041,6 +1041,7 @@
 							var numberResults = indexOfFoundItems.length;
 							_this.renderShowResults( numberResults );
 						});
+						_this.setPagination();
 					} else {
 						_this.multipleLettersClicked.splice(0);
 						_this.resetAll();
