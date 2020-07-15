@@ -58,20 +58,28 @@
 		</article>
 		{{/each}}
 		{{#each sorting}}
-		<article id="{{propertyName}}" class="ohio-select2 col-lg-4 col-md-4 col-sm-12 col-xs-12">
-			<button id="{{id}}" class="btn btn-secondary">Sort DESC</button>
+		<article id="{{propertyName}}" class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+			<div class="b22-secondary-button-container">
+				<button id="{{id}}" class="btn btn-secondary">Sort <i class="fas fa-sort-amount-down"></i></button>
+			</div>
 		</article>
 		{{/each}}
+		<!-- START Custom filter button: Add here your button for custom filter -->
+		<!--
+		<article class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+			<div class="b22-secondary-button-container">
+				<button id="sort-by-date" class="btn">Sort by date</button>
+			</div>
+		</article>
+		-->
+		<!-- END Custom filter button -->
 	</div>
 	<div class="row">
 		<div class="b22-filter__results-number-container col-xs-12 col-sm-6 col-md-6 col-lg-6">
 			<div class="js-b22-results-number b22-filter__results-number"></div>
 		</div>
-		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-			<button id="sort-by-date" class="btn">Sort by date</button>
-		</div>
 		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 b22-filter__reset-btn-container">
-			<button class="js-b22-reset-button b22-filter__reset-btn btn">Reset Filters*</button>
+			<button class="js-b22-reset-button b22-filter__reset-btn btn">Reset Filters</button>
 		</div>
 	</div>
 </div>

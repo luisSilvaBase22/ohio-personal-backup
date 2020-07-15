@@ -29,7 +29,7 @@
 		],
 		sorting: [
 			{
-				id: "#sort-by-number", //Click listener will be added to this selector
+				id: "#b-sort-title", //Click listener will be added to this selector
 				//sortFn: 'sortFn', Optional, a sorting function
 				propertyName: "title", // Property Name, applies only if sortFn is not defined
 				order: "DESC" //ASC,DESC Applies only if sortFn is not defined
@@ -77,8 +77,28 @@
 
 	document.addEventListener( 'DOMContentLoaded', function() {
 		var multiplesFiltersInstance = window.FiltersWidget( WIDGET_SETTINGS.menuComponentId );
-		multiplesFiltersInstance.start( FILTERS, WIDGET_SETTINGS );
+		multiplesFiltersInstance.start( FILTERS, WIDGET_SETTINGS ).done( function( response ) {
+			console.log("Rendered");
+			updateSortingIcon();
+		} );
 	} );
+
+	//To update icon sort, function not necessary for the widget, just for UX
+	function updateSortingIcon() {
+		var sortButton = document.querySelector('#b-sort-title');
+		var icon = sortButton.querySelector('i');
+		sortButton.addEventListener('click', function(  ) {
+			var isIconDown = icon.classList.contains('fa-sort-amount-down');
+
+			if ( isIconDown ) {
+				icon.classList.replace('fa-sort-amount-down', 'fa-sort-amount-up');
+			} else {
+				icon.classList.replace('fa-sort-amount-up', 'fa-sort-amount-down');
+			}
+
+		});
+	}
+
 
 </script>
 <!-- END: Ohio Design / Agencies / ODH / Filter / Generic Filter / Main -->
