@@ -1250,6 +1250,17 @@
 					var Sorting = _this.FilterInitialSettings.sorting;
 					var CustomFilters = _this.FilterInitialSettings.customFilter;
 
+					var Labels = _this.WidgetSettings.Labels;
+					if (Labels === undefined) {
+						Labels = {};
+						Labels.filterTitleFirstSection = undefined;
+						Labels.filterButton = undefined;
+						Labels.inputPlaceholder = undefined;
+						Labels.filterTitleSecondSection = undefined;
+						Labels.allTypeIndexButton = undefined;
+						Labels.resetFiltersButton = undefined;
+					}
+
 					_this.Filters = _this.addPropertiesToFiltersForTemplate( Filters );
 					_this.totalResources = response.length;
 
@@ -1269,9 +1280,16 @@
 							sorting: Sorting,
 							eventFilter: EventFilter,
 							alphabeticalList: alphabet,
-							CustomFilter: CustomFilters
+							CustomFilter: CustomFilters,
+							filterTitleFirstSection: Labels.filterTitleFirstSection,
+							filterButton: Labels.filterButton,
+							inputPlaceholder: Labels.inputPlaceholder,
+							filterTitleSecondSection: Labels.filterTitleSecondSection,
+							allTypeIndexButton: Labels.allTypeIndexButton,
+							resetFiltersButton: Labels.resetFiltersButton
 						}
 					});
+
 
 					FiltersComponent.render().then(function() {
 						console.log('Filters Rendered!');
@@ -1336,13 +1354,15 @@
 				var templateItems = _this.WidgetSettings.templateItems;
 				var imageNoResults = _this.WidgetSettings.imageNoResults;
 				var idTemplateItems = _this.WidgetSettings.idTemplateItems;
+				var noResultsText = _this.WidgetSettings.Labels;
 
 				var CardsComponent = new OhioToolkitWebComponent({
 					element: idTemplateItems,
 					templateLocation: templateItems,
 					data: {
 						items: response,
-						noResultsImgPath: imageNoResults
+						noResultsImgPath: imageNoResults,
+						noResultsText: noResultsText
 					}
 				});
 

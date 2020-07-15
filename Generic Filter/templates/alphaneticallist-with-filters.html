@@ -1,15 +1,15 @@
 <!-- START Ohio Design / Content / Component Templates / Agencies / OPD / multiple-filters-template.hbs.html -->
 <div class="b22-filter__first-section">
 	<div class="b22-filter__title-container">
-		<div>Filter Title</div>
+		<div>{{getMultilingualLabelByWCMKey ./filterTitleFirstSection}}</div>
 		<span><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
 	</div>
 	<div class="row b22-filter__input-container">
 		{{#if eventFilter}}
 		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 margin-bottom-sm">
 			<label for="b22-input-search" class="sr-only">Filter</label>
-			<input id="b22-input-search" class="js-b22-input b22-filter__input-filter" type="text" placeholder="Search by keyboard...">
-			<button class="js-b22-filter-button b22-filter__input-filter-btn btn btn-primary">Filter</button>
+			<input id="b22-input-search" class="js-b22-input b22-filter__input-filter" type="text" placeholder="{{getMultilingualLabelByWCMKey ./inputPlaceholder}}">
+			<button class="js-b22-filter-button b22-filter__input-filter-btn btn btn-primary">{{getMultilingualLabelByWCMKey ./filterButton}}</button><!-- Filter -->
 		</div>
 		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
 			<div id="{{eventFilter.id}}"></div>
@@ -17,8 +17,8 @@
 		{{else}}
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 margin-bottom-sm">
 			<label for="b22-input-search" class="sr-only">Filter</label>
-			<input id="b22-input-search" class="js-b22-input b22-filter__input-filter" type="text" placeholder="Search by keyboard...">
-			<button class="js-b22-filter-button b22-filter__input-filter-btn btn btn-primary">Filter</button>
+			<input id="b22-input-search" class="js-b22-input b22-filter__input-filter" type="text" placeholder="{{getMultilingualLabelByWCMKey ./inputPlaceholder}}">
+			<button class="js-b22-filter-button b22-filter__input-filter-btn btn btn-primary">{{getMultilingualLabelByWCMKey ./filterButton}}</button><!-- Filter -->
 		</div>
 		{{/if}}
 	</div>
@@ -28,7 +28,7 @@
 			<ul class="js-b22-indexes js-opd-alphabet-container b22-alphalist__alphabet">
 				<li class="b22-alphalist__alphabet-list-title">
 					<a href="#top" class="js-b22-alphabet-button-all js-opd-alphabet-button-all b22-alphalist-button-all">
-						<span>All type</span>
+						<span>All type </span><!--{{getMultilingualLabelByWCMKey ./allTypeIndexButton}} -->
 					</a>
 				</li>
 				{{#each alphabeticalList}}
@@ -45,10 +45,11 @@
 </div>
 
 <div class="b22-filter__second-section">
-	<div class="b22-filter__categories-title">Filter Events</div>
+	<div class="b22-filter__categories-title">{{getMultilingualLabelByWCMKey ./filterTitleSecondSection}}</div><!-- Filter events -->
 	<div id="b22-filter-taxonomies-container" class="row margin-bottom-sm componentContainer " style="">
 		{{#each Filters}}
 		<article id="{{propertyName}}" class="ohio-select2 col-lg-{{numColumns}} col-md-{{numColumns}} col-sm-12 col-xs-12">
+			<label for="{{id}}">{{label}}</label>
 			<select multiple="multiple" id="{{id}}">
 				<option value="all" selected="selected">{{allLabel}}</option>
 				{{#each options}}
@@ -79,7 +80,7 @@
 			<div class="js-b22-results-number b22-filter__results-number"></div>
 		</div>
 		<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 b22-filter__reset-btn-container">
-			<button class="js-b22-reset-button b22-filter__reset-btn btn">Reset Filters</button>
+			<button class="js-b22-reset-button b22-filter__reset-btn btn">{{getMultilingualLabelByWCMKey ./resetFiltersButton}}</button><!-- Reset Filters -->
 		</div>
 	</div>
 </div>

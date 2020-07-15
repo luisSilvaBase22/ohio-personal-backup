@@ -14,7 +14,7 @@
 		alpha: {
 			id: "#selector",
 			propertyName: 'title'
-		}, //Alpha List Selector
+		},
 		filters: [
 			{
 				id: "#js-select-county", //Select2 Selector
@@ -71,11 +71,20 @@
 	var WIDGET_SETTINGS = {
 		root: "#id-filter",
 		menuComponentId: '[Component name="ohio design/agencies/puco/events/calendar-view/all-events/events-json-all-events" resultsPerPage="" startPage="" format="id"]',
-		template: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/opd/alphabetical-list"]',
+		template: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/opd/generic-filter"]',
 		elementsPerPage: 3,
 		idTemplateItems: "#cards-generic-wrapper",
 		imageNoResults: '[Component name="ohio design/agencies/odh/no-results.png" rendition="auto" format="url"]',
-		templateItems: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/opd/alphabetical-items"]'
+		templateItems: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/opd/alphabetical-items"]',
+		Labels: {
+			filterTitleFirstSection: 'opd-filter-by-name',
+			filterButton: 'opd-filter-title',
+			inputPlaceholder: 'opd-filter-placeholder',
+			//filterTitleSecondSection: '',
+			//allTypeIndexButton: '',
+			resetFiltersButton: 'opd-reset-filters',
+			noResultsText: 'odx-no-results-image'
+		}
 	};
 
 	document.addEventListener( 'DOMContentLoaded', function() {
