@@ -11,7 +11,10 @@
 	[Component name="ohio design/agencies/medicaid/multiple-filters-generic-js"]
 
 	var FILTERS = {
-		alpha: "#selector", //Alpha List Selector
+		alpha: {
+			id: "#selector",
+			propertyName: 'title'
+		}, //Alpha List Selector
 		filters: [
 			{
 				id: "#js-select-county", //Select2 Selector

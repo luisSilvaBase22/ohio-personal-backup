@@ -322,33 +322,37 @@
 				var bDate = new Date( b.startTimeWCM );
 				return ((aDate < bDate) ? -1 : ((aDate > bDate) ? 1 : 0));
 			},
-			filterByAlphaIndex: function( letterIndexes ){//input an array of selected letters sorted alphabetically: ["a", "d", "f"].sort()
-				var resultIndexes = [];
+			filterByAlphaIndex: function( letterIndexes, propertyName ){//input an array of selected letters sorted alphabetically: ["a", "d", "f"].sort()
+				var resultUuids = [];
+				var resultItems = [];//Used only for debugging
 				var curPosition = 0;
 
 				for(var i=0; i<letterIndexes.length;i++){
 					var letterIndex = letterIndexes[i];
 
 					for(var j=curPosition; j<this.AllItems.length;j++){
-						var countyFirstLetter = this.AllItems[j].title.substring(0, 1).toLowerCase();
+						var CurrentItem = this.AllItems[j];
+						var countyFirstLetter = CurrentItem[propertyName].substring(0, 1).toLowerCase();
 						if( letterIndex === countyFirstLetter ) {
-							resultIndexes.push(j);
+							resultUuids.push( CurrentItem.uuid );
+							resultItems.push( CurrentItem );
 							curPosition = j;
 						}
-						if (countyFirstLetter>letterIndex) {
+						/* Compares lexicographically "a">"c" */
+						if ( countyFirstLetter !== "" && countyFirstLetter>letterIndex) {
 							curPosition = j;
 							break;
 						}
 					}
 
 				}
-
-				return resultIndexes;
+				console.log("Filtered by alphabetic selection: ", resultItems );
+				return resultUuids;
 				//returns an array with the indexes of the items to show
 			},
-			addIndexToItems: function( Items ){
+			addIndexToItems: function( Items, propertyName ){
 				var indexedItems = Items.filter( function(el, index){
-					var indexAlphabet = el.title.substring(0, 1);
+					var indexAlphabet = el[propertyName].substring(0, 1);
 					el.index = indexAlphabet;
 					if ( Utils.isPair(index) )
 						el.pairItem = true;
@@ -358,7 +362,7 @@
 
 				return removedDuplicatedItems;
 			},
-			getContentPiecesData: function( mappingFunction, sortByDate, setAlphabeticIndexes ){
+			getContentPiecesData: function( mappingFunction, sortByDate, AlphabeticalFilter ){
 				var _this = this;
 				var serviceURL = Utils.configureAjaxParameters();
 				return OHIO.ODX.actions.getAjaxDataFromURL(serviceURL).then(function( response ){
@@ -378,8 +382,9 @@
 						ContentPieces = ContentPieces.sort(_this.sortByDateForEventsTypeContentOnly);
 					}
 
-					if ( setAlphabeticIndexes ) {
-						ContentPieces = _this.addIndexToItems( ContentPieces );
+					if ( AlphabeticalFilter ) {
+						var _propertyName = AlphabeticalFilter.hasOwnProperty('propertyName') ? AlphabeticalFilter.propertyName : 'title';
+						ContentPieces = _this.addIndexToItems( ContentPieces, _propertyName );
 					}
 
 					return _this.AllItems = _this.FilteredItems = ContentPieces;
@@ -987,7 +992,7 @@
 					activeIndex.removeClass('js-b22-filter-index--active');
 				});
 			},
-			setIndexFilterActions: function(){
+			setIndexFilterActions: function( propertyName ){
 				var els = this.elements;
 				var directory = els.$filterByAlphaindex.letters;
 				var indexOfFoundItems;
@@ -1033,14 +1038,18 @@
 						});
 
 						var selectedLettersOrdered = _this.multipleLettersClicked.sort();
-						indexOfFoundItems = MultipleFiltersDataLogic.filterByAlphaIndex(selectedLettersOrdered);
+						indexOfFoundItems = MultipleFiltersDataLogic.filterByAlphaIndex(selectedLettersOrdered, propertyName);
 						//Show cards matches the filter
-						indexOfFoundItems.forEach(function( idx ){
+						/*indexOfFoundItems.forEach(function( idx ){
 							els.$cards.items[idx].classList.add('js-b22-item--visible');
 							$(els.$cards.items[idx]).show();
 							var numberResults = indexOfFoundItems.length;
 							_this.renderShowResults( numberResults );
 						});
+						 */
+						_this.showCards( indexOfFoundItems );
+						var numberResults = indexOfFoundItems.length;
+						_this.renderShowResults( numberResults );
 						_this.setPagination();
 					} else {
 						_this.multipleLettersClicked.splice(0);
@@ -1209,17 +1218,15 @@
 					sortByDate = true;
 				}
 
-				var alphabeticalFilter = _this.FilterInitialSettings.alpha;
+				var AlphabeticalFilter = _this.FilterInitialSettings.alpha;
 
-				var setAlphabeticIndexes = false;
 				var alphabet = undefined;
 
-				if ( alphabeticalFilter ) {
-					setAlphabeticIndexes = true;
+				if ( AlphabeticalFilter ) {
 					alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
 				}
 
-				MultipleFiltersDataLogic.getContentPiecesData( mappingFunction, sortByDate, setAlphabeticIndexes ).then( function( response ){
+				MultipleFiltersDataLogic.getContentPiecesData( mappingFunction, sortByDate, AlphabeticalFilter ).then( function( response ){
 					console.log("The data: ", response );
 
 					var Filters = _this.FilterInitialSettings.filters;
@@ -1285,8 +1292,9 @@
 								_this.setEventForInput();
 							}
 
-							if ( alphabeticalFilter ) {
-								_this.setIndexFilterActions();
+							if ( AlphabeticalFilter ) {
+								var propertyName = AlphabeticalFilter.propertyName;
+								_this.setIndexFilterActions( propertyName );
 							}
 
 							_this.setResetActions();
