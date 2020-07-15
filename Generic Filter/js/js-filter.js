@@ -526,6 +526,16 @@
 					}
 				});
 
+				var $pages = $pagination.find('.page-link');
+				$pages.each(function(){
+					var $page = $(this);
+					var pageNumber = $page.text();
+					$page.attr('aria-label',"Page Number "+pageNumber);
+				});
+
+				$pages.first().attr('aria-label',"Previous page");
+				$pages.last().attr('aria-label',"Next page");
+
 				var $anchorPagination = els.anchorPagination;
 				$anchorPagination.attr('aria-label', 'resources-search-pagination');
 				$anchorPagination.attr('href', '#top');
@@ -1091,6 +1101,11 @@
 
 				window.location.href = window.location.href.split( '#' )[ 0 ] + stringParameters;
 			},
+			addingAriaLabels: function(){
+				$(".select2-search__field").attr("aria-label", function () {
+					return $(this).closest("article").attr("id")
+				});
+			},
 			setResetActions: function(){
 
 				var _this = this;
@@ -1246,7 +1261,7 @@
 						}
 					}
 
-					var WebComponent = new OhioToolkitWebComponent({
+					var FiltersComponent = new OhioToolkitWebComponent({
 						element: container, //'#id-container',
 						templateLocation: template,
 						data: {
@@ -1258,7 +1273,7 @@
 						}
 					});
 
-					WebComponent.render().then(function() {
+					FiltersComponent.render().then(function() {
 						console.log('Filters Rendered!');
 
 						_this.Filters.forEach( function( Filter ) {
@@ -1304,6 +1319,7 @@
 								deferredStart.resolve();
 
 						} );
+						_this.addingAriaLabels();
 
 					});
 
@@ -1321,7 +1337,7 @@
 				var imageNoResults = _this.WidgetSettings.imageNoResults;
 				var idTemplateItems = _this.WidgetSettings.idTemplateItems;
 
-				var Cards = new OhioToolkitWebComponent({
+				var CardsComponent = new OhioToolkitWebComponent({
 					element: idTemplateItems,
 					templateLocation: templateItems,
 					data: {
@@ -1330,7 +1346,7 @@
 					}
 				});
 
-				Cards.render().then( function() {
+				CardsComponent.render().then( function() {
 					console.log("Cards rendered");
 
 					_this.setElements();
