@@ -1193,7 +1193,7 @@
 					console.error( e );
 				}
 			},
-			renderComponent: function(){
+			renderComponent: function( deferredStart ){
 				var _this = this;
 
 				var mappingFunction;
@@ -1291,6 +1291,10 @@
 
 							_this.setResetActions();
 							//_this.setPagination();
+
+							if (deferredStart)
+								deferredStart.resolve();
+
 						} );
 
 					});
@@ -1298,6 +1302,10 @@
 					//_this.renderCards( response );
 
 				});
+
+				if (deferredStart)
+					return deferredStart.promise();
+				return deferredStart;
 			},
 			renderCards: function( response, deferred ){
 				var _this = this;
@@ -1330,7 +1338,13 @@
 			start: function( Filters, WidgetSettings ) {
 				this.FilterInitialSettings = Filters;
 				this.WidgetSettings = WidgetSettings;
-				this.renderComponent();
+				var deferred = $.Deferred();
+				return this.renderComponent( deferred ).done(function( response ) {
+					console.log("Hi", response);
+					var promiseDef = $.Deferred();
+					deferred.resolve();
+					return deferred.promise();
+				});
 			}
 		};
 
