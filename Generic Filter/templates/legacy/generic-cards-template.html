@@ -1,8 +1,9 @@
+<!-- This template shows a card with a thumbnail, currently only working in Verdura -->
 <div class="odx-section-resources-cards-list odx-gov-cards__component row js-common-card-wrapper">
 	<p class="odx-section-resources-card-list__results"></p>
 	<div class="list-unstyled odx-topic__cards js-b22-items-container">
 		{{#each items}}
-		<div id = {{uuid}} class="js-b22-item js-b22-item--visible base22-filter-container__item-grid ohio-cards-container-grid base22-filter-container--visible odx-gov-resources__card odx-carousel-cards-item col-xs-12 col-sm-4 col-md-4 col-lg-3" data-topics="{{topics}}">
+		<div id = {{uuid}} class="js-b22-item js-b22-item--visible ohio-cards-container-grid odx-gov-resources__card odx-carousel-cards-item col-xs-12 col-sm-4 col-md-4 col-lg-3" data-topics="{{topics}}">
 			<div class="ohio-card ohio-card--center ohio-card-container">
 				{{#if linkURLExternal}}
 				{{#if linkURLWebContent}}
@@ -76,12 +77,12 @@
 			</div>
 		</div>
 		{{/each}}
-		<div class="js-no-results-img odx-events__img-no-results" style="display: none;">
+		<div class="js-b22-image-no-results js-no-results-img" style="display: none;">
 			<img src="{{{noResultsImgPath}}}" alt="No results for events search">
 			<p class="odx-card-no-result__message odx-bold">{{ getMultilingualLabelByWCMKey ./noResults }}</p>
 		</div>
 	</div>
 </div>
-<div class="odx-topic-hub-resources__pagination">
-	<ul id="js-events-search-pagination--gov" class="odx-events__search-pagination odx-topic-hub-filter__pagination pagination-sm"></ul>
+<div class="">
+	<ul class="js-b22-filter-pagination odx-events__search-pagination pagination-sm pagination"></ul>
 </div>
