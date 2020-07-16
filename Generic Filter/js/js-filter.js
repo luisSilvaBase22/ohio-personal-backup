@@ -413,6 +413,7 @@
 		};
 	};
 
+	//UI part
 	window.FiltersWidget = function( componentID ){
 
 		var Utils  = {
