@@ -51,7 +51,9 @@
 		],
 		events: {
 			formName: '[Element key="formName" type="content" context="selected" name="ohio content english/puco/forms/calendar-field-2"]',
-			id: 'calendar-field'//optional, by default in the template it is defined as "calendar-field"
+			id: 'calendar-field',//optional, by default in the template it is defined as "calendar-field"
+			startTimeSelector: '.iop-filter__input-date-1',
+			endTimeSelector: '.iop-filter__input-date-2'
 		},
 		itemsMapping: function ( Events ){
 			return Events.map(function( Item ) {

@@ -898,19 +898,22 @@
 
 				});
 			},
-			setEventForDateFilter: function(){
+			setEventForDateFilter: function( EventFilter ){
 				var _this = this;
 
 				var els = this.elements;
 				var searchButton = els.searchButton;
 				var input = els.input;
 
+				var startTimeSelector = EventFilter.startTimeSelector;
+				var endTimeSelector = EventFilter.endTimeSelector;
+
 				searchButton.on('click', function(){
 					var keyword = input.val();
 					keyword.trim().toLowerCase();
 
-					var startTimeInput = $('.iop-filter__input-date-1 .flatpickr-input').val();
-					var endTimeInput = $('.iop-filter__input-date-2 .flatpickr-input').val();
+					var startTimeInput = $( startTimeSelector + ' .flatpickr-input' ).val();
+					var endTimeInput = $( endTimeSelector + ' .flatpickr-input' ).val();
 
 					if ( startTimeInput != '') {
 						startTimeInput = new Date ( startTimeInput ) || '';
@@ -1320,7 +1323,7 @@
 							//_this.setElements();
 							if ( EventFilter ) {
 								_this.buildFieldsForEventPicker( EventFilter );
-								_this.setEventForDateFilter();
+								_this.setEventForDateFilter( EventFilter );
 							} else {
 								_this.setEventForInput();
 							}
