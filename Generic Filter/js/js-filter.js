@@ -1319,11 +1319,14 @@
 							} );
 						}
 
+						if ( EventFilter ) {//To render the events input at same time filters template do
+							_this.buildFieldsForEventPicker( EventFilter );
+						}
+
 						var deferred = $.Deferred();
 						_this.renderCards( response, deferred ).done( function() {
 							//_this.setElements();
-							if ( EventFilter ) {
-								_this.buildFieldsForEventPicker( EventFilter );
+							if ( EventFilter ) {//To add listener to events input once elements are rendered
 								_this.setEventForDateFilter( EventFilter );
 							} else {
 								_this.setEventForInput();
