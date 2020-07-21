@@ -731,7 +731,7 @@
 				//resultsParagraph.text('We found ' + numberResults + ' ' + results);
 				resultsParagraph.text('We found ' + numberResults + ' ' + 'results');
 			},
-			setEventForDropdown: function( idFilter, taxonomy ){
+			setListenerForDropdown: function( idFilter, taxonomy ){
 				var _this = this;
 
 				var id = idFilter.substr(0,1) === '#' ? idFilter : "#" + idFilter;
@@ -825,7 +825,7 @@
 
 				});
 			},
-			setEventForSorting: function( sortingSelector, propertyName, SortObject ){
+			setListenerForSorting: function( sortingSelector, propertyName, SortObject ){
 
 				var _this = this;
 				var SortedItems = [];
@@ -865,7 +865,7 @@
 				} );
 
 			},
-			setEventForInput: function(){
+			setListenerForInput: function(){
 				var _this = this;
 
 				var els = this.elements;
@@ -899,7 +899,7 @@
 
 				});
 			},
-			setEventForDateFilter: function( EventFilter ){
+			setListenerForDateFilter: function( EventFilter ){
 				var _this = this;
 
 				var els = this.elements;
@@ -1301,7 +1301,7 @@
 						_this.Filters.forEach( function( Filter ) {
 							var categorySelector = Filter.id;
 							var taxonomy = Filter.propertyName;
-							_this.setEventForDropdown( categorySelector, taxonomy );
+							_this.setListenerForDropdown( categorySelector, taxonomy );
 						} );
 
 						//validate if defined
@@ -1309,7 +1309,7 @@
 							Sorting.forEach( function( SortObject ) {
 								var sortSelector = SortObject.id.substr(0,1) === '#' ? SortObject.id : "#" + SortObject.id;
 								var propertyName = SortObject.propertyName;
-								_this.setEventForSorting( sortSelector, propertyName, SortObject );
+								_this.setListenerForSorting( sortSelector, propertyName, SortObject );
 							} );
 						}
 
@@ -1327,9 +1327,9 @@
 						_this.renderCards( response, deferred ).done( function() {
 							//_this.setElements();
 							if ( EventFilter ) {//To add listener to events input once elements are rendered
-								_this.setEventForDateFilter( EventFilter );
+								_this.setListenerForDateFilter( EventFilter );
 							} else {
-								_this.setEventForInput();
+								_this.setListenerForInput();
 							}
 
 							if ( AlphabeticalFilter ) {
