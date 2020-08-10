@@ -1,0 +1,24 @@
+/* Pre-compiled styles */
+#aw-header-navigation .navigation {
+	background: #2782C9;
+}
+
+#aw-header-navigation ul li.current,
+#aw-header-navigation ul li:hover,
+#aw-header-navigation ul li:active,
+#aw-header-navigation ul li:focus {
+	border-bottom: white;/*6px solid $color-secondary-main;*/
+}
+
+#aw-header-navigation ul li a{
+	color: white;/*$input-color*/
+	height: fit-content;
+}
+
+#aw-header-navigation ul li.current a,
+#aw-header-navigation ul li a:hover,
+#aw-header-navigation ul li a:active,
+#aw-header-navigation ul li a:focus {
+	color: white;/*$color-secondary-main;*/
+	border-bottom: none;
+}
