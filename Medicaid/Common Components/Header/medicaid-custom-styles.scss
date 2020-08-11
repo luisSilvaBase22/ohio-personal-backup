@@ -41,7 +41,7 @@ body .content-body .odx-background-color-primary-main{
 	text-align: right;
 }
 
-#aw-header-bottom-right a.odx-help__link{
+#aw-header-bottom-right a.odx-auth__link{
 	display: none;
 }
 
@@ -167,6 +167,8 @@ a.btn-default:active {
 /* END: Breadcrumb */
 
 /* START: Header */
+$header-bgr-color: #3D7AA9; //Temporal variable
+
 #aw-header-navigation ul {
 	height: 110px;
 }
@@ -240,6 +242,22 @@ a.btn-default:active {
 	#aw-header-bottom-right .odx-header-bottom-right{
 		padding: 30px 25px 0;
 	}
+	.aw-header-bottom #aw-header-bottom-right {
+		background: $header-bgr-color;
+	}
+	#aw-header-bottom-right .odx-search.odx-search_slide {
+		background: $header-bgr-color;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1200px) {
+	#aw-header-bottom-right {
+		background-color: $header-bgr-color;
+	}
+
+	#aw-header-bottom-right .odx-search.odx-search_slide {
+		background: $header-bgr-color;
+	}
 }
 
 @media screen and (min-width: 992px) {
@@ -293,7 +311,7 @@ a.btn-default:active {
 }
 
 .odx-header-bottom-right {
-	background-color: #3D7AA9;
+	background-color: $header-bgr-color;
 }
 
 .sticky-header > .odx-header-bottom-right {
@@ -316,7 +334,7 @@ a.btn-default:active {
 	}
 }
 #aw-main-wrapper .navigation {
-	background: #3D7AA9;
+	background: $header-bgr-color;
 }
 
 #aw-header-bottom-right .fa {
@@ -724,6 +742,7 @@ body .content-body .odx-background-color-primary-additional {
 	#aw-header-navigation ul li:focus {
 		border-bottom: none;
 	}
+
 }
 
 @media (max-width: 1199px) and (min-width: 992px) {
