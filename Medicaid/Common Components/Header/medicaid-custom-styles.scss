@@ -168,8 +168,8 @@ a.btn-default:active {
 
 /* START: Header */
 #aw-header-navigation ul {
-	 height: 110px;
- }
+	height: 110px;
+}
 #aw-header-navigation ul li {
 	height: 80px;
 }
@@ -177,24 +177,24 @@ a.btn-default:active {
 #aw-header-navigation ul li:hover,
 #aw-header-navigation ul li:active,
 #aw-header-navigation ul li:focus {
-	border-bottom: 6px solid $color-secondary-main;
+	border-bottom: 6px solid white;
 }
 #aw-header-navigation ul li a{
-	color: $input-color;
+	color: white;
 	height: fit-content;
 }
 #aw-header-navigation ul li.current a,
 #aw-header-navigation ul li a:hover,
 #aw-header-navigation ul li a:active,
 #aw-header-navigation ul li a:focus {
-	color: $color-secondary-main;
+	color: white;
 	border-bottom: none;
 }
 
 .odx-separator {
 	min-height: 49px;
 	width: 1px;
-	background-color: #D8D8D8;
+	background-color: white;
 	float: left;
 	margin-right: 20px;
 }
@@ -223,7 +223,7 @@ a.btn-default:active {
 	#aw-header-navigation ul li a:hover,
 	#aw-header-navigation ul li a:active,
 	#aw-header-navigation ul li a:focus {
-		color: black;
+		color: white;
 		border-bottom: none;
 	}
 	#aw-header-navigation ul li,
@@ -284,7 +284,7 @@ a.btn-default:active {
 }
 
 #aw-header-bottom-right .icon-description{
-	color: $color-secondary-main;
+	color: white;
 }
 
 #aw-header-bottom-right a {
@@ -293,7 +293,7 @@ a.btn-default:active {
 }
 
 .odx-header-bottom-right {
-	background-color: white;
+	background-color: #3D7AA9;
 }
 
 .sticky-header > .odx-header-bottom-right {
@@ -315,6 +315,22 @@ a.btn-default:active {
 		padding: 30px 5px 0 35px;
 	}
 }
+#aw-main-wrapper .navigation {
+	background: #3D7AA9;
+}
+
+#aw-header-bottom-right .fa {
+	color: white;
+}
+
+#aw-header-bottom-right .far {
+	color: white;
+}
+
+#aw-header-bottom-right .odx-search__btn .fas{
+	color: white;
+}
+
 /* END: Header */
 
 /* START: Footer */
