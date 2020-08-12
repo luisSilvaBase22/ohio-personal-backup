@@ -1,0 +1,57 @@
+.b-mega-menu {
+    background-color: #EEEEEE;
+    box-shadow: 0 20px 52px 0 rgba(0, 0, 0, 0.5);
+}
+.b-mega-menu .b-mega-menu__section {
+    padding-top: 20px;
+    padding-left: 3%;
+}
+.b-mega-menu .b-mega-menu__bottom-line {
+    border: solid;
+    border-color: #3B7AAB;
+    border-width: 10px 0 0 0;
+}
+
+.b-section__title,
+.b-secondary-page__title {
+    color: #3B7AAB;
+    font-family: "Source Sans Pro";
+}
+
+.b-section .b-section__title {
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: 0;
+    line-height: 32px;
+}
+.b-section .b-section__description {
+    font-family: "Source Sans Pro";
+    color: #4A4A4A;
+    font-size: 12px;
+    letter-spacing: 0.07px;
+    line-height: 14px;
+}
+
+.b-section__secondary-pages-list {
+    list-style: none;
+    padding: 0;
+}
+.b-section__secondary-pages-list .b-secondary-page__title {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 23px;
+}
+.b-section__secondary-pages-list .b-secondary-page__description {
+    color: #4A4A4A;
+    border-top: 1px solid #979797;
+    font-family: "Source Sans Pro";
+    font-size: 14px;
+    letter-spacing: 0.08px;
+    line-height: 18px;
+}
+
+.b-mega-menu__image-section {
+    height: 240px;
+    width: auto;
+}

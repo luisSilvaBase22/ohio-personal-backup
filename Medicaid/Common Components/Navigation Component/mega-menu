@@ -1,0 +1,77 @@
+$mega-menu-background-color: #EEEEEE;
+$mega-menu-bottom-line-color: #3B7AAB;
+
+//Fonts color
+$mega-menu-section-primary-color: #3B7AAB;
+$mega-menu-section-secondary-color: #4A4A4A;
+
+//Font type
+$mega-menu-primary-font: "Source Sans Pro";
+
+
+.b-mega-menu {
+	background-color: $mega-menu-background-color;
+	box-shadow: 0 20px 52px 0 rgba(0,0,0,0.5);
+
+	.b-mega-menu__section {
+		padding-top: 20px;
+		padding-left: 3%;
+	}
+
+	.b-mega-menu__bottom-line {
+		border: solid;
+		border-color: $mega-menu-bottom-line-color;
+		border-width: 10px 0 0 0;
+	}
+}
+
+.b-section__title,
+.b-secondary-page__title {
+	color: $mega-menu-section-primary-color;
+	font-family: $mega-menu-primary-font;
+}
+
+.b-section {
+	.b-section__title {
+		font-size: 25px;
+		font-weight: bold;
+		letter-spacing: 0;
+		line-height: 32px;
+	}
+
+	.b-section__description {
+		font-family: $mega-menu-primary-font;
+		color: $mega-menu-section-secondary-color;
+		font-size: 12px;
+		letter-spacing: 0.07px;
+		line-height: 14px;
+	}
+}
+
+.b-section__secondary-pages-list {
+	list-style: none;
+	padding: 0;
+	.b-secondary-page__title {
+		font-size: 18px;
+		font-weight: 600;
+		letter-spacing: 0;
+		line-height: 23px;
+	}
+
+	.b-secondary-page__description {
+		color: $mega-menu-section-secondary-color;
+		border-top: 1px solid #979797;
+		font-family: $mega-menu-primary-font;
+		font-size: 14px;
+		letter-spacing: 0.08px;
+		line-height: 18px;
+	}
+}
+
+.b-mega-menu__image-section {
+	height: 240px;
+	width: auto;
+}
+
+
+
