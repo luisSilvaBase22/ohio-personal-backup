@@ -598,6 +598,11 @@ body .content-body .aw-left-nav li.active a.left-navigation__link:focus {
 
 /* END: Header */
 /* START - Header nav */
+
+#aw-header-bottom-right #authoringlink {
+	display: none;
+}
+
 @media screen and (max-width: 525px){
 	#aw-header-bottom-right{
 		width: 180px;
