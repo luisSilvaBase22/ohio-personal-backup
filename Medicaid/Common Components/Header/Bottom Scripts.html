@@ -1,0 +1,70 @@
+<!-- START: Ohio Design / Agencies / Medicaid / Global Components / Desktop / Header / Bottom Scripts -->
+
+<script type="text/javascript" src="[Component name="odx common design/js/all-scripts-odx.min.js"]"></script>
+
+<script type="text/javascript" src="[Component name="odx common design/js/ui-kit.bundle.min.js"]"></script>
+<script type="text/javascript">
+
+	//Override External URLS
+	$('#odx-main-content a[href^="http"],#odx-main-content a[href^="https"]').attr("target","_blank");
+
+	window.onscroll = function() {odxScroll()};
+	function odxScroll() {
+		if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
+			$(".navigation").addClass("sticky-header");
+		} else {
+			$(".navigation").removeClass("sticky-header");
+		}
+	}
+
+	// Add offsett when scrolling in tablet and mobile
+	window.addEventListener("hashchange", function () {
+		var scrollY = window.scrollY;
+		if(window.scrollY == undefined){
+			scrollY = window.pageYOffset;
+		}
+		if(scrollY !== 0 && $(window).width() < 992){
+			window.scrollTo(window.scrollX, window.scrollY - 150);
+		}
+	});
+
+	(function() {
+		$(document).on('ready', function() {
+			// change top banner image position
+			if(isDesktop && $('.landing-highlight-top-image').length > 0){
+				$('.content-body').css('margin-top','140px');
+			}
+
+			// mark first item of the left-nav as active when there's no section active
+			if($('.odx-navigation--left ul li.active').length == 0 && $('.odx-navigation--left ul li').length > 0){
+				$('.odx-navigation--left ul li')[0].className = 'active';
+			}
+		})
+	})();
+
+
+	// This line allows to send the parameters in normal QUERY STRING (by default we send by HEADERS)
+	OHIO.ODX.configuration.useQueryStringParams = true;
+
+	// TODO: This line changes depending on the current agency
+	OHIO.ODX.configuration.currentAgency = window.siteId;
+	OHIO.ODX.configuration.defaultImage = "[Component name="ohio design/agencies/oda/logos-favicons-and-default-images/oda-default-card-image.jpg"]";
+
+	// Disable DEBUG log information
+	OHIO.ODX.configuration.debug = false;
+
+	// Apply multilingual labels for header right
+	OHIO.ODX.actions.applyMultilingualLabels('#aw-header-bottom-right', 'span.multilingual');
+	OHIO.ODX.actions.applyMultilingualLabels('.top-search', 'input.multilingual', true);
+	$('#aw-header-top-right').slideDown();
+
+	// Apply multilingual labels for the content
+	OHIO.ODX.actions.applyMultilingualLabels('#singleColumn', 'span.multilingual');
+	OHIO.ODX.actions.applyMultilingualLabels('.single-column-footer', 'span.multilingual');
+
+	OHIO.ODX.actions.applyMultilingualLabels('#aw-content-layout-two-columns', 'span.multilingual');
+	OHIO.ODX.actions.applyMultilingualLabels('#aw-content-layout-single-column', 'span.multilingual');
+	OHIO.ODX.actions.applyMultilingualLabels('#aw-content-large-column', 'span.multilingual');
+	OHIO.ODX.actions.applyMultilingualLabels('#twoColumnsRight','span.multilingual');
+</script>
+<!-- END: Ohio Design / Agencies / Medicaid / Global Components / Desktop / Header / Bottom Scripts -->
