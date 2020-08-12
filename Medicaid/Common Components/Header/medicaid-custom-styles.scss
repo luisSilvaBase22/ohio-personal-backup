@@ -548,6 +548,13 @@ body .content-body .aw-left-nav li.active a.left-navigation__link:focus {
 	}
 }
 
+#aw-header-bottom-left,
+.odx-header-bottom-right,
+.odx-search,
+.odx-search__container {
+	background-color: $color-secondary-main;
+}
+
 #aw-header-bottom-right .icon-description{
 	color: white;
 }
