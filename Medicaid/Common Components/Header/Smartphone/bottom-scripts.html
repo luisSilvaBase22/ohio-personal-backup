@@ -1,0 +1,109 @@
+<!-- START: Ohio Design / Agencies / Medicaid / Global Components / Smartphone / Bottom Scripts -->
+<script type="text/javascript" src="[Component name='odx common design/xwidget/js/all-xwidget3.js']"></script>
+<script src="[Component name='odx common design/js/all-scripts-smartphone-odx.js']"></script>
+<script type="text/javascript" src="[Component name='odx common design/js/ui-kit.bundle.js']"></script>
+
+<script type="text/javascript">
+	(function($){
+
+		// Add offsett when scrolling in desktop
+		window.addEventListener("hashchange", function () {
+			var scrollY = window.scrollY;
+			if(window.scrollY == undefined){
+				scrollY = window.pageYOffset;
+			}
+			if(scrollY !== 0 && $(window).width() > 991){
+				window.scrollTo(window.scrollX, window.scrollY - 150);
+			}
+		});
+
+		// This line allows to send the parameters in normal QUERY STRING (by default we send by HEADERS)
+		OHIO.ODX.configuration.useQueryStringParams = true;
+
+		OHIO.ODX.configuration.currentAgency = window.siteId;
+
+		// Apply multilingual labels for header right
+		OHIO.ODX.actions.applyMultilingualLabels('#aw-header-top', 'span.multilingual');
+
+		OHIO.ODX.actions.applyMultilingualLabels('#aw-header-bottom-right', 'span.multilingual');
+		OHIO.ODX.actions.applyMultilingualLabels('.top-search', 'input.multilingual', true);
+
+		// Apply multilingual labels for the content
+		OHIO.ODX.actions.applyMultilingualLabels('#singleColumn', 'span.multilingual');
+		OHIO.ODX.actions.applyMultilingualLabels('#aw-content-layout-two-columns', 'span.multilingual');
+		OHIO.ODX.actions.applyMultilingualLabels('#aw-content-layout-single-column', 'span.multilingual');
+		OHIO.ODX.actions.applyMultilingualLabels('#aw-content-large-column', 'span.multilingual');
+		OHIO.ODX.actions.applyMultilingualLabels('#twoColumnsRight','span.multilingual');
+
+		// Apply plugin main navigation
+		// We must use the window.load event in order to wait until all the resources (e.g. Dust templates) are loaded
+		$(window).load(function(){
+			// Apply multilingual labels for the mobile menu
+			OHIO.ODX.actions.applyMultilingualLabels('#main-nav-container', 'span.multilingual');
+			OHIO.ODX.actions.applyMultilingualLabels('#quick-links-mobile', 'a.mm-title');
+		});
+	})(jQuery);
+</script>
+
+<!-- Include FB SDK -->
+<script>
+	(function($){
+		$(function(){
+			var $headerNav = $("#aw-header-navigation");
+			var $buttonCollapse = $("#button-collapse-navigator");
+
+			$("body").append("<div class=\"visible-xs-block odx-mobile-nav__background\"><span class=\"sr-only\">background for mobile navigation</span></div>");
+			$headerNav.parent().append("<div class=\"hidden visible-xs-inline\"><div class=\"odx-mobile-nav__icon-button\"><span class=\"sr-only\">icon for toggle navigation</span><span class=\"chevron\"></span></div></div>");
+
+
+			$headerNav.css({"bottom": -$headerNav.height()});
+			var $button = $(".odx-mobile-nav__icon-button");
+
+			$headerNav.show(0, function(){
+				$headerNav.css({"bottom": -$headerNav.height() });
+			});
+
+			$button.show();
+
+			var $background = $(".odx-mobile-nav__background");
+
+			window.addEventListener("orientationchange", function() {
+				$headerNav.removeClass("aw-header-navigation--open");
+				$background.removeClass("odx-mobile-nav__background--open");
+				$button.removeClass("odx-mobile-nav__icon-button--open");
+				if(window.orientation == 0){
+					$headerNav.css({"bottom": -400});
+				} else{
+					$headerNav.css({"bottom": -200});
+				}
+				$button.css({"bottom": 50});
+				$background.css({"height": 0});
+			}, false);
+
+			$(".odx-mobile-nav__icon-button").on("click", function(){
+				$headerNav.toggleClass("aw-header-navigation--open");
+				$background.toggleClass("odx-mobile-nav__background--open");
+				$button.toggleClass("odx-mobile-nav__icon-button--open");
+
+				if($headerNav.hasClass("aw-header-navigation--open")){
+					$headerNav.css({"bottom": 0});
+					$button.css({"bottom": $headerNav.height() - 45 });
+				}else{
+					$headerNav.css({"bottom": -$headerNav.height()});
+					$button.css({"bottom": 50});
+				}
+
+				if($background.hasClass("odx-mobile-nav__background--open")){
+					$background.css({"height": $("body").height()});
+				}else{
+					$background.css({"height": 0});
+				}
+			});
+
+		});
+	})(jQuery)
+</script>
+<!-- End: Mobile Navigation -->
+
+
+<!-- END: Ohio Design / Agencies / Medicaid / Global Components / Smartphone / Bottom Scripts -->

@@ -1,0 +1,67 @@
+<!-- START: Ohio Design / Agencies / Medicaid / Global Components / Tablet / Bottom Scripts -->
+<script type="text/javascript" src="[Component name="odx common design/xwidget/js/all-xwidget3.min.js"]"></script>
+<script src="[Component name="odx common design/js/all-scripts-odx.min.js"]"></script>
+<script type="text/javascript" src="[Component name="odx common design/js/ui-kit.bundle.min.js"]"></script>
+<script type="text/javascript">
+
+// Add offsett when scrolling in desktop
+window.onscroll = function() {odxScroll()};
+function odxScroll() {
+	if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
+		$(".navigation").addClass("sticky-header");
+	} else {
+		$(".navigation").removeClass("sticky-header");
+	}
+}
+
+// Add offsett when scrolling in desktop
+window.addEventListener("hashchange", function () {
+	var scrollY = window.scrollY;
+	if(window.scrollY == undefined){
+		scrollY = window.pageYOffset;
+	}
+	if(scrollY !== 0 && $(window).width() > 991){
+		window.scrollTo(window.scrollX, window.scrollY - 150);
+	}
+});
+
+// This line allows to send the parameters in normal QUERY STRING (by default we send by HEADERS)
+OHIO.ODX.configuration.useQueryStringParams = true;
+
+OHIO.ODX.configuration.currentAgency = window.siteId;
+
+// Apply multilingual labels for header right
+OHIO.ODX.actions.applyMultilingualLabels('#aw-header-top', 'span.multilingual');
+OHIO.ODX.actions.applyMultilingualLabels('#aw-header-bottom-right', 'span.multilingual');
+OHIO.ODX.actions.applyMultilingualLabels('.top-search', 'input.multilingual', true);
+$('#aw-header-top-right').slideDown();
+
+// Apply multilingual labels for the content
+OHIO.ODX.actions.applyMultilingualLabels('#singleColumn', 'span.multilingual');
+OHIO.ODX.actions.applyMultilingualLabels('#aw-content-layout-two-columns', 'span.multilingual');
+OHIO.ODX.actions.applyMultilingualLabels('#aw-content-layout-single-column', 'span.multilingual');
+OHIO.ODX.actions.applyMultilingualLabels('#aw-content-large-column', 'span.multilingual');
+OHIO.ODX.actions.applyMultilingualLabels('#twoColumnsRight', 'span.multilingual');
+
+//Apply event hover in main nav menu
+</script>
+<!-- Include FB SDK -->
+<script>
+	window.fbAsyncInit = function() {
+		FB.init({
+			autoLogAppEvents: true,
+			xfbml: true,
+			version: 'v2.12'
+		});
+	};
+
+	(function(d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) { return; }
+		js = d.createElement(s);
+		js.id = id;
+		js.src = "https://connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+</script>
+<!-- END: Ohio Design / Agencies / Medicaid / Global Components / Tablet / Bottom Scripts -->
