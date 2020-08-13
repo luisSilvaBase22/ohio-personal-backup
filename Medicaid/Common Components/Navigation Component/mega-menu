@@ -95,8 +95,13 @@ $mega-menu-primary-font: "Source Sans Pro";
 }
 
 .b-mega-menu__image-section {
-	height: 240px;
-	width: auto;
+	max-height: 240px;
+	overflow: hidden;
+
+	img {
+		width: 70%;
+		float: right;
+	}
 }
 
 
