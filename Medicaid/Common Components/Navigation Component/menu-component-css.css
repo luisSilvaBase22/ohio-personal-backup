@@ -23,6 +23,22 @@
     font-weight: bold;
     letter-spacing: 0;
     line-height: 32px;
+    width: 350px;
+}
+.b-section .b-section__title a {
+    text-decoration: none;
+    color: #3B7AAB;
+    display: inline-block;
+    width: 100%;
+    -webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.b-section .b-section__title a:hover {
+    -webkit-transform: translate(5px, 0);
+    transform: translate(5px, 0);
+}
+.b-section .b-section__title a i.fas {
+    float: right;
 }
 .b-section .b-section__description {
     font-family: "Source Sans Pro";
@@ -30,6 +46,7 @@
     font-size: 12px;
     letter-spacing: 0.07px;
     line-height: 14px;
+    margin-bottom: 20px;
 }
 
 .b-section__secondary-pages-list {
@@ -41,6 +58,21 @@
     font-weight: 600;
     letter-spacing: 0;
     line-height: 23px;
+}
+.b-section__secondary-pages-list .b-secondary-page__title a {
+    text-decoration: none;
+    color: #3B7AAB;
+    display: inline-block;
+    width: 100%;
+    -webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+.b-section__secondary-pages-list .b-secondary-page__title a:hover {
+    -webkit-transform: translate(5px, 0);
+    transform: translate(5px, 0);
+}
+.b-section__secondary-pages-list .b-secondary-page__title a i.fas {
+    float: right;
 }
 .b-section__secondary-pages-list .b-secondary-page__description {
     color: #4A4A4A;

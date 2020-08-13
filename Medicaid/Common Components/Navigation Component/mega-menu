@@ -8,6 +8,25 @@ $mega-menu-section-secondary-color: #4A4A4A;
 //Font type
 $mega-menu-primary-font: "Source Sans Pro";
 
+@mixin anchoresStylesAndIconAlignment (){
+	a {
+		text-decoration: none;
+		color: $mega-menu-section-primary-color;
+		display: inline-block;
+		width: 100%;
+		-webkit-transition: all 0.5s ease;
+		transition: all 0.5s ease;
+
+		&:hover {
+			-webkit-transform: translate(5px, 0);
+			transform: translate(5px, 0);
+		}
+	}
+
+	a i.fas {
+		float: right;
+	}
+}
 
 .b-mega-menu {
 	background-color: $mega-menu-background-color;
@@ -37,6 +56,9 @@ $mega-menu-primary-font: "Source Sans Pro";
 		font-weight: bold;
 		letter-spacing: 0;
 		line-height: 32px;
+		width: 350px;
+
+		@include anchoresStylesAndIconAlignment();
 	}
 
 	.b-section__description {
@@ -45,17 +67,21 @@ $mega-menu-primary-font: "Source Sans Pro";
 		font-size: 12px;
 		letter-spacing: 0.07px;
 		line-height: 14px;
+		margin-bottom: 20px;
 	}
 }
 
 .b-section__secondary-pages-list {
 	list-style: none;
 	padding: 0;
+
 	.b-secondary-page__title {
 		font-size: 18px;
 		font-weight: 600;
 		letter-spacing: 0;
 		line-height: 23px;
+
+		@include anchoresStylesAndIconAlignment();
 	}
 
 	.b-secondary-page__description {
