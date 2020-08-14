@@ -27,6 +27,8 @@ $mega-menu-primary-font: "Source Sans Pro";
 
 	.b-section__title button{
 		color: white;
+		background-color: $mega-menu-mobile-background-color;
+		border: none;
 	}
 
 	.b-section__title .fas {
