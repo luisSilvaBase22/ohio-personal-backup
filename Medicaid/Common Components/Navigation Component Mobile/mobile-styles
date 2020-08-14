@@ -12,7 +12,6 @@ $mega-menu-primary-font: "Source Sans Pro";
 
 .b-mega-menu-mobile {
 	background-color: $mega-menu-background-color;
-	box-shadow: 0 20px 52px 0 rgba(0,0,0,0.5);
 
 	.b-mega-menu-mobile__bottom-line {
 		border: solid;
@@ -21,19 +20,40 @@ $mega-menu-primary-font: "Source Sans Pro";
 	}
 }
 
+.js-shadow-box {
+	box-shadow: 0 20px 52px 0 rgba(0,0,0,0.5);
+}
+
 
 .b-mega-menu-mobile__section {
 	background-color: $mega-menu-mobile-background-color;
 
-	.b-section__title button{
-		color: white;
-		background-color: $mega-menu-mobile-background-color;
-		border: none;
+	.b-section__title {
+		padding: 20px;
+
+		& button {
+			width: 100%;
+			color: white;
+			background-color: $mega-menu-mobile-background-color;
+			border: none;
+		}
+
+		& button:focus {
+			border: none;
+			outline: 0;//To remove annoying border on Chrome only
+		}
+
+		& button span {
+			float: left;
+		}
+
+		& .fas {
+			margin-top: 5px;
+			float: right;
+			color: white;
+		}
 	}
 
-	.b-section__title .fas {
-		color: white;
-	}
 }
 
 .b-mega-menu-mobile__secondary-pages {
@@ -49,6 +69,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 
 		padding-left: 20px;
 		padding-right: 20px;
+		padding-top: 20px;
 
 		&:first-child {
 			background-color: white;
@@ -63,14 +84,20 @@ $mega-menu-primary-font: "Source Sans Pro";
 		.fas {
 			color: $mega-menu-section-primary-color;
 			float: right;
+			margin-top: 20px;
 		}
 
 		.b-secondary-page__description {
 			color: $mega-menu-section-secondary-color;
 		}
 
+		a:hover{
+			text-decoration: none;
+		}
+
 		hr {
 			border-bottom: 0.5px solid $mega-menu-section-secondary-color;
+			margin-bottom: unset;
 		}
 	}
 

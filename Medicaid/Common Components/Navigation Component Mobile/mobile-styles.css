@@ -1,6 +1,5 @@
 .b-mega-menu-mobile {
     background-color: #EEEEEE;
-    box-shadow: 0 20px 52px 0 rgba(0, 0, 0, 0.5);
 }
 .b-mega-menu-mobile .b-mega-menu-mobile__bottom-line {
     border: solid;
@@ -8,14 +7,32 @@
     border-width: 10px 0 0 0;
 }
 
+.js-shadow-box {
+    box-shadow: 0 20px 52px 0 rgba(0, 0, 0, 0.5);
+}
+
 .b-mega-menu-mobile__section {
     background-color: #0971BD;
 }
+.b-mega-menu-mobile__section .b-section__title {
+    padding: 20px;
+}
 .b-mega-menu-mobile__section .b-section__title button {
+    width: 100%;
     color: white;
     background-color: #0971BD;
+    border: none;
+}
+.b-mega-menu-mobile__section .b-section__title button:focus {
+    border: none;
+    outline: 0;
+}
+.b-mega-menu-mobile__section .b-section__title button span {
+    float: left;
 }
 .b-mega-menu-mobile__section .b-section__title .fas {
+    margin-top: 5px;
+    float: right;
     color: white;
 }
 
@@ -29,6 +46,7 @@
 .b-mega-menu-mobile__secondary-pages .b-secondary-page {
     padding-left: 20px;
     padding-right: 20px;
+    padding-top: 20px;
 }
 .b-mega-menu-mobile__secondary-pages .b-secondary-page:first-child {
     background-color: white;
@@ -41,10 +59,15 @@
 .b-mega-menu-mobile__secondary-pages .b-secondary-page .fas {
     color: #3B7AAB;
     float: right;
+    margin-top: 20px;
 }
 .b-mega-menu-mobile__secondary-pages .b-secondary-page .b-secondary-page__description {
     color: #4A4A4A;
 }
+.b-mega-menu-mobile__secondary-pages .b-secondary-page a:hover {
+    text-decoration: none;
+}
 .b-mega-menu-mobile__secondary-pages .b-secondary-page hr {
     border-bottom: 0.5px solid #4A4A4A;
+    margin-bottom: unset;
 }
