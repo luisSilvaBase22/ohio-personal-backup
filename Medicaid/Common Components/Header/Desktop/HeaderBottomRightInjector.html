@@ -1,0 +1,125 @@
+<!-- START: Ohio Design / Agencies / Medicaid / Global Components / Desktop / Header / Header Bottom Right Injector -->
+<div class="odx-header-bottom-right">
+	<div class="odx-separator">
+		<span class="sr-only">This is just a separator between the navigation and the help and search icons</span>
+	</div>
+
+	[Component name="ohio design/agencies/odh/odh-az-index/odh-az-index"]
+
+
+
+	<a href="" id="js-go-help">
+		<i class="fa fa-question-circle-o" aria-hidden="true"></i>
+		<span class="sr-only">Go to the help page</span>
+	</a>
+
+	<div class="odx-search__btn">
+		<div class="" id="search-button" tabindex="0">
+			<div class="fa fa-search"></div>
+			<span class="sr-only">Display the search box</span>
+		</div>
+	</div>
+
+	[Plugin:Equals text1="true" text2="[Plugin:RequestAttribute key='userLoggedIn' mode='get']"]
+	<a href="" id="authoringlink" class="hidden">
+		<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+		<span class="sr-only">Go to Authoring tool</span>
+	</a>
+	[/Plugin:Equals]
+</div>
+<div class="odx-search odx-search_slide">
+	<div class="odx-search__container">
+		<form id="search-form" action="" method="get">
+			<label for="search_query" class="sr-only">Search in Medicaid</label>
+			<input type="search" class="odx-search__input" title="Search in Medicaid" name="search_query" id="search_query" placeholder="Search">
+			<div class="b-search__buttons" style="display: none">
+				<button class="odx-search__loop-btn" type="submit">
+					<span class="fa fa-search"></span>
+					<span class="sr-only">Submit your search</span>
+				</button>
+				<div class="odx-search__close">
+					<span class="fas fa-times" aria-hidden="true"></span>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script type="text/javascript">
+	(function ($) {
+		$(document).ready(function () {
+			var $searchButton = $('#search-button'),
+				$searchForm = $('#search-form'),
+				$searchTop = $('.odx-search'),
+				$formButtons = $('.b-search__buttons'),
+				$closeSearch = $('.odx-search__close'),
+				$input = $('.odx-search .odx-search__input'),
+				$loop = $('.odx-search__loop-btn'),
+				searchURLPortal = searchUrl.replace('&', '&');
+
+			window.hideSearchElements = function(){
+				$closeSearch.attr('tabindex','-1').attr('aria-hidden','true');
+				$input.attr('tabindex','-1').attr('aria-hidden','true');
+				$loop.attr('tabindex','-1').attr('aria-hidden','true');
+				$formButtons.attr('tabindex','-1').attr('aria-hidden','true');
+				$formButtons.hide();
+			};
+
+			window.showSearchElements = function(){
+				$closeSearch.attr('tabindex','0').attr('aria-hidden','false');
+				$input.attr('tabindex','0').attr('aria-hidden','false');
+				$loop.attr('tabindex','0').attr('aria-hidden','fasle');
+				$formButtons.attr('tabindex','0').attr('aria-hidden','false');
+			};
+
+			// window.hideSearchElements();
+
+			// $(document).on('click', function (event) {
+			//     var $target = $(event.target);
+			//     var isClickInside = $target.closest($searchForm).length;
+			//     var isSearchButtonClicked = $target.closest($searchButton).length;
+			//     if (!isClickInside && !isSearchButtonClicked){
+			//         window.hideSearchElements();
+			//         $searchTop.removeClass('in');
+			//     }
+			// });
+
+			$searchButton.on('click', function () {
+				window.showSearchElements();
+				$searchTop.addClass('in');
+				$formButtons.show();
+				//$input.focus();
+			});
+
+			$input.on('focus focusout',function(){
+				console.log('focus element');
+				$searchTop.toggleClass('on-focus');
+
+			});
+
+			$searchButton.on('keypress', function (event) {
+				var keyCode = event.which;
+				if (keyCode == 13) {
+					$searchButton.trigger('click');
+				}
+			});
+
+			$closeSearch.on('click', function () {
+				$searchTop.removeClass('in');
+				window.hideSearchElements();
+			});
+
+			$closeSearch.on('keypress', function (event) {
+				var keyCode = event.which;
+				if (keyCode == 13) {
+					$closeSearch.trigger('click');
+				}
+			});
+
+			$searchForm.attr("action", searchURLPortal);
+			$('#js-go-help').attr("href", window.globalLinks.help);
+		});
+	})(jQuery);
+</script>
+
+<!-- END: Ohio Design / Agencies / Medicaid / Global Components / Desktop / Header / Header Bottom Right Injector -->
