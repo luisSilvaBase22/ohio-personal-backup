@@ -16,6 +16,13 @@ wcmHeaderTopLeftInjectorID
 
 6e3dcc8b-9d2c-44f0-b481-304e47fd6716
 
+wcmHeaderBottomRightInjectorID
+
+1d62fcd3-0e34-4ac7-9893-e890aeff01d1
+
+90d39374-fa48-4beb-be6d-0afffce1ce80 //OLD
+
+
 wcmBottomScriptsInjectorID
 
 716e70ec-8e65-4b7d-979b-3bd2f625b83c //Custom Buttom Scripts
@@ -23,9 +30,22 @@ wcmBottomScriptsInjectorID
 2c09348d-7b5c-45c6-9649-b6e5de09da0c //Default
 
 //Smartphone Bottom Scripts
+wcmBottomScriptsSmartphoneInjectorID
 
 186513b4-8acd-4744-b767-2764a7ea42e6
 
 //Tablet Bottom Scripts
+wcmBottomScriptsTabletInjectorID
 
 d1a1cf7a-2a49-4c2a-a92d-311382418e8a
+
+
+//Mobile Bottom Right Injector
+wcmHeaderBottomRightSmartphoneInjectorID
+
+cb9a28e8-6fff-4c9e-883a-eeaab4bf8fdc //Custom
+
+ //Default
+fefb37ac-21c0-4c8a-ae2d-5d23197ae142
+
+
