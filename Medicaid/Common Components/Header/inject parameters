@@ -22,6 +22,11 @@ wcmHeaderBottomRightInjectorID
 
 90d39374-fa48-4beb-be6d-0afffce1ce80 //OLD
 
+wcmHeaderBottomLeftInjectorID
+
+baf052ed-2e9c-48ec-a956-c74e74149d48 //OLD
+
+d7d248ae-dee6-43e5-8c9f-2c6a88d64f5f //Custom
 
 wcmBottomScriptsInjectorID
 
@@ -47,5 +52,6 @@ cb9a28e8-6fff-4c9e-883a-eeaab4bf8fdc //Custom
 
  //Default
 fefb37ac-21c0-4c8a-ae2d-5d23197ae142
+
 
 

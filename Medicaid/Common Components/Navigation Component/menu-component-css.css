@@ -1,6 +1,10 @@
 .b-mega-menu {
     background-color: #EEEEEE;
     box-shadow: 0 20px 52px 0 rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 140px;
+    left: 0;
+    width: 100vw;
 }
 .b-mega-menu .b-mega-menu__section {
     padding-top: 20px;
