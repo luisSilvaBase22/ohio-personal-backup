@@ -21,11 +21,9 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 	var $containerSectionIndividuals = $megaMenuContainer.querySelector('.b-mega-menu__section .b-section[data-section="Individuals & Families"]');
 
 	var hideMegaMenu = function(){
-		$megaMenuContainer.addEventListener('mouseleave', function(  ) {
-			hideAllSections();
-			hideAllImages();
-			$megaMenuContainer.style.display = "none";
-		})
+		hideAllSections();
+		hideAllImages();
+		$megaMenuContainer.style.display = "none";
 	};
 
 	var showMegaMenu = function(){
@@ -46,63 +44,52 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 		$imageSectionIndividuals.style.display = "none";
 	};
 
-	$anchorAboutUs.hover(function() {
-
+	var toggleShowHideSections = function( $imageSection, $containerSection ){
 		hideAllSections();
 		hideAllImages();
 
-		$imageSectionAboutUs.style.display = "block";
-		$containerSectionAboutUs.style.display = "block";
-
-		showMegaMenu();
-	} );
-
-	$anchorMedicaid.hover(function() {
-
-		hideAllSections();
-		hideAllImages();
-
-		$imageSectionMedicaid.style.display = "block";
-		$containerSectionMedicaid.style.display = "block";
-
-		showMegaMenu();
-	} );
-
-	$anchorProviders.hover(function() {
-
-		hideAllSections();
-		hideAllImages();
-
-		$imageSectionProviders.style.display = "block";
-		$containerSectionProviders.style.display = "block";
-
-		showMegaMenu();
-	} );
-
-	$anchorIndividuals.hover(function() {
-
-		hideAllSections();
-		hideAllImages();
-
-		$imageSectionIndividuals.style.display = "block";
-		$containerSectionIndividuals.style.display = "block";
-
-		showMegaMenu();
-	} );
-
-	hideMegaMenu();
-
-	var odxScroll = function() {
-
-		if( document.documentElement.scrollTop > 30 ) {
-			$megaMenuContainer.style.top = "104px";
+		if ( $megaMenuContainer.style.display === "none" ) {
+			$imageSection.style.display = "block";
+			$containerSection.style.display = "block";
+			showMegaMenu();
 		} else {
-			$megaMenuContainer.style.top = "140px";
+			hideAllSections();
+			hideAllImages();
+			hideMegaMenu
 		}
 	};
 
-	window.addEventListener("scroll", function() {
-		odxScroll();
-	})
+	$anchorAboutUs.click(function() {
+
+		hideAllSections();
+		hideAllImages();
+
+		if ( $megaMenuContainer.style.display === "none" ) {
+			$imageSectionAboutUs.style.display = "block";
+			$containerSectionAboutUs.style.display = "block";
+			showMegaMenu();
+		} else {
+			hideAllSections();
+			hideAllImages();
+			hideMegaMenu
+		}
+	} );
+
+	$anchorMedicaid.click(function() {
+
+		toggleShowHideSections( $imageSectionMedicaid, $containerSectionMedicaid );
+	} );
+
+	$anchorProviders.click(function() {
+
+		toggleShowHideSections( $imageSectionProviders, $containerSectionProviders );
+	} );
+
+	$anchorIndividuals.click(function() {
+
+		toggleShowHideSections( $imageSectionIndividuals, $containerSectionIndividuals );
+	} );
+
+	hideMegaMenu();
 
 });
