@@ -15,25 +15,26 @@
 			<div class="col-12">
 				<div class="b-mega-menu-mobile__secondary-pages" style="display: block">
 					<ul>
-[Plugin:Matches text="[Element key="portalLocation" type="content" context="autofill"]" pattern="/Taxonomy/Portal Locations/All Portal Locations/By Agency/Medicaid/.*"]
-<li class="b-secondary-page">
-	<a href='[Placeholder tag="href"]'>
-		<div class="row">
-			<div class="col-10">
-				<div class="b-secondary-page__title">
-					[Placeholder tag="title"]
-				</div>
-				<div class="b-secondary-page__description">
-					[Element key="summary" type="content" context="autofill"]
-				</div>
-			</div>
-			<div class="col-2">
-				<i class="fas fa-chevron-right"></i>
-			</div>
-		</div>
-	</a>
-</li>
-[/Plugin:Matches]
+						[Plugin:Matches text="[Element key="portalLocation" type="content" context="autofill"]" pattern="(.*)?(/Taxonomy/Portal Locations/All Portal Locations/By Agency/Medicaid/Individuals and Families)(.*)?"]
+						<li class="b-secondary-page">
+							[Element key="portalLocation" type="content" context="autofill"]
+							<a href='[Placeholder tag="href"]'>
+								<div class="row">
+									<div class="col-10">
+										<div class="b-secondary-page__title">
+											[Placeholder tag="title"]
+										</div>
+										<div class="b-secondary-page__description">
+											[Element key="summary" type="content" context="autofill"]
+										</div>
+									</div>
+									<div class="col-2">
+										<i class="fas fa-chevron-right"></i>
+									</div>
+								</div>
+							</a>
+						</li>
+						[/Plugin:Matches]
 					</ul>
 				</div>
 			</div>
