@@ -44,49 +44,56 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 		$imageSectionIndividuals.style.display = "none";
 	};
 
+	var lastVisitedSection = "";
+
 	var toggleShowHideSections = function( $imageSection, $containerSection ){
+
 		hideAllSections();
 		hideAllImages();
+		//hideMegaMenu();
 
 		if ( $megaMenuContainer.style.display === "none" ) {
 			$imageSection.style.display = "block";
 			$containerSection.style.display = "block";
+			lastVisitedSection = $containerSection.dataset.section;
 			showMegaMenu();
 		} else {
-			hideAllSections();
-			hideAllImages();
-			hideMegaMenu
+			if ($containerSection.dataset.section !== lastVisitedSection ) {
+				//Switch section in case mega menu is open
+				$imageSection.style.display = "block";
+				$containerSection.style.display = "block";
+				lastVisitedSection = $containerSection.dataset.section;
+			} else {
+				//Close mega menu
+				hideAllSections();
+				hideAllImages();
+				hideMegaMenu();
+				lastVisitedSection = "";
+			}
 		}
 	};
 
-	$anchorAboutUs.click(function() {
+	$anchorAboutUs.click(function( event ) {
 
-		hideAllSections();
-		hideAllImages();
-
-		if ( $megaMenuContainer.style.display === "none" ) {
-			$imageSectionAboutUs.style.display = "block";
-			$containerSectionAboutUs.style.display = "block";
-			showMegaMenu();
-		} else {
-			hideAllSections();
-			hideAllImages();
-			hideMegaMenu
-		}
+		event.preventDefault();
+		toggleShowHideSections( $imageSectionAboutUs, $containerSectionAboutUs );
 	} );
 
-	$anchorMedicaid.click(function() {
+	$anchorMedicaid.click(function( event ) {
 
+		event.preventDefault();
 		toggleShowHideSections( $imageSectionMedicaid, $containerSectionMedicaid );
 	} );
 
-	$anchorProviders.click(function() {
+	$anchorProviders.click(function( event ) {
 
+		event.preventDefault();
 		toggleShowHideSections( $imageSectionProviders, $containerSectionProviders );
 	} );
 
-	$anchorIndividuals.click(function() {
+	$anchorIndividuals.click(function( event ) {
 
+		event.preventDefault();
 		toggleShowHideSections( $imageSectionIndividuals, $containerSectionIndividuals );
 	} );
 
