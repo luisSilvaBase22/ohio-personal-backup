@@ -4,9 +4,93 @@
 
 <script type="text/javascript" src="[Component name="odx common design/js/ui-kit.bundle.min.js"]"></script>
 <script type="text/javascript">
+	(function() {
+
+		var updateSiteLogoAltAttribute = function(){
+
+			var $headerContainer = document.querySelector('#aw-header-bottom-left');
+			var $logos = $headerContainer.querySelectorAll('.odx-logo img');
+
+			var urlSubtrings = window.location.href.split("/");
+			var isHome = urlSubtrings.slice(-1);
+
+			if ( isHome[0] === "home" ) {
+				$logos.forEach( function( logo ){
+					logo.alt = "Refresh home page";
+				} );
+			}
+		};
+
+		$(document).on('ready', function() {
+
+			// Breadcrumb Landmark
+			$('.b-breadcrumb__container').attr('role', 'navigation');
+			$('.b-breadcrumb__container').attr('aria-label', 'breadcrumb');
+
+			// "Skip to" links
+			$( "#js-skip-to-nav" ).on( "click", function() {
+				$('.odx-logo a').focus();
+			});
+			$( "#js-skip-to-content" ).on( "click", function() {
+				if( $('.odx-content__title').length > 0) {
+					$('.odx-content__title').attr('tabindex','0');
+					$('.odx-content__title').focus();
+				} else{
+					$('h1')[0].focus();
+				}
+			});
+
+			// "New Window" warning for links
+			var $newWindowLinks = document.querySelectorAll('a[target="_blank"]');
+			var newWindowAlert = '';
+			var currentAriaLabel = '';
+			for(var i=0; i < $newWindowLinks.length; i++){
+				currentAriaLabel = $newWindowLinks[i].getAttribute("aria-label");
+				if(currentAriaLabel == null){
+					currentAriaLabel = $newWindowLinks[i].innerHTML.trim();
+					if(currentAriaLabel.indexOf('=') == -1){
+						$newWindowLinks[i].setAttribute('aria-label', currentAriaLabel + ', This link will open in a new window');
+					} else if($newWindowLinks[i].closest('div.ohio-takeover-wrapper') != null){
+						newWindowAlert = document.createElement('div');
+						newWindowAlert.className = 'sr-only';
+						newWindowAlert.innerHTML = 'This link will open in a new window';
+						$newWindowLinks[i].appendChild(newWindowAlert);
+					}
+				} else{
+					$newWindowLinks[i].setAttribute('aria-label', currentAriaLabel + ', This link will open in a new window');
+				}
+			}
+			//Hide all separators <hr> for screen readers
+			$('hr').attr('aria-hidden', 'true');
+
+			//Remove button word from aria-label (ohio.gov uninav)
+			$('#global-search-button').attr('aria-label', 'Search all of Ohio.gov');
+
+			// Remove "IBM Websphere portal" main region label
+			$('.wpthemeMainContent').removeAttr("role");
+			$('.wpthemeMainContent').removeAttr("aria-label");
+
+			updateSiteLogoAltAttribute();
+
+		});
+	})();
+
+	// change <title>
+	if ($('.aw-main-header h1').html() === "Home"){
+		$('.aw-main-header h1').text("Ohio Department of Medicaid Homepage");
+		$('title').text("Ohio Department of Medicaid Homepage");
+	} else{
+		var currentTitle = $('title').html();
+		$('title').text("Medicaid | " + currentTitle);
+	}
+
+	// Convert content title to H1
+	var title = $('.odx-content__title').text().trim();
+	$(".odx-title").html('<h1 class="odx-content__title">'+title+'</h1>');
 
 	//Override External URLS
 	$('#odx-main-content a[href^="http"],#odx-main-content a[href^="https"]').attr("target","_blank");
+
 
 	window.onscroll = function() {odxScroll()};
 	function odxScroll() {
