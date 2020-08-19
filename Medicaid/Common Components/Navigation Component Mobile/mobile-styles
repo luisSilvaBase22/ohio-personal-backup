@@ -29,7 +29,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 	background-color: $mega-menu-mobile-background-color;
 
 	.b-section__title {
-		padding: 20px;
+		padding-top: 12px;
 
 		& button {
 			width: 100%;
@@ -84,11 +84,15 @@ $mega-menu-primary-font: "Source Sans Pro";
 		.fas {
 			color: $mega-menu-section-primary-color;
 			float: right;
-			margin-top: 20px;
+			margin-top: 80%;
 		}
 
 		.b-secondary-page__description {
 			color: $mega-menu-section-secondary-color;
+		}
+
+		a {
+			text-decoration: none;
 		}
 
 		a:hover{
@@ -98,6 +102,23 @@ $mega-menu-primary-font: "Source Sans Pro";
 		hr {
 			border-bottom: 0.5px solid $mega-menu-section-secondary-color;
 			margin-bottom: unset;
+		}
+
+		&__bottom-line {
+			border-bottom: 0.75px solid gray;
+		}
+
+	}
+
+	li:first-child {
+		.b-secondary-page__bottom-line {
+			border: none;
+		}
+	}
+
+	li:last-child {
+		.b-secondary-page__bottom-line {
+			border: none;
 		}
 	}
 
