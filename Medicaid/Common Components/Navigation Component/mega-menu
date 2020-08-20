@@ -25,6 +25,8 @@ $mega-menu-primary-font: "Source Sans Pro";
 
 	a i.fas {
 		float: right;
+		color: $mega-menu-section-primary-color;
+		font-size: 18px;
 	}
 }
 

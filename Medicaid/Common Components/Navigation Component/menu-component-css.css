@@ -43,6 +43,8 @@
 }
 .b-section .b-section__title a i.fas {
     float: right;
+    color: #3B7AAB;
+    font-size: 18px;
 }
 .b-section .b-section__description {
     font-family: "Source Sans Pro";
@@ -77,6 +79,8 @@
 }
 .b-section__secondary-pages-list .b-secondary-page__title a i.fas {
     float: right;
+    color: #3B7AAB;
+    font-size: 18px;
 }
 .b-section__secondary-pages-list .b-secondary-page__description {
     color: #4A4A4A;
