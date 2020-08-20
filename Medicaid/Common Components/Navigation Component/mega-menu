@@ -21,6 +21,14 @@ $mega-menu-primary-font: "Source Sans Pro";
 			-webkit-transform: translate(5px, 0);
 			transform: translate(5px, 0);
 		}
+
+		span {
+			display: inline-block;
+			width: 130px;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+		}
 	}
 
 	a i.fas {
@@ -57,7 +65,8 @@ $mega-menu-primary-font: "Source Sans Pro";
 	font-family: $mega-menu-primary-font;
 }
 
-.b-section {
+#aw-header-bottom-right .b-section,
+#aw-header-bottom-left .b-section {
 	.b-section__title {
 		font-size: 25px;
 		font-weight: bold;
@@ -78,7 +87,8 @@ $mega-menu-primary-font: "Source Sans Pro";
 	}
 }
 
-.b-section__secondary-pages-list {
+#aw-header-bottom-right .b-section__secondary-pages-list,
+#aw-header-bottom-left .b-section__secondary-pages-list {
 	list-style: none;
 	padding: 0;
 
@@ -101,12 +111,22 @@ $mega-menu-primary-font: "Source Sans Pro";
 	}
 }
 
-.b-mega-menu__image-section {
+#aw-header-bottom-left .b-mega-menu__image-section {
+	 max-height: 240px;
+	 overflow: hidden;
+
+	 img {
+		 width: 70%;
+		 float: right;
+	 }
+ }
+
+#aw-header-bottom-right .b-mega-menu__image-section {
 	max-height: 240px;
 	overflow: hidden;
 
 	img {
-		width: 70%;
+		width: 90%;
 		float: right;
 	}
 }
