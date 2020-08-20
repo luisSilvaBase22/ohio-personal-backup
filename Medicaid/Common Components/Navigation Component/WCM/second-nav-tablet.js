@@ -99,4 +99,17 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 
 	hideMegaMenu();
 
+	var odxScroll = function() {
+
+		if( document.documentElement.scrollTop > 30 ) {
+			$megaMenuContainer.style.top = "104px";
+		} else {
+			$megaMenuContainer.style.top = "140px";
+		}
+	};
+
+	window.addEventListener("scroll", function() {
+		odxScroll();
+	})
+
 });
