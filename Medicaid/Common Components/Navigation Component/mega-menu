@@ -16,7 +16,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 	overflow: hidden;
 }
 
-@mixin anchorsStylesAndIconAlignment (){
+@mixin anchorsStylesAndArrowAlignmentTranslation (){
 	a {
 		text-decoration: none;
 		color: $mega-menu-section-primary-color;
@@ -84,7 +84,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 		line-height: 32px;
 		width: 350px;
 
-		@include anchorsStylesAndIconAlignment();
+		@include anchorsStylesAndArrowAlignmentTranslation();
 	}
 
 	.b-section__description {
@@ -111,7 +111,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 		letter-spacing: 0;
 		line-height: 23px;
 
-		@include anchorsStylesAndIconAlignment();
+		@include anchorsStylesAndArrowAlignmentTranslation();
 	}
 
 	.b-secondary-page__description {
