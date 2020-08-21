@@ -8,7 +8,15 @@ $mega-menu-section-secondary-color: #4A4A4A;
 //Font type
 $mega-menu-primary-font: "Source Sans Pro";
 
-@mixin anchoresStylesAndIconAlignment (){
+@mixin titlesAndSummariesOverflow( $widthSpan ){
+	display: inline-block;
+	width: $widthSpan;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+@mixin anchorsStylesAndIconAlignment (){
 	a {
 		text-decoration: none;
 		color: $mega-menu-section-primary-color;
@@ -23,11 +31,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 		}
 
 		span {
-			display: inline-block;
-			width: 130px;
-			text-overflow: ellipsis;
-			white-space: nowrap;
-			overflow: hidden;
+			@include titlesAndSummariesOverflow( 130px );
 		}
 
 		@media (min-width: 1200px) and (max-width: 1308px) {
@@ -80,7 +84,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 		line-height: 32px;
 		width: 350px;
 
-		@include anchoresStylesAndIconAlignment();
+		@include anchorsStylesAndIconAlignment();
 	}
 
 	.b-section__description {
@@ -90,6 +94,10 @@ $mega-menu-primary-font: "Source Sans Pro";
 		letter-spacing: 0.07px;
 		line-height: 14px;
 		margin-bottom: 20px;
+	}
+
+	.b-section__description span {
+		@include titlesAndSummariesOverflow( 350px );
 	}
 }
 
@@ -103,7 +111,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 		letter-spacing: 0;
 		line-height: 23px;
 
-		@include anchoresStylesAndIconAlignment();
+		@include anchorsStylesAndIconAlignment();
 	}
 
 	.b-secondary-page__description {
