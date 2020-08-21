@@ -9,6 +9,11 @@ $mega-menu-section-secondary-color: #4A4A4A;
 //Font type
 $mega-menu-primary-font: "Source Sans Pro";
 
+@mixin overflowTitlesAndSummaries () {
+	line-height: 18px;
+	max-height: 18px;
+	overflow: hidden;
+}
 
 .b-mega-menu-mobile {
 	background-color: $mega-menu-background-color;
@@ -59,6 +64,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 .b-mega-menu-mobile__secondary-pages {
 
 	background-color: $mega-menu-background-color;
+	padding-bottom: 10px;
 
 	ul {
 		list-style: none;
@@ -74,21 +80,23 @@ $mega-menu-primary-font: "Source Sans Pro";
 		&:first-child {
 			background-color: white;
 			box-shadow: 0 20px 52px 0 rgba(0,0,0,0.5);
-			padding-bottom: 20px;
 		}
 
 		.b-secondary-page__title {
 			color: $mega-menu-section-primary-color;
+			font-weight: 600;
+			@include overflowTitlesAndSummaries();
 		}
 
 		.fas {
 			color: $mega-menu-section-primary-color;
 			float: right;
-			margin-top: 80%;
+			margin-top: 50%;
 		}
 
 		.b-secondary-page__description {
 			color: $mega-menu-section-secondary-color;
+			@include overflowTitlesAndSummaries();
 		}
 
 		a {
@@ -110,15 +118,17 @@ $mega-menu-primary-font: "Source Sans Pro";
 
 	}
 
-	li:first-child {
+	li:first-child,
+	li:last-child {
 		.b-secondary-page__bottom-line {
 			border: none;
 		}
 	}
 
-	li:last-child {
-		.b-secondary-page__bottom-line {
-			border: none;
+	li:not(:last-child)
+	{
+		.b-secondary-page__description {
+			margin-bottom: 15px;
 		}
 	}
 
