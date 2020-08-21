@@ -1,0 +1,22 @@
+{
+  "name": "ohio-components",
+  "version": "1.0.0",
+  "description": "Repository to test components and widget developed for Ohio project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luisSilvaBase22/ohio-local-backup.git"
+  },
+  "author": "Luis Silva",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luisSilvaBase22/ohio-local-backup/issues"
+  },
+  "homepage": "https://github.com/luisSilvaBase22/ohio-local-backup#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  }
+}

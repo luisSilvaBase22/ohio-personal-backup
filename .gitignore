@@ -1,1 +1,9 @@
-.idea/workspace.xml
+# Read about how to use .gitignore: https://help.github.com/articles/ignoring-files copied partially from pepsico-front-assets gitignore file
+
+# Include your project-specific ignores in this section
+# ----- Project ignores
+
+node_modules
+
+# IDEA
+.idea
