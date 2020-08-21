@@ -71,8 +71,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 	font-family: $mega-menu-primary-font;
 }
 
-#aw-header-bottom-right .b-section,
-#aw-header-bottom-left .b-section {
+.b-section {
 	.b-section__title {
 		font-size: 25px;
 		font-weight: bold;
@@ -93,8 +92,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 	}
 }
 
-#aw-header-bottom-right .b-section__secondary-pages-list,
-#aw-header-bottom-left .b-section__secondary-pages-list {
+.b-section__secondary-pages-list {
 	list-style: none;
 	padding: 0;
 
@@ -135,23 +133,6 @@ $mega-menu-primary-font: "Source Sans Pro";
 	}
  }
 
-#aw-header-bottom-right .b-mega-menu__image-section {
-	max-height: 240px;
-	overflow: hidden;
-
-	img {
-		max-width: 100%;
-		float: right;
-	}
-
-	@media (min-width: 1025px) and (max-width: 1240px) {
-		max-height: 245px;
-
-		img {
-			max-width: 125%;
-		}
-	}
-}
 
 
 
