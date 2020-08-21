@@ -2197,7 +2197,7 @@ ul.b22-alphalist__alphabet li:not(:first-child) a{
 	max-height: 70px;
 }
 .medicaid-ohio-news__container {
-	height: 195px;
+	height: 200px;
 	margin-bottom: 10px;
 	border-bottom: 1px solid $borders-color;
 }
@@ -2213,6 +2213,53 @@ body .content-body p.categories-selected {
 .b22-filter__second-section.medicaid-filter__second-container-only {
 	border-top: 1px solid $borders-color;
 }
+@media(max-width: 1440px) {
+	.medicaid-ohio-news__container {
+		height: 250px;
+	}
+}
+@media(max-width: 1024px) {
+	.medicaid-ohio-news__container {
+		height: 320px;
+	}
+}
+@media(max-width: 768px) {
+	.medicaid-ohio-news__container {
+		height: 350px;
+	}
+}
+@media(max-width: 768px) {
+	.medicaid-ohio-news__container {
+		height: 350px;
+	}
+}
+@media(max-width: 450px) {
+	.medicaid-ohio-news__container {
+		height: auto;
+	}
+}
 /* ==== END: News Filter ==== */
+
+/* ==== START: Collapsible Questions ==== */
+body .content-body .odx-collapsable__title p {
+	font-size: 20px;
+}
+
+.odx-collapsable__title:nth-child(n+2) {
+	border-top: 1px solid $borders-color;
+}
+
+.odx-collapsable__title {
+	margin-bottom: 0;
+	padding: 10px 10px 2px 10px;
+	background-color: transparent;
+}
+
+.odx-collapsable__title i.odx-collapsable__chevron {
+	font-size: 24px;
+	color: $color-secondary-main;
+}
+/* ==== END: Collapsible Questions ==== */
+
 
 /* END - Libraries>ODX Common Design>Content>Utility>Style Sheets>SCSS>Agencies>medicaid>medicaid-custom-styles.scss */
