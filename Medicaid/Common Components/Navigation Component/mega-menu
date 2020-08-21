@@ -89,7 +89,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 
 	.b-section__description {
 		font-family: $mega-menu-primary-font;
-		color: $mega-menu-section-secondary-color;
+		color: $input-color;//color: $mega-menu-section-secondary-color;
 		font-size: 12px;
 		letter-spacing: 0.07px;
 		line-height: 14px;
@@ -115,7 +115,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 	}
 
 	.b-secondary-page__description {
-		color: $mega-menu-section-secondary-color;
+		color: $input-color;//color: $mega-menu-section-secondary-color;
 		border-top: 1px solid #979797;
 		font-family: $mega-menu-primary-font;
 		font-size: 14px;
@@ -143,6 +143,10 @@ $mega-menu-primary-font: "Source Sans Pro";
 		}
 	}
  }
+
+.b-section .b-section__title a span {
+	overflow: unset;
+}
 
 
 

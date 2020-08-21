@@ -95,7 +95,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 		}
 
 		.b-secondary-page__description {
-			color: $mega-menu-section-secondary-color;
+			color: $input-color;//color: $mega-menu-section-secondary-color;
 			@include overflowTitlesAndSummaries();
 		}
 
@@ -108,7 +108,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 		}
 
 		hr {
-			border-bottom: 0.5px solid $mega-menu-section-secondary-color;
+			color: $input-color;//color: $mega-menu-section-secondary-color;
 			margin-bottom: unset;
 		}
 

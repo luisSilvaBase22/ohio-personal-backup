@@ -22,6 +22,22 @@ $containers-background: #f2f2f2;
 $light-containers-background: #EBF6FF;
 $borders-color: #d8d8d8;
 
+
+/* Start: Mega menu variables */
+
+$mega-menu-background-color: #EEEEEE;
+$mega-menu-bottom-line-color: #3B7AAB;
+$mega-menu-mobile-background-color: #0971BD;
+
+//Font color
+$mega-menu-section-primary-color: #3B7AAB;
+
+//Font type
+$mega-menu-primary-font: "Source Sans Pro";
+
+/* End: Mega menu variables */
+
+
 .hide-image-caption .odx-content__image-caption{
 	display: none;
 }
@@ -512,6 +528,280 @@ body .content-body {
 	}
 }
 /* END: Help Bubble */
+
+/* START: Mega Menu Desktop and Tablet */
+
+@mixin titlesAndSummariesOverflow( $widthSpan ){
+	display: inline-block;
+	width: $widthSpan;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+@mixin anchorsStylesAndArrowAlignmentTranslation (){
+	a {
+		text-decoration: none;
+		color: $mega-menu-section-primary-color;
+		display: inline-block;
+		width: 100%;
+		-webkit-transition: all 0.5s ease;
+		transition: all 0.5s ease;
+
+		&:hover {
+			-webkit-transform: translate(5px, 0);
+			transform: translate(5px, 0);
+		}
+
+		span {
+			@include titlesAndSummariesOverflow( 130px );
+			font-weight: bold;
+		}
+
+		@media (min-width: 1200px) and (max-width: 1308px) {
+			span {
+				width: 115px;
+			}
+		}
+	}
+
+	a i.fas {
+		float: right;
+		color: $mega-menu-section-primary-color;
+		font-size: 18px;
+	}
+}
+
+.b-mega-menu {
+
+	background-color: $mega-menu-background-color;
+	box-shadow: 0 20px 52px 0 rgba(0,0,0,0.5);
+	position: fixed;
+	top: 140px;
+	left: 0;
+	width: 100vw;
+	z-index: 300;
+
+	.b-mega-menu__section {
+		padding-top: 20px;
+		padding-left: 3%;
+	}
+
+	.b-mega-menu__bottom-line {
+		border: solid;
+		border-color: $mega-menu-bottom-line-color;
+		border-width: 10px 0 0 0;
+	}
+}
+
+.b-section__title,
+.b-secondary-page__title {
+	color: $mega-menu-section-primary-color;
+	font-family: $mega-menu-primary-font;
+}
+
+.b-section {
+	.b-section__title {
+		font-size: 25px;
+		font-weight: bold;
+		letter-spacing: 0;
+		line-height: 32px;
+		width: 350px;
+
+		@include anchorsStylesAndArrowAlignmentTranslation();
+	}
+
+	.b-section__description {
+		font-family: $mega-menu-primary-font;
+		color: $input-color;
+		font-size: 12px;
+		letter-spacing: 0.07px;
+		line-height: 14px;
+		margin-bottom: 20px;
+	}
+
+	.b-section__description span {
+		@include titlesAndSummariesOverflow( 350px );
+	}
+}
+
+.b-section__secondary-pages-list {
+	list-style: none;
+	padding: 0;
+
+	.b-secondary-page__title {
+		font-size: 18px;
+		font-weight: 600;
+		letter-spacing: 0;
+		line-height: 23px;
+
+		@include anchorsStylesAndArrowAlignmentTranslation();
+	}
+
+	.b-secondary-page__description {
+		color: $input-color;
+		border-top: 1px solid #979797;
+		font-family: $mega-menu-primary-font;
+		font-size: 14px;
+		letter-spacing: 0.08px;
+		line-height: 18px;
+		max-height: 36px;
+		overflow: hidden;
+	}
+}
+
+.b-mega-menu__image-section {
+	max-height: 240px;
+	overflow: hidden;
+
+	img {
+		max-width: 100%;
+		float: right;
+	}
+
+	@media (min-width: 1025px) and (max-width: 1240px) {
+		max-height: 245px;
+
+		img {
+			max-width: 125%;
+		}
+	}
+}
+
+.b-section .b-section__title a span {
+	overflow: unset;
+}
+
+/* END: Mega Menu Desktop and Tablet */
+
+/* START: Mega Menu Smartphone */
+
+@mixin overflowTitlesAndSummaries () {
+	line-height: 18px;
+	max-height: 18px;
+	overflow: hidden;
+}
+
+.b-mega-menu-mobile {
+	background-color: $mega-menu-background-color;
+
+	.b-mega-menu-mobile__bottom-line {
+		border: solid;
+		border-color: $mega-menu-bottom-line-color;
+		border-width: 10px 0 0 0;
+	}
+}
+
+.js-shadow-box {
+	box-shadow: 0 20px 52px 0 rgba(0,0,0,0.5);
+}
+
+
+.b-mega-menu-mobile__section {
+	background-color: $mega-menu-mobile-background-color;
+
+	.b-section__title {
+		padding-top: 12px;
+
+		& button {
+			width: 100%;
+			color: white;
+			background-color: $mega-menu-mobile-background-color;
+			border: none;
+		}
+
+		& button:focus {
+			border: none;
+			outline: 0;//To remove annoying border on Chrome only
+		}
+
+		& button span {
+			float: left;
+		}
+
+		& .fas {
+			margin-top: 5px;
+			float: right;
+			color: white;
+		}
+	}
+
+}
+
+.b-mega-menu-mobile__secondary-pages {
+
+	background-color: $mega-menu-background-color;
+	padding-bottom: 10px;
+
+	ul {
+		list-style: none;
+		padding: 0;
+	}
+
+	.b-secondary-page {
+
+		padding-left: 20px;
+		padding-right: 20px;
+		padding-top: 20px;
+
+		&:first-child {
+			background-color: white;
+			box-shadow: 0 20px 52px 0 rgba(0,0,0,0.5);
+		}
+
+		.b-secondary-page__title {
+			color: $mega-menu-section-primary-color;
+			font-weight: 600;
+			@include overflowTitlesAndSummaries();
+		}
+
+		.fas {
+			color: $mega-menu-section-primary-color;
+			float: right;
+			margin-top: 50%;
+		}
+
+		.b-secondary-page__description {
+			color: $input-color;
+			@include overflowTitlesAndSummaries();
+		}
+
+		a {
+			text-decoration: none;
+		}
+
+		a:hover{
+			text-decoration: none;
+		}
+
+		hr {
+			border-bottom: 0.5px solid $input-color;
+			margin-bottom: unset;
+		}
+
+		&__bottom-line {
+			border-bottom: 0.75px solid gray;
+		}
+
+	}
+
+	li:first-child,
+	li:last-child {
+		.b-secondary-page__bottom-line {
+			border: none;
+		}
+	}
+
+	li:not(:last-child)
+	{
+		.b-secondary-page__description {
+			margin-bottom: 15px;
+		}
+	}
+
+}
+
+/* END: Mega Menu Smartphone */
 
 /* START: Left Nav */
 .odx-icon-wrapper{
