@@ -52,6 +52,7 @@ $mega-menu-primary-font: "Source Sans Pro";
 	top: 140px;
 	left: 0;
 	width: 100vw;
+	z-index: 300;
 
 	.b-mega-menu__section {
 		padding-top: 20px;
@@ -112,10 +113,12 @@ $mega-menu-primary-font: "Source Sans Pro";
 		font-size: 14px;
 		letter-spacing: 0.08px;
 		line-height: 18px;
+		max-height: 36px;
+		overflow: hidden;
 	}
 }
 
-#aw-header-bottom-left .b-mega-menu__image-section {
+.b-mega-menu__image-section {
 	 max-height: 240px;
 	 overflow: hidden;
 
