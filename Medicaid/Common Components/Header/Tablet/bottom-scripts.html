@@ -4,6 +4,52 @@
 <script type="text/javascript" src="[Component name="odx common design/js/ui-kit.bundle.min.js"]"></script>
 <script type="text/javascript">
 
+	(function() {
+		$(document).on('ready', function() {
+
+			// Breadcrumb Landmark
+			$('.b-breadcrumb__container').attr('role', 'navigation');
+			$('.b-breadcrumb__container').attr('aria-label', 'breadcrumb');
+
+			// "New Window" warning for links
+			var $newWindowLinks = document.querySelectorAll('a[target="_blank"]');
+			var newWindowAlert = '';
+			for(var i=0; i < $newWindowLinks.length; i++){
+				newWindowAlert = document.createElement('div');
+				newWindowAlert.className = 'sr-only';
+				newWindowAlert.innerHTML = 'This link will open in a new window';
+				$newWindowLinks[i].appendChild(newWindowAlert);
+			}
+
+			//Hide all separators <hr> for screen readers
+			$('hr').attr('aria-hidden', 'true');
+
+			//Remove button word from aria-label (ohio.gov uninav)
+			$('#global-search-button').attr('aria-label', 'Search all of Ohio.gov');
+
+			// Remove "IBM Websphere portal" main region label
+			$('.wpthemeMainContent').removeAttr("role");
+			$('.wpthemeMainContent').removeAttr("aria-label");
+		})
+	})();
+
+
+// change <title>
+if ($('.aw-main-header h1').html() === "Home"){
+	$('.aw-main-header h1').text("Ohio Department of Medicaid Homepage");
+	$('title').text("Ohio Department of Medicaid Homepage");
+} else{
+	var currentTitle = $('title').html();
+	$('title').text("Medicaid | " + currentTitle);
+}
+
+// Convert content title to H1
+var title = $('.odx-content__title').text().trim();
+$(".odx-title").html('<h1 class="odx-content__title">'+title+'</h1>');
+
+//Override External URLS
+$('#odx-main-content a[href^="http"],#odx-main-content a[href^="https"]').attr("target","_blank");
+
 // Add offsett when scrolling in desktop
 window.onscroll = function() {odxScroll()};
 function odxScroll() {
