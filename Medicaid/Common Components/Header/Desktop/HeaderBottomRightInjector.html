@@ -118,7 +118,70 @@
 
 			$searchForm.attr("action", searchURLPortal);
 			$('#js-go-help').attr("href", window.globalLinks.help);
+
 		});
+
+		window.onload = function(){
+			var SearchBarAccessibility = function(){
+
+				var Instance;
+
+				function SearchBarAccessibility(  ) {
+
+				}
+
+				var getParameterByName = function (name, url) {
+					if (!url) url = window.location.href;
+					name = name.replace(/[\[\]]/g, '\\$&');
+					var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+						results = regex.exec(url);
+					if (!results) return null;
+					if (!results[2]) return '';
+					return decodeURIComponent(results[2].replace(/\+/g, ' '));
+				};
+				var assignFocusOnSearch = function(  ) {
+
+					var query = getParameterByName("search_query");
+
+					if ( query != null ) {
+						var $resultsContainer = document.querySelector('#searchResults');
+						var $landingPageSearch = $resultsContainer.querySelector('.search-count.odx-bold');
+						console.log("Query defined");
+
+						if ( $landingPageSearch!= null  ) {
+							//Buscar en página el div de results
+							//Asigar el focus
+							$landingPageSearch.setAttribute("tabindex", "0");
+							$landingPageSearch.focus();
+						} else {
+							var $noResults = $resultsContainer.querySelector('.search-results-container');
+							$noResults.setAttribute("tabindex", "0");
+							$noResults.focus();
+						}
+
+					} else {
+						console.log("Query UNdefined");
+					}
+				};
+
+				return {
+					init: function(  ) {
+						if (!Instance) {
+							Instance = new SearchBarAccessibility();
+							console.info("running search tab");
+							assignFocusOnSearch();
+						} else {
+							console.info("Instance up");
+							assignFocusOnSearch();
+						}
+					}
+				};
+			};
+
+			var focusOnSearch = SearchBarAccessibility();
+			focusOnSearch.init();
+		};
+
 	})(jQuery);
 </script>
 
