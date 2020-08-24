@@ -146,11 +146,8 @@
 					if ( query != null ) {
 						var $resultsContainer = document.querySelector('#searchResults');
 						var $landingPageSearch = $resultsContainer.querySelector('.search-count.odx-bold');
-						console.log("Query defined");
 
 						if ( $landingPageSearch!= null  ) {
-							//Buscar en página el div de results
-							//Asigar el focus
 							$landingPageSearch.setAttribute("tabindex", "0");
 							$landingPageSearch.focus();
 						} else {
@@ -159,8 +156,6 @@
 							$noResults.focus();
 						}
 
-					} else {
-						console.log("Query UNdefined");
 					}
 				};
 
@@ -168,10 +163,8 @@
 					init: function(  ) {
 						if (!Instance) {
 							Instance = new SearchBarAccessibility();
-							console.info("running search tab");
 							assignFocusOnSearch();
 						} else {
-							console.info("Instance up");
 							assignFocusOnSearch();
 						}
 					}
