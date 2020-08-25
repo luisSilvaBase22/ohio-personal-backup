@@ -16,27 +16,26 @@ $titles-dark-color: #373737;
 $input-color-light: #5C5C5C;
 $input-color: #4A4A4A;
 $standard-links-color: #3D7AA9;
+$standard-links-color-light: #2782C9;
 $cards-border: #FFBE0E; // yellow
 
 $containers-background: #f2f2f2;
 $light-containers-background: #EBF6FF;
 $borders-color: #d8d8d8;
 
-
 /* Start: Mega menu variables */
-
 $mega-menu-background-color: #EEEEEE;
 $mega-menu-bottom-line-color: #3B7AAB;
 $mega-menu-mobile-background-color: #0971BD;
-
 //Font color
 $mega-menu-section-primary-color: #3B7AAB;
-
 //Font type
 $mega-menu-primary-font: "Source Sans Pro";
-
 /* End: Mega menu variables */
 
+body .lang-modal__app-wrapper #app{
+	top: 7px;
+}
 
 .hide-image-caption .odx-content__image-caption{
 	display: none;
@@ -68,6 +67,30 @@ body .content-body hr{
 	margin: 0.25em 0 1em 0;
 }
 /* END: Titles */
+
+/* START: Sidebar Containers */
+.content-body .odx-more-information,
+.content-body .odx-related-laws-and-forms,
+.content-body .odx-external-resources,
+.content-body .odx-share-this{
+	background-color: white;
+	box-shadow: 1px 3px 6px 0 rgba(58, 62, 72, 0.3);
+}
+body .content-body .odx-more-information h2,
+body .content-body .odx-related-laws-and-forms h2,
+body .content-body .odx-external-resources h2,
+body .content-body .odx-share-this h2{
+	font-size: 1.5em;
+	margin: 10px 0 20px;
+}
+body .content-body .odx-share-this h2{
+	margin: 15px 0 10px;
+	padding-left: 10px;
+}
+.odx-share-this__social--icon i{
+	color: $color-secondary-main;
+}
+/* END: Sidebar Containers */
 
 /* START: Buttons */
 .btn-default,
@@ -838,6 +861,17 @@ body .content-body .aw-left-nav li.active a.left-navigation__link:focus {
 .pagination > .active > span:hover{
 	background-color: $color-secondary-main;
 	border-color: $color-secondary-main;
+}
+.odx-events__search-pagination li a{
+	width: 50px;
+	border-radius: 20px;
+	margin: 0 5px;
+	text-align: center;
+}
+.pagination-sm > li:last-child > a,
+.pagination-sm > li:last-child > span,
+.odx-events__search-pagination li:first-child a{
+	border-radius: 20px;
 }
 /* END: Paginator */
 
@@ -2244,6 +2278,16 @@ ul.b22-alphalist__alphabet li:not(:first-child) a{
 }
 /* END: Generic Filter */
 
+/* START: Small filter cards with no Image */
+.odx-carousel-cards-item-no-image p.ohio-card-content-summary{
+	height: 55px;
+}
+.odx-carousel-cards-item-no-image .ohio-card.ohio-card--center .ohio-card-content{
+	height: 150px;
+	min-height: unset;
+}
+/* END: Small filter cards with no Image */
+
 /* ==== START: FAQs Tabs Component ==== */
 .iop-faqs-tabs__container {
 	margin-top: 5px;
@@ -2487,7 +2531,7 @@ ul.b22-alphalist__alphabet li:not(:first-child) a{
 	max-height: 70px;
 }
 .medicaid-ohio-news__container {
-	height: 200px;
+	height: 190px;
 	margin-bottom: 10px;
 	border-bottom: 1px solid $borders-color;
 }
@@ -2503,24 +2547,38 @@ body .content-body p.categories-selected {
 .b22-filter__second-section.medicaid-filter__second-container-only {
 	border-top: 1px solid $borders-color;
 }
+.ohio-card-content .ohio-card-content-header.medicaid-news__title,
+.medicaid-news__summary {
+	overflow: hidden;
+	max-height: 100px;
+	margin-top: 0;
+}
+.medicaid-news__summary-wrapper {
+	max-height: 100px;
+}
 @media(max-width: 1440px) {
-	.medicaid-ohio-news__container {
-		height: 250px;
+	.medicaid-news__summary-wrapper {
+		max-height: 150px;
 	}
 }
 @media(max-width: 1024px) {
-	.medicaid-ohio-news__container {
-		height: 320px;
+	.medicaid-news__summary-wrapper {
+		max-height: 220px;
 	}
 }
 @media(max-width: 768px) {
 	.medicaid-ohio-news__container {
-		height: 350px;
+		height: 270px;
 	}
-}
-@media(max-width: 768px) {
-	.medicaid-ohio-news__container {
-		height: 350px;
+	.ohio-card-content .ohio-card-content-header.medicaid-news__title{
+		overflow: hidden;
+		max-height: 90px;
+	}
+	.medicaid-news__summary{
+		max-height: 110px;
+	}
+	.medicaid-news__summary-wrapper {
+		max-height: 260px;
 	}
 }
 @media(max-width: 450px) {
@@ -2551,5 +2609,58 @@ body .content-body .odx-collapsable__title p {
 }
 /* ==== END: Collapsible Questions ==== */
 
+/* ==== START: Common Questions Bullet list ==== */
+ul.odx-questions-container{
+	padding-inline-start: 20px;
+	margin-top: 20px;
+}
+ul.odx-questions-container li,
+ul.odx-questions-container a{
+	color: $standard-links-color-light;
+	text-decoration: none;
+	line-height: 1.5em;
+	padding: 0 40px 10px 0;
+}
+ul.odx-questions-container a:hover,
+ul.odx-questions-container a:visited,
+ul.odx-questions-container a:focus,
+ul.odx-questions-container a:active{
+	color: $standard-links-color-light;
+}
+/* ==== END:  Common Questions Bullet list ==== */
+
+/* ==== START: Reports and Research ==== */
+#medicaid-reports-research__main-wrapper {
+	margin-left: 7%;
+	.medicaid-reports-research__items {
+		height: 100px;
+		border-bottom: 1px solid $borders-color;
+		margin-right: 2%;
+		margin-top: 3.5%;
+	}
+	.medicaid-reports-research__icon {
+		text-align: end;
+		margin-top: 20px;
+	}
+	.medicaid-reports-research__title {
+		color: $color-secondary-dark;
+		font-size: 1.9em;
+	}
+	.medicaid-reports-research__ads {
+		margin-top: 5%;
+		padding-right: 7%;
+	}
+}
+@media(max-width: 450px) {
+	#medicaid-reports-research__main-wrapper {
+		.medicaid-reports-research__items {
+			height: auto;
+			margin-right: 0;
+			margin-top: 10px;
+			padding-bottom: 10px;
+		}
+	}
+}
+/* ==== END: Reports and Research ==== */
 
 /* END - Libraries>ODX Common Design>Content>Utility>Style Sheets>SCSS>Agencies>medicaid>medicaid-custom-styles.scss */
