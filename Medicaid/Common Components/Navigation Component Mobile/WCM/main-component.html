@@ -7,7 +7,33 @@
 					<div class="b-mega-menu-mobile__section">
 						<div class="b-section__title">
 							<button class="js-btn-display-secondary-pages" id="b-section-button">
-								<span>[Property field="title" type="sitearea" context="current"]</span> <i class="fas fa-plus-circle"></i></button>
+								<span>
+									<!-- About us -->
+
+									[Plugin:Matches text="[Element key="portalLocation" type="content" context="autofill"]" pattern="(.*)?(/Taxonomy/Portal Locations/All Portal Locations/By Agency/Medicaid/((About Us)))(/Second Level Navigation)?"]
+									[Property field="title" type="content" context="selected" name="ohio content english/medicaid/about-us/about-us"]
+									[/Plugin:Matches]
+
+									<!-- Learn About Medicaid -->
+
+									[Plugin:Matches text="[Element key="portalLocation" type="content" context="autofill"]" pattern="(.*)?(/Taxonomy/Portal Locations/All Portal Locations/By Agency/Medicaid/((Learn About Medicaid)))(/Second Level Navigation)?"]
+									[Property field="title" type="content" context="selected" name="ohio content english/medicaid/learn-about-medicaid/learn-about-medicaid"]
+									[/Plugin:Matches]
+
+									<!-- Resource for providers -->
+
+									[Plugin:Matches text="[Element key="portalLocation" type="content" context="autofill"]" pattern="(.*)?(/Taxonomy/Portal Locations/All Portal Locations/By Agency/Medicaid/((Resources for Providers)))(/Second Level Navigation)?"]
+									[Property field="title" type="content" context="selected" name="ohio content english/medicaid/resources-for-providers/resources-for-providers"]
+									[/Plugin:Matches]
+
+
+									<!-- Families and Individuals -->
+
+									[Plugin:Matches text="[Element key="portalLocation" type="content" context="autofill"]" pattern="(.*)?(/Taxonomy/Portal Locations/All Portal Locations/By Agency/Medicaid/((Individuals and Families)))(/Second Level Navigation)?"]
+									[Property field="title" type="content" context="selected" name="ohio content english/medicaid/families-and-individuals/families-and-individuals"]
+									[/Plugin:Matches]
+
+								</span> <i class="fas fa-plus-circle"></i></button>
 						</div>
 					</div>
 				</div>
