@@ -737,8 +737,7 @@
 
 				//resultsParagraph.text('We found ' + numberResults + ' ' + results);
 				resultsParagraph.text('We found ' + numberResults + ' ' + 'results');
-				resultsParagraph.attr('tabindex','-1');
-				resultsParagraph.focus();
+				this.focusResults();
 			},
 			setListenerForDropdown: function( idFilter, taxonomy ){
 				var _this = this;
@@ -830,8 +829,7 @@
 						_this.setPagination();
 					}
 					*/
-
-
+					_this.focusResults();
 				});
 			},
 			setListenerForSorting: function( sortingSelector, propertyName, SortObject ){
@@ -1009,6 +1007,13 @@
 					_this.setHashParameters( hashParam );
 
 				} );
+			},
+			focusResults: function(){
+				var els = this.elements;
+
+				var $resultsParagraph = els.resultsNumber;
+				$resultsParagraph.attr('tabindex','-1');
+				$resultsParagraph.focus();
 			},
 			removeActiveIndexes: function(){
 				var els = this.elements;
