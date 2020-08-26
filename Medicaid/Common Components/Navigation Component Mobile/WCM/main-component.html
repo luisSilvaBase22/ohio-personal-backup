@@ -1,49 +1,48 @@
-<!-- START: Ohio Design / Agencies / Medicaid / Global Components / Desktop / Smartphone / Second Navigation / Mega Menu - Main Component -->
+<!-- START: Ohio Design / Agencies / Medicaid / Global Components / Mega Menu / Mobile / Second Navigation - Main -->
 <div class="hidden-sm hidden-md hidden-lg">
-	<div class="container">
-		<div class="b-mega-menu-mobile">
-			<div>
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="b-mega-menu-mobile__section">
-							<div class="b-section__title">
-								<button class="js-btn-display-secondary-pages" id="b-section-button">
-									<span>[Property field="title" type="sitearea" context="current"]</span> <i class="fas fa-plus-circle"></i></button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-xs-12">
-						<div class="b-mega-menu-mobile__secondary-pages" style="display: block">
-							<ul>
-								[Plugin:Matches text="[Element key="portalLocation" type="content" context="autofill"]" pattern="(.*)?(/Taxonomy/Portal Locations/All Portal Locations/By Agency/Medicaid/Individuals and Families)(.*)?"]
-								<li class="b-secondary-page">
-									[Element key="portalLocation" type="content" context="autofill"]
-									<a href='[Placeholder tag="href"]'>
-										<div class="row">
-											<div class="col-xs-10">
-												<div class="b-secondary-page__title">
-													[Placeholder tag="title"]
-												</div>
-												<div class="b-secondary-page__description">
-													[Element key="summary" type="content" context="autofill"]
-												</div>
-											</div>
-											<div class="col-xs-2">
-												<i class="fas fa-chevron-right"></i>
-											</div>
-										</div>
-									</a>
-								</li>
-								[/Plugin:Matches]
-							</ul>
+	<div class="b-mega-menu-mobile">
+		<div>
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="b-mega-menu-mobile__section">
+						<div class="b-section__title">
+							<button class="js-btn-display-secondary-pages" id="b-section-button">
+								<span>[Property field="title" type="sitearea" context="current"]</span> <i class="fas fa-plus-circle"></i></button>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="b-mega-menu-mobile__bottom-line" style="display: none"></div>
+			<div class="row">
+				<div class="col-12">
+					<div class="b-mega-menu-mobile__secondary-pages" style="display: none">
+						<ul>
+							[Plugin:Matches text="[Element key="portalLocation" type="content" context="autofill"]" pattern="(.*)?(/Taxonomy/Portal Locations/All Portal Locations/By Agency/Medicaid/((About Us)|(Learn About Medicaid)|(Resources for Providers)|(Individuals and Families)))(/Second Level Navigation)?"]
+							<li class="b-secondary-page">
+								<a href='[Placeholder tag="href"]'>
+									<div class="row">
+										<div class="col-xs-10">
+											<div class="b-secondary-page__title">
+												<span>[Placeholder tag="title"]</span>
+											</div>
+											<div class="b-secondary-page__description">
+												<span>[Element key="summary" type="content" context="autofill"]</span>
+											</div>
+										</div>
+										<div class="col-xs-2">
+											<i class="fas fa-chevron-right"></i>
+										</div>
+									</div>
+								</a>
+								<div class="b-secondary-page__bottom-line"></div>
+							</li>
+							[/Plugin:Matches]
+						</ul>
+					</div>
+				</div>
+			</div>
 		</div>
+		<div class="b-mega-menu-mobile__bottom-line" style="display: none"></div>
 	</div>
 </div>
-<!-- END: Ohio Design / Agencies / Medicaid / Global Components / Smartphone / Header / Second Navigation / Mega Menu -->
+[Component name="ohio design/agencies/medicaid/global-components/mega-menu/mobile/second-navigation-mobile-js"]
+<!-- END: Ohio Design / Agencies / Medicaid / Global Components / Mega Menu / Mobile / Second Navigation - Main -->
