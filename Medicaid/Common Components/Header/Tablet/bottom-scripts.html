@@ -50,13 +50,26 @@ $(".odx-title").html('<h1 class="odx-content__title">'+title+'</h1>');
 //Override External URLS
 $('#odx-main-content a[href^="http"],#odx-main-content a[href^="https"]').attr("target","_blank");
 
+//Hide Mega Menu in Tablet when scrolling (788px>= Device <=1023 )
+function hideMegaMenuTablet( hide ){
+	var $megaMenu = document.querySelector('.b-mega-menu');
+	if ( hide ) {
+		$megaMenu.classList.add('hide');
+	} else {
+		$megaMenu.style.display = "none";
+		$megaMenu.classList.remove('hide');
+	}
+}
+
 // Add offsett when scrolling in desktop
 window.onscroll = function() {odxScroll()};
 function odxScroll() {
 	if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
 		$(".navigation").addClass("sticky-header");
+		hideMegaMenuTablet( true );
 	} else {
 		$(".navigation").removeClass("sticky-header");
+		hideMegaMenuTablet( false );
 	}
 }
 
