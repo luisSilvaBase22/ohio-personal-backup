@@ -577,6 +577,12 @@ body .content-body {
 			font-weight: bold;
 		}
 
+		@media (min-width: 767px) and (max-width: 991px) {
+			span {
+				width: 550px;
+			}
+		}
+
 		@media (min-width: 1200px) and (max-width: 1308px) {
 			span {
 				width: 115px;
@@ -665,7 +671,7 @@ body .content-body {
 		padding-top: 8px;
 		letter-spacing: 0.08px;
 		line-height: 18px;
-		max-height: 60px;
+		max-height: 45px;
 		overflow: hidden;
 	}
 }
