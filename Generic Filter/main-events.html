@@ -93,7 +93,11 @@
 
 	var WIDGET_SETTINGS = {
 		root: "#id-filter",
-		menuComponentId: '[Component name="ohio design/agencies/puco/events/calendar-view/all-events/events-json-all-events" resultsPerPage="" startPage="" format="id"]',
+		menuComponent: {
+			id: '[Component name="ohio design/agencies/puco/events/calendar-view/all-events/events-json-all-events" resultsPerPage="" startPage="" format="id"]',
+			location: 'Ohio Content English//opd/law-library/innocence/recommended-reading',
+			categories: ["", ""]
+		},
 		template: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/opd/generic-filter"]',
 		elementsPerPage: 3,
 		idTemplateItems: "#cards-generic-wrapper",
@@ -102,7 +106,7 @@
 	};
 
 	document.addEventListener( 'DOMContentLoaded', function() {
-		var multiplesFiltersInstance = window.FiltersWidget( WIDGET_SETTINGS.menuComponentId );
+		var multiplesFiltersInstance = window.FiltersWidget( WIDGET_SETTINGS.menuComponent );
 		multiplesFiltersInstance.start( FILTERS, WIDGET_SETTINGS );
 	} );
 

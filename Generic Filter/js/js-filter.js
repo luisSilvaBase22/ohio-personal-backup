@@ -13,12 +13,19 @@
 	};
 
 	//Logic part from component, gets the data to fill the cards
-	window.MultipleFilters = function( cmpntid ){
+	window.MultipleFilters = function( ComponentToGetData ){
 
 		//var LocalOptions = Options || DefaultOptions;
 		var LocalOptions = DefaultOptions;
-		LocalOptions.AjaxParameters.cmpntid = cmpntid;
 
+		if ( typeof ComponentToGetData === "object" && ComponentToGetData.id ) {
+			LocalOptions.AjaxParameters.cmpntid = ComponentToGetData.id;
+			if (ComponentToGetData.location)
+				LocalOptions.AjaxParameters.location = ComponentToGetData.location;
+
+		} else {
+			LocalOptions.AjaxParameters.cmpntid = ComponentToGetData;
+		}
 
 		var Utils = {
 			prepareLibrary: function(){
@@ -63,7 +70,7 @@
 					CACHE: LocalOptions.AjaxParameters.CACHE,
 					CONTENTCACHE: LocalOptions.AjaxParameters.CONTENTCACHE,
 					CONNECTORCACHE: LocalOptions.AjaxParameters.CONNECTORCACHE,
-					location: LibrarySettings.wcmLibrary + '/' + LibrarySettings.location,
+					location: LocalOptions.AjaxParameters.location ? LocalOptions.AjaxParameters.location : LibrarySettings.wcmLibrary + '/' + LibrarySettings.location,
 				};
 
 				var serviceURL = '/wps/wcm/connect/' + LibrarySettings.virtualPortal + LibrarySettings.wcmLibrary + '/' + window.siteId + '?' + $.param(Params);
