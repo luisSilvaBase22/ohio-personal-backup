@@ -51,7 +51,10 @@
 				var $target = $(event.target);
 				var isClickInside = $target.closest($searchForm).length;
 				var isSearchButtonClicked = $target.closest($searchButton).length;
-				if (!isClickInside && !isSearchButtonClicked) $searchTop.removeClass('in');
+				if (!isClickInside && !isSearchButtonClicked) {
+					$searchTop.removeClass('in');
+					$formButtons.hide();
+				}
 			});
 
 			$searchButton.on('click', function () {
