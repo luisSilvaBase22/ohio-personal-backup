@@ -737,6 +737,8 @@
 
 				//resultsParagraph.text('We found ' + numberResults + ' ' + results);
 				resultsParagraph.text('We found ' + numberResults + ' ' + 'results');
+				resultsParagraph.attr('tabindex','-1');
+				resultsParagraph.focus();
 			},
 			setListenerForDropdown: function( idFilter, taxonomy ){
 				var _this = this;
