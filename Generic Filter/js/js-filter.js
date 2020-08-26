@@ -879,6 +879,13 @@
 				var searchButton = els.searchButton;
 				var input = els.input;
 
+				input.on('keypress', function( event ){
+					var keyCode = event.which;
+					if (keyCode == 13) {
+						searchButton.trigger('click');
+					}
+				});
+
 				searchButton.on('click', function(){
 					var keyword = input.val();
 					keyword.trim().toLowerCase();
