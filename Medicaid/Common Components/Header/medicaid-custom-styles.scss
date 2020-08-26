@@ -636,6 +636,12 @@ body .content-body {
 		@include anchorsStylesAndArrowAlignmentTranslation();
 	}
 
+	@media (max-width: 991px) and (min-width: 767px) {
+		.b-section__title a span {
+			width: 250px;
+		}
+	}
+
 	.b-section__description {
 		font-family: $mega-menu-primary-font;
 		color: $input-color;
@@ -704,7 +710,7 @@ body .content-body {
 
 @mixin overflowTitlesAndSummaries () {
 	line-height: 18px;
-	max-height: 18px;
+	max-height: 22px;
 	overflow: hidden;
 	padding-top: 5px;
 }
