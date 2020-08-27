@@ -1041,7 +1041,7 @@
 				var els = this.elements;
 
 				var $resultsParagraph = els.resultsNumber;
-				$resultsParagraph.attr('tabindex','-1');
+				$resultsParagraph.attr('tabindex','0');
 				$resultsParagraph.focus();
 			},
 			removeActiveIndexes: function(){
