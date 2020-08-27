@@ -52,9 +52,9 @@
 	<div id="b22-filter-taxonomies-container" class="row margin-bottom-sm componentContainer " style="">
 		{{#each Filters}}
 		<article id="{{propertyName}}" class="ohio-select2 col-lg-{{numColumns}} col-md-{{numColumns}} col-sm-12 col-xs-12">
-			<label for="{{id}}">{{label}}</label>
+			<label for="{{id}}">{{getMultilingualLabelByWCMKey ./label}}</label>
 			<select multiple="multiple" id="{{id}}">
-				<option value="all" selected="selected">{{allLabel}}</option>
+				<option value="all" selected="selected">{{getMultilingualLabelByWCMKey ./allLabel}}</option>
 				{{#each options}}
 				<option value="{{this}}">{{this}}</option>
 				{{/each}}
