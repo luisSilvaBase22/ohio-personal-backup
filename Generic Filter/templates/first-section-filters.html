@@ -1,6 +1,7 @@
 <!-- START Ohio Design / Content / Component Templates / Agencies / OPD / multiple-filters-template.hbs.html -->
 <div class="b22-filter__first-section js-b22-filter__first-section">
 	<div class="b22-filter__title-container">
+		<h2 class="sr-only">{{getMultilingualLabelByWCMKey ./filterTitleFirstSection}}</h2>
 		<div>{{getMultilingualLabelByWCMKey ./filterTitleFirstSection}}</div>
 		<span class="js-b22-collapse-btn"><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
 	</div>
@@ -8,7 +9,7 @@
 		<div class="row b22-filter__input-container">
 			{{#if eventFilter}}
 			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 margin-bottom-sm">
-				<label for="b22-input-search" class="sr-only">Filter</label>
+				<label for="b22-input-search" class="sr-only">Filter by keyword</label>
 				<input id="b22-input-search" class="js-b22-input b22-filter__input-filter" type="text" placeholder="{{getMultilingualLabelByWCMKey ./inputPlaceholder}}">
 				<button class="js-b22-filter-button b22-filter__input-filter-btn btn btn-primary">{{getMultilingualLabelByWCMKey ./filterButton}}</button><!-- Filter -->
 			</div>
@@ -17,7 +18,7 @@
 			</div>
 			{{else}}
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 margin-bottom-sm">
-				<label for="b22-input-search" class="sr-only">Filter</label>
+				<label for="b22-input-search" class="sr-only">Filter by keyword</label>
 				<input id="b22-input-search" class="js-b22-input b22-filter__input-filter" type="text" placeholder="{{getMultilingualLabelByWCMKey ./inputPlaceholder}}">
 				<button class="js-b22-filter-button b22-filter__input-filter-btn btn btn-primary">{{getMultilingualLabelByWCMKey ./filterButton}}</button><!-- Filter -->
 			</div>
