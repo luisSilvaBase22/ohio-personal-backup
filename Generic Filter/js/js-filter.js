@@ -369,6 +369,20 @@
 
 				return removedDuplicatedItems;
 			},
+			removeCurrentContentPiece: function( ContentPieces ){
+				//Remove content piece from where the filter is being referenced
+
+				var indexOfItemToRemove;
+
+				for( var i = 0; i < ContentPieces.length; i++ ){
+					if ( ContentPieces[i].uuid === '[Property field="id" type="content" context="current"]' ){
+						indexOfItemToRemove = i;
+						break;
+					}
+				}
+
+				ContentPieces.splice( indexOfItemToRemove, 1 );
+			},
 			getContentPiecesData: function( mappingFunction, sortByDate, AlphabeticalFilter ){
 				var _this = this;
 				var serviceURL = Utils.configureAjaxParameters();
@@ -380,6 +394,8 @@
 						}
 						return Item;
 					} );
+
+					_this.removeCurrentContentPiece( ContentPieces );
 
 					if ( mappingFunction ) {
 						ContentPieces = mappingFunction( ContentPieces );
