@@ -2177,6 +2177,12 @@ body .content-body .medicaid-print-biography h2 {
 	margin: 15px 0 15px;
 }
 
+@media screen and (max-width: 767px) {
+	.b22-filter__title-container span {
+		display: inline-block;
+	}
+}
+
 .b22-filter__title-container i {
 	color: #3D7AA9;
 }
