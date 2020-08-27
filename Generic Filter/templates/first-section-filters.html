@@ -1,50 +1,52 @@
 <!-- START Ohio Design / Content / Component Templates / Agencies / OPD / multiple-filters-template.hbs.html -->
-<div class="b22-filter__first-section">
+<div class="b22-filter__first-section js-b22-filter__first-section">
 	<div class="b22-filter__title-container">
 		<div>{{getMultilingualLabelByWCMKey ./filterTitleFirstSection}}</div>
-		<span><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
+		<span class="js-b22-collapse-btn"><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
 	</div>
-	<div class="row b22-filter__input-container">
-		{{#if eventFilter}}
-		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 margin-bottom-sm">
-			<label for="b22-input-search" class="sr-only">Filter</label>
-			<input id="b22-input-search" class="js-b22-input b22-filter__input-filter" type="text" placeholder="{{getMultilingualLabelByWCMKey ./inputPlaceholder}}">
-			<button class="js-b22-filter-button b22-filter__input-filter-btn btn btn-primary">{{getMultilingualLabelByWCMKey ./filterButton}}</button><!-- Filter -->
+	<div class="js-b22-hide-first-section-filters-mobile"><!-- START div from collapsible for mobile -->
+		<div class="row b22-filter__input-container">
+			{{#if eventFilter}}
+			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 margin-bottom-sm">
+				<label for="b22-input-search" class="sr-only">Filter</label>
+				<input id="b22-input-search" class="js-b22-input b22-filter__input-filter" type="text" placeholder="{{getMultilingualLabelByWCMKey ./inputPlaceholder}}">
+				<button class="js-b22-filter-button b22-filter__input-filter-btn btn btn-primary">{{getMultilingualLabelByWCMKey ./filterButton}}</button><!-- Filter -->
+			</div>
+			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+				<div id="{{eventFilter.id}}"></div>
+			</div>
+			{{else}}
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 margin-bottom-sm">
+				<label for="b22-input-search" class="sr-only">Filter</label>
+				<input id="b22-input-search" class="js-b22-input b22-filter__input-filter" type="text" placeholder="{{getMultilingualLabelByWCMKey ./inputPlaceholder}}">
+				<button class="js-b22-filter-button b22-filter__input-filter-btn btn btn-primary">{{getMultilingualLabelByWCMKey ./filterButton}}</button><!-- Filter -->
+			</div>
+			{{/if}}
 		</div>
-		<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-			<div id="{{eventFilter.id}}"></div>
-		</div>
-		{{else}}
-		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 margin-bottom-sm">
-			<label for="b22-input-search" class="sr-only">Filter</label>
-			<input id="b22-input-search" class="js-b22-input b22-filter__input-filter" type="text" placeholder="{{getMultilingualLabelByWCMKey ./inputPlaceholder}}">
-			<button class="js-b22-filter-button b22-filter__input-filter-btn btn btn-primary">{{getMultilingualLabelByWCMKey ./filterButton}}</button><!-- Filter -->
+		{{#if alphabeticalList}}
+		<div id="b22-alphalist-container" class="row margin-bottom-sm">
+			<div class="b22-alphalist__index-container js-b22-alphabet-container">
+				<ul class="js-b22-indexes js-opd-alphabet-container b22-alphalist__alphabet">
+					<li class="b22-alphalist__alphabet-list-title">
+						<a href="#top" class="js-b22-alphabet-button-all js-opd-alphabet-button-all b22-alphalist-button-all">
+							<span>All type </span><!--{{getMultilingualLabelByWCMKey ./allTypeIndexButton}} -->
+						</a>
+					</li>
+					{{#each alphabeticalList}}
+					<li>
+						<a href data-target ="{{this}}" class="js-b22-alphabet-char">
+							<span>{{this}}</span>
+						</a>
+					</li>
+					{{/each}}
+				</ul>
+			</div>
 		</div>
 		{{/if}}
-	</div>
-	{{#if alphabeticalList}}
-	<div id="b22-alphalist-container" class="row margin-bottom-sm">
-		<div class="b22-alphalist__index-container js-b22-alphabet-container">
-			<ul class="js-b22-indexes js-opd-alphabet-container b22-alphalist__alphabet">
-				<li class="b22-alphalist__alphabet-list-title">
-					<a href="#top" class="js-b22-alphabet-button-all js-opd-alphabet-button-all b22-alphalist-button-all">
-						<span>All type </span><!--{{getMultilingualLabelByWCMKey ./allTypeIndexButton}} -->
-					</a>
-				</li>
-				{{#each alphabeticalList}}
-				<li>
-					<a href data-target ="{{this}}" class="js-b22-alphabet-char">
-						<span>{{this}}</span>
-					</a>
-				</li>
-				{{/each}}
-			</ul>
-		</div>
-	</div>
-	{{/if}}
+	</div><!-- END div from collapsible for mobile -->
 </div>
 
-<div class="b22-filter__second-section">
+<div class="b22-filter__second-section js-b22-filter__second-section">
 	<div class="b22-filter__categories-title">{{getMultilingualLabelByWCMKey ./filterTitleSecondSection}}</div><!-- Filter events -->
 	<div id="b22-filter-taxonomies-container" class="row margin-bottom-sm componentContainer " style="">
 		{{#each Filters}}

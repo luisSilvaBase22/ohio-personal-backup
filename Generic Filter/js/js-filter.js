@@ -465,6 +465,10 @@
 					items: $cards.find('.js-b22-item')
 				};
 
+				els.$collapsibleFirstSectionFiltersMobile = els.$root.find('.js-b22-hide-first-section-filters-mobile');
+				els.$collapsibleSecondSectionFiltersMobile  = els.$root.find('.js-b22-filter__second-section');
+				els.$collapseButton = els.$root.find('.js-b22-collapse-btn');
+
 				var $filterByAlphaindex = els.$root.find('.js-b22-alphabet-container');
 				els.$filterByAlphaindex = {
 					root: $filterByAlphaindex,
@@ -1008,6 +1012,31 @@
 
 				} );
 			},
+			setListenerCollapseFiltersWhenMobile: function(){
+
+				var els = this.elements;
+				var $collapseButton = els.$collapseButton;
+				var $containerFiltersFirstSection = els.$collapsibleFirstSectionFiltersMobile;
+				var $containerFiltersSecondSection = els.$collapsibleSecondSectionFiltersMobile;
+
+				$collapseButton.on('click', function( event ){
+					var $iconArrow = $collapseButton.find('i');
+					if ( $containerFiltersFirstSection.css('display') !== 'none' ) {
+						//If visible then Hide
+						$iconArrow.toggleClass('fa-chevron-up');
+						$iconArrow.toggleClass('fa-chevron-down');
+						$containerFiltersFirstSection.hide();
+						$containerFiltersSecondSection.hide();
+					} else {
+						//If hidden then show
+						$iconArrow.toggleClass('fa-chevron-down');
+						$iconArrow.toggleClass('fa-chevron-up');
+						$containerFiltersFirstSection.show();
+						$containerFiltersSecondSection.show();
+					}
+				});
+
+			},
 			focusResults: function(){
 				var els = this.elements;
 
@@ -1365,6 +1394,7 @@
 								deferredStart.resolve();
 
 						} );
+
 						_this.addingAriaLabels();
 
 					});
@@ -1398,6 +1428,7 @@
 					console.log("Cards rendered");
 
 					_this.setElements();
+					_this.setListenerCollapseFiltersWhenMobile();
 					_this.setPagination();
 					if (deferred)
 						deferred.resolve();
