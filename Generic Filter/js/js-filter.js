@@ -84,7 +84,9 @@
 				return 'b' + s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
 			},
 			removeDuplicated: function( array ) {
-				return array.filter((a, b) => array.indexOf(a) === b)
+				return array.filter( function( a, b ){
+					return array.indexOf( a ) === b;
+				} );
 			},
 			removeDuplicatedIndex: function( items ){
 				var noRepeatedLetter = '';
