@@ -13,12 +13,19 @@
 	};
 
 	//Logic part from component, gets the data to fill the cards
-	window.MultipleFilters = function( cmpntid ){
+	window.MultipleFilters = function( ComponentToGetData ){
 
 		//var LocalOptions = Options || DefaultOptions;
 		var LocalOptions = DefaultOptions;
-		LocalOptions.AjaxParameters.cmpntid = cmpntid;
 
+		if ( typeof ComponentToGetData === "object" && ComponentToGetData.id ) {
+			LocalOptions.AjaxParameters.cmpntid = ComponentToGetData.id;
+			if (ComponentToGetData.location)
+				LocalOptions.AjaxParameters.location = ComponentToGetData.location;
+
+		} else {
+			LocalOptions.AjaxParameters.cmpntid = ComponentToGetData;
+		}
 
 		var Utils = {
 			prepareLibrary: function(){
@@ -63,7 +70,7 @@
 					CACHE: LocalOptions.AjaxParameters.CACHE,
 					CONTENTCACHE: LocalOptions.AjaxParameters.CONTENTCACHE,
 					CONNECTORCACHE: LocalOptions.AjaxParameters.CONNECTORCACHE,
-					location: LibrarySettings.wcmLibrary + '/' + LibrarySettings.location,
+					location: LocalOptions.AjaxParameters.location ? LocalOptions.AjaxParameters.location : LibrarySettings.wcmLibrary + '/' + LibrarySettings.location,
 				};
 
 				var serviceURL = '/wps/wcm/connect/' + LibrarySettings.virtualPortal + LibrarySettings.wcmLibrary + '/' + window.siteId + '?' + $.param(Params);
@@ -362,6 +369,20 @@
 
 				return removedDuplicatedItems;
 			},
+			removeCurrentContentPiece: function( ContentPieces ){
+				//Remove content piece from where the filter is being referenced
+
+				var indexOfItemToRemove;
+
+				for( var i = 0; i < ContentPieces.length; i++ ){
+					if ( ContentPieces[i].uuid === '[Property field="id" type="content" context="current"]' ){
+						indexOfItemToRemove = i;
+						break;
+					}
+				}
+
+				ContentPieces.splice( indexOfItemToRemove, 1 );
+			},
 			getContentPiecesData: function( mappingFunction, sortByDate, AlphabeticalFilter ){
 				var _this = this;
 				var serviceURL = Utils.configureAjaxParameters();
@@ -373,6 +394,8 @@
 						}
 						return Item;
 					} );
+
+					_this.removeCurrentContentPiece( ContentPieces );
 
 					if ( mappingFunction ) {
 						ContentPieces = mappingFunction( ContentPieces );
@@ -457,6 +480,10 @@
 					groupHeaders: $cards.find('.js-b22-index-header'),
 					items: $cards.find('.js-b22-item')
 				};
+
+				els.$collapsibleFirstSectionFiltersMobile = els.$root.find('.js-b22-hide-first-section-filters-mobile');
+				els.$collapsibleSecondSectionFiltersMobile  = els.$root.find('.js-b22-filter__second-section');
+				els.$collapseButton = els.$root.find('.js-b22-collapse-btn');
 
 				var $filterByAlphaindex = els.$root.find('.js-b22-alphabet-container');
 				els.$filterByAlphaindex = {
@@ -730,6 +757,7 @@
 
 				//resultsParagraph.text('We found ' + numberResults + ' ' + results);
 				resultsParagraph.text('We found ' + numberResults + ' ' + 'results');
+				this.focusResults();
 			},
 			setListenerForDropdown: function( idFilter, taxonomy ){
 				var _this = this;
@@ -821,8 +849,7 @@
 						_this.setPagination();
 					}
 					*/
-
-
+					_this.focusResults();
 				});
 			},
 			setListenerForSorting: function( sortingSelector, propertyName, SortObject ){
@@ -871,6 +898,13 @@
 				var els = this.elements;
 				var searchButton = els.searchButton;
 				var input = els.input;
+
+				input.on('keypress', function( event ){
+					var keyCode = event.which;
+					if (keyCode == 13) {
+						searchButton.trigger('click');
+					}
+				});
 
 				searchButton.on('click', function(){
 					var keyword = input.val();
@@ -993,6 +1027,38 @@
 					_this.setHashParameters( hashParam );
 
 				} );
+			},
+			setListenerCollapseFiltersWhenMobile: function(){
+
+				var els = this.elements;
+				var $collapseButton = els.$collapseButton;
+				var $containerFiltersFirstSection = els.$collapsibleFirstSectionFiltersMobile;
+				var $containerFiltersSecondSection = els.$collapsibleSecondSectionFiltersMobile;
+
+				$collapseButton.on('click', function( event ){
+					var $iconArrow = $collapseButton.find('i');
+					if ( $containerFiltersFirstSection.css('display') !== 'none' ) {
+						//If visible then Hide
+						$iconArrow.toggleClass('fa-chevron-up');
+						$iconArrow.toggleClass('fa-chevron-down');
+						$containerFiltersFirstSection.hide();
+						$containerFiltersSecondSection.hide();
+					} else {
+						//If hidden then show
+						$iconArrow.toggleClass('fa-chevron-down');
+						$iconArrow.toggleClass('fa-chevron-up');
+						$containerFiltersFirstSection.show();
+						$containerFiltersSecondSection.show();
+					}
+				});
+
+			},
+			focusResults: function(){
+				var els = this.elements;
+
+				var $resultsParagraph = els.resultsNumber;
+				$resultsParagraph.attr('tabindex','0');
+				$resultsParagraph.focus();
 			},
 			removeActiveIndexes: function(){
 				var els = this.elements;
@@ -1344,6 +1410,7 @@
 								deferredStart.resolve();
 
 						} );
+
 						_this.addingAriaLabels();
 
 					});
@@ -1377,6 +1444,7 @@
 					console.log("Cards rendered");
 
 					_this.setElements();
+					_this.setListenerCollapseFiltersWhenMobile();
 					_this.setPagination();
 					if (deferred)
 						deferred.resolve();
