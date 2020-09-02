@@ -39,6 +39,7 @@
 				</button>
 				<div class="odx-search__close">
 					<span class="fas fa-times" aria-hidden="true"></span>
+					<span class="sr-only">Close search to activate press enter</span>
 				</div>
 			</div>
 		</form>
@@ -68,7 +69,7 @@
 			window.showSearchElements = function(){
 				$closeSearch.attr('tabindex','0').attr('aria-hidden','false');
 				$input.attr('tabindex','0').attr('aria-hidden','false');
-				$loop.attr('tabindex','0').attr('aria-hidden','fasle');
+				$loop.attr('tabindex','0').attr('aria-hidden','false');
 				$formButtons.attr('tabindex','0').attr('aria-hidden','false');
 			};
 
