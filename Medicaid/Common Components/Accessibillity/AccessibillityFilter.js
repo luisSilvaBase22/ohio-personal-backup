@@ -1,4 +1,7 @@
 var AccessibillityScriptsForFilter = {
+	forceFocusArticle: function(){
+		$('.select2-container.select2-container--default').focus();
+	},
 	forceFocusAfterDropdownSelection: function(){
 		var $results = $('.js-b22-results-number');
 		$results.focus();
@@ -23,12 +26,13 @@ var AccessibillityScriptsForFilter = {
 		var $select = $('#js-select-topics');
 		$select.on('select2:select', function( e ) {
 			console.log("SELECTED", e);
-			_this.forceFocusAfterDropdownSelection();
+			//_this.forceFocusAfterDropdownSelection();
+			_this.forceFocusArticle();
 			$select.select2('close');
 		});
 		$select.on('change', function( ev ){
 			console.log("DO", ev);
-			_this.forceFocusAfterDropdownSelection();
+			//_this.forceFocusAfterDropdownSelection();
 			$select.select2('close');
 		});
 
@@ -57,7 +61,9 @@ var AccessibillityScriptsForFilter = {
 	start: function( articleId ){
 		var $filterWrapper = document.querySelector('article' + articleId );
 
-		$filterWrapper.setAttribute('aria-label', 'Press space key to display dropdown options');
+		//$filterWrapper.setAttribute('aria-label', 'Press space key to display dropdown options');
+
+		$('.select2-container.select2-container--default').attr('aria-label', 'Press space key to display dropdown options');
 
 
 		var $inputBox = $('.select2.select2-container');
