@@ -20,6 +20,8 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 	var $containerSectionProviders = $megaMenuContainer.querySelector('.b-mega-menu__section .b-section[data-section="Resources for Providers"]');
 	var $containerSectionIndividuals = $megaMenuContainer.querySelector('.b-mega-menu__section .b-section[data-section="Individuals & Families"]');
 
+	[Component name="ohio design/agencies/medicaid/global-components/mega-menu/accessibilitymegamenuscript"]
+
 	var hideMegaMenu = function(){
 		$megaMenuContainer.addEventListener('mouseleave', function(  ) {
 			hideAllSections();
@@ -46,8 +48,7 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 		$imageSectionIndividuals.style.display = "none";
 	};
 
-	$anchorAboutUs.hover(function() {
-
+	var toggleAboutUsSection = function(){
 		hideAllSections();
 		hideAllImages();
 
@@ -55,10 +56,9 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 		$containerSectionAboutUs.style.display = "block";
 
 		showMegaMenu();
-	} );
+	};
 
-	$anchorMedicaid.hover(function() {
-
+	var toggleMedicaidSection = function(){
 		hideAllSections();
 		hideAllImages();
 
@@ -66,10 +66,9 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 		$containerSectionMedicaid.style.display = "block";
 
 		showMegaMenu();
-	} );
+	};
 
-	$anchorProviders.hover(function() {
-
+	var toggleProviders = function(){
 		hideAllSections();
 		hideAllImages();
 
@@ -77,10 +76,9 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 		$containerSectionProviders.style.display = "block";
 
 		showMegaMenu();
-	} );
+	};
 
-	$anchorIndividuals.hover(function() {
-
+	var toggleFamiliesAndIndividuals = function(){
 		hideAllSections();
 		hideAllImages();
 
@@ -88,7 +86,25 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 		$containerSectionIndividuals.style.display = "block";
 
 		showMegaMenu();
+	};
+
+	$anchorAboutUs.hover(function() {
+		toggleAboutUsSection();
 	} );
+
+	$anchorMedicaid.hover(function() {
+		toggleMedicaidSection();
+	} );
+
+	$anchorProviders.hover(function() {
+		toggleProviders();
+	} );
+
+	$anchorIndividuals.hover(function() {
+		toggleFamiliesAndIndividuals();
+	} );
+
+	AcccessibilityMegaMenu.init();
 
 	hideMegaMenu();
 
