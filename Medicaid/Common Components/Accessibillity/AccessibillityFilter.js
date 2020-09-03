@@ -8,20 +8,6 @@ var AccessibillityScriptsForFilter = {
 	},
 	listenerDropdown: function(){
 		var _this = this;
-		console.log("Detecting events for dropdown");
-		var $dropdown = document.querySelector('.select2-results__options');
-		var $itemsFromDropdown = $('.select2-results__option');
-
-		$dropdown.addEventListener( 'click', function( event ) {
-			if ( event.target.classList.contains('select2-results__option') ) {
-				console.log("CLICK");
-			}
-			/*
-			if ( event.which == 13 || event.which == 32 ) { enter or space keys
-				console.log("FOCUS");
-			}
-			*/
-		} );
 
 		var $select = $('#js-select-topics');
 		$select.on('select2:select', function( e ) {
@@ -70,7 +56,7 @@ var AccessibillityScriptsForFilter = {
 		$inputBox.attr('tabindex', "0");//Input box
 
 		$inputBox.on('focus', function(){
-			console.log("Runing screen");
+			console.log("Running screen");
 			var $dropdown = $('.select2-results__options');
 
 			$dropdown.attr('aria-labelledby', 'topic-sr');
@@ -78,9 +64,6 @@ var AccessibillityScriptsForFilter = {
 			$dropdown.attr('tabindex', "-1");
 		});
 
-		$inputBox.on('keydown', function(){
-			console.log("KEYDOWN");
-		});
 
 		this.watcherDropdown();
 
