@@ -1,54 +1,74 @@
 var AcccessibilityMegaMenu = {
+	$megaMenu: document.querySelector('.b-mega-menu'),
 	focusHelp: function(){
-		hideAllSections();
-		hideAllImages();
+		hideAllSectionsAndMegaMenuContainer();
 
 		var $linkHelp = document.querySelector('#js-go-help');
 		$linkHelp.focus();
 	},
-	listenerLastItemFromSubsection: function( selectorSection, nextSection,  callback ){
+	listenerLastItemFromSubsection: function( selectorSublinks, $currentSection, $nextSection ){
 		var _this = this;
-		var $megaMenu = document.querySelector('.b-mega-menu');
+		//var $megaMenu = document.querySelector('.b-mega-menu');
 
-		var $subsectionWrapper = $megaMenu.querySelector( selectorSection );
-		var $subsectionLinks = $subsectionWrapper.querySelectorAll( '.b-section__secondary-pages-list' );
+		var $subsectionWrapper = this.$megaMenu.querySelector( selectorSublinks );
+		var $subsectionLinks = $subsectionWrapper.querySelectorAll( '.b-section__secondary-pages-list a' );
 		var $lastLinkFromCurrentSubSection = $subsectionLinks[ $subsectionLinks.length -1 ];
-		$lastLinkFromCurrentSubSection.addEventListener('keypress', function(){
-			if ( nextSection !== undefined ) {
-				_this.focusSubsection( nextSection );
 
+		$lastLinkFromCurrentSubSection.addEventListener('focusout', function(){
+			if ( $nextSection ) {
+				$nextSection.focus();
+				_this.focusMainNavigation();
+				hideAllSectionsAndMegaMenuContainer();
+				$currentSection.setAttribute('aria-expanded', 'false');
+			} else {
+				_this.focusHelp();
+				hideAllSectionsAndMegaMenuContainer();
+				$currentSection.setAttribute('aria-expanded', 'false');
 			}
-
-			callback();
 		});
 	},
 	focusSubsection: function( selectorSection ){
-		var $megaMenu = document.querySelector('.b-mega-menu');
+		//var $megaMenu = document.querySelector('.b-mega-menu');
 
-		var $subsectionWrapper = $megaMenu.querySelector( selectorSection );
-		var $firstLink = $subsectionWrapper.querySelector( '.b-section__secondary-pages-list li a' );
+		var $subsectionWrapper = this.$megaMenu.querySelector( selectorSection );
+		var $firstLink = $subsectionWrapper.querySelector( '.b-section__title a' );
 		$firstLink.focus();
 	},
+	focusMainNavigation: function(){
+		var $headerAnchors = document.querySelector('.awesome-navigator.navList1');
+		var $aboutUs = $headerAnchors.querySelector('li:nth-child(2) a');
+		var $medicaid = $headerAnchors.querySelector('li:nth-child(3) a');
+		var $providers = $headerAnchors.querySelector('li:nth-child(4) a');
+		var $individuals = $headerAnchors.querySelector('li:nth-child(5) a');
+
+		$medicaid.focus();
+	},
 	addAriasToMegaMenu: function( $aboutUs, $medicaid, $providers, $individuals ){
-		$aboutUs.setAttribute('aria-hidden', 'true');
+		//var $megaMenu = document.querySelector('.b-mega-menu');
+
+		this.$megaMenu.setAttribute('aria-expanded', 'false');
+		this.$megaMenu.setAttribute('aria-hidden', 'false');
+		this.$megaMenu.setAttribute('role', 'region');
+
+		$aboutUs.setAttribute('aria-hidden', 'false');
 		$aboutUs.setAttribute('aria-label', 'Our Structure section');
 		$aboutUs.setAttribute('role', 'button');
 		$aboutUs.setAttribute('aria-expanded', 'false');
 		$aboutUs.setAttribute('tabindex', '0' );
 
-		$medicaid.setAttribute('aria-hidden', 'true');
+		$medicaid.setAttribute('aria-hidden', 'false');
 		$medicaid.setAttribute('aria-label', 'About Medicaid section');
 		$medicaid.setAttribute('role', 'button');
 		$medicaid.setAttribute('aria-expanded', 'false');
 		$medicaid.setAttribute('tabindex', '0' );
 
-		$providers.setAttribute('aria-hidden', 'true');
+		$providers.setAttribute('aria-hidden', 'false');
 		$providers.setAttribute('aria-label', 'Providers section');
 		$providers.setAttribute('role', 'button');
 		$providers.setAttribute('aria-expanded', 'false');
 		$providers.setAttribute('tabindex', '0' );
 
-		$individuals.setAttribute('aria-hidden', 'true');
+		$individuals.setAttribute('aria-hidden', 'false');
 		$individuals.setAttribute('aria-label', 'Individuals section');
 		$individuals.setAttribute('role', 'button');
 		$individuals.setAttribute('aria-expanded', 'false');
@@ -75,109 +95,61 @@ var AcccessibilityMegaMenu = {
 			TAB: 9
 		};
 
-
 		var _this = this;
 
-		/*
-		var $linkAbout = $aboutUs.querySelector('a');
-		$linkAbout.setAttribute('aria-label', "About us section, press enter to see section");
-		$linkAbout.setAttribute('role', 'button');
-		$linkAbout.setAttribute('aria-pressed', 'false');
-		$linkAbout.setAttribute('aria-expanded', 'false');
-
-		 */
-
-		$aboutUs.addEventListener('keydown', function( event ) {
-			console.log("PRESSED", event.keyCode );
+		$aboutUs.addEventListener('click', function( event ) {
+			console.log("PRESSED", event );
 			event.preventDefault();
 			event.stopPropagation();
-			console.log("PRESSED", event.keyCode );
 
-			event.stopImmediatePropagation();
+			//event.stopImmediatePropagation();
 
 			$aboutUs.setAttribute('aria-expanded', 'true');
-			$aboutUs.setAttribute('aria-hidden', 'false');
 
-			if ( event.keyCode === KEYS.ENTER || event.keyCode === KEYS.SPACE ) {
-				event.preventDefault();
-				event.stopImmediatePropagation();
-				console.log("SUCCESS");
-				toggleAboutUsSection();
-				_this.focusSubsection( selectorAboutSection );
-				//_this.listenerLastItemFromSubsection( selectorAboutSection, selectorMedicaidSection, toggleMedicaidSection() );
-			}
-			/*
-			var $link = $aboutUs.querySelector('a');
+			toggleAboutUsSection();
+			_this.focusSubsection( selectorAboutSection );
+			_this.listenerLastItemFromSubsection( selectorAboutSection, $aboutUs, $medicaid );
 
-			$link.addEventListener( 'keydown' , function( e ) {
-				e.preventDefault();
-				console.log("CLICK REDIRECT", e.keyCode);
-				if ( e.keyCode === KEYS.ENTER ) {
-					e.preventDefault();
-				}
-
-				toggleAboutUsSection();
-
-				_this.focusSubsection( selectorAboutSection );
-				_this.listenerLastItemFromSubsection( selectorAboutSection, selectorMedicaidSection, toggleMedicaidSection() );
-			});
-
-			 */
 
 		});
 
-		$medicaid.addEventListener( 'keyup', function( event ) {
+		$medicaid.addEventListener( 'click', function( event ) {
 			event.preventDefault();
-			console.log("PRESSED", event.keyCode );
+			event.stopPropagation();
 
 			$medicaid.setAttribute('aria-expanded', 'true');
-			$medicaid.setAttribute('aria-hidden', 'false');
 
-			if ( event.keyCode === KEYS.ENTER ) {
-				event.preventDefault();
-				console.log("SUCCESS");
-			}
-			/*
-			var $link = $aboutUs.querySelector('a');
+			toggleMedicaidSection();
 
-			$link.addEventListener( 'keydown' , function( e ) {
-				e.preventDefault();
-				toggleMedicaidSection();
+			_this.focusSubsection( selectorMedicaidSection );
+			_this.listenerLastItemFromSubsection( selectorMedicaidSection, $medicaid, $providers );
 
-				_this.focusSubsection( selectorMedicaidSection );
-				_this.listenerLastItemFromSubsection( selectorMedicaidSection, selectorProvidersSection, toggleProviders() );
-
-			});
-
-			 */
 		} );
 
-		$providers.addEventListener( 'keyup', function( event ) {
+		$providers.addEventListener( 'click', function( event ) {
 			event.preventDefault();
-			var $link = $aboutUs.querySelector('a');
+			event.stopPropagation();
 
-			$link.addEventListener( 'keydown' , function( e ) {
-				e.preventDefault();
-				toggleMedicaidSection();
+			$providers.setAttribute('aria-expanded', 'true');
 
-				_this.focusSubsection( selectorProvidersSection );
-				_this.listenerLastItemFromSubsection( selectorProvidersSection, selectorFamAndIndividualsSection, toggleFamiliesAndIndividuals() );
+			toggleProviders();
 
-			});
+			_this.focusSubsection( selectorProvidersSection );
+			_this.listenerLastItemFromSubsection( selectorProvidersSection, $providers, $individuals );
+
 		} );
 
-		$individuals.addEventListener( 'keyup', function( event ) {
+		$individuals.addEventListener( 'click', function( event ) {
 			event.preventDefault();
-			var $link = $aboutUs.querySelector('a');
+			event.stopPropagation();
 
-			$link.addEventListener( 'keydown' , function( e ) {
-				e.preventDefault();
-				toggleMedicaidSection();
+			$individuals.setAttribute('aria-expanded', 'true');
 
-				_this.focusSubsection( selectorFamAndIndividualsSection );
-				_this.listenerLastItemFromSubsection( selectorFamAndIndividualsSection, undefined, _this.focusHelp() );
+			toggleFamiliesAndIndividuals();
 
-			});
+			_this.focusSubsection( selectorFamAndIndividualsSection );
+			_this.listenerLastItemFromSubsection( selectorFamAndIndividualsSection, $individuals, undefined );
+
 		} );
 
 	}
