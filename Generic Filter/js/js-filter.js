@@ -383,7 +383,9 @@
 					}
 				}
 
-				ContentPieces.splice( indexOfItemToRemove, 1 );
+				if ( indexOfItemToRemove ) {
+					ContentPieces.splice( indexOfItemToRemove, 1 );
+				}
 			},
 			getContentPiecesData: function( mappingFunction, sortByDate, AlphabeticalFilter ){
 				var _this = this;
