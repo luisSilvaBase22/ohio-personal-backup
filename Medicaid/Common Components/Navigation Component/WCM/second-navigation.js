@@ -1,7 +1,4 @@
 document.addEventListener('DOMContentLoaded', function(  ) {
-	var $headerAnchors = document.querySelector('.awesome-navigator.navList1');
-
-	//var $allNavigationAnchors = $headerAnchors.querySelectorAll('li a');
 
 	var $anchorAboutUs = $('.awesome-navigator.navList1 li:nth-child(2)');
 	var $anchorMedicaid = $('.awesome-navigator.navList1 li:nth-child(3)');
@@ -20,13 +17,16 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 	var $containerSectionProviders = $megaMenuContainer.querySelector('.b-mega-menu__section .b-section[data-section="Resources for Providers"]');
 	var $containerSectionIndividuals = $megaMenuContainer.querySelector('.b-mega-menu__section .b-section[data-section="Individuals & Families"]');
 
-	[Component name="ohio design/agencies/medicaid/global-components/mega-menu/accessibilitymegamenuscript"]
+
+	var hideAllSectionsAndMegaMenuContainer = function(){
+		hideAllSections();
+		hideAllImages();
+		$megaMenuContainer.style.display = "none";
+	};
 
 	var hideMegaMenu = function(){
 		$megaMenuContainer.addEventListener('mouseleave', function(  ) {
-			hideAllSections();
-			hideAllImages();
-			$megaMenuContainer.style.display = "none";
+			hideAllSectionsAndMegaMenuContainer();
 		})
 	};
 
@@ -104,7 +104,14 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 		toggleFamiliesAndIndividuals();
 	} );
 
-	AcccessibilityMegaMenu.init();
+	/*START:  Definition of script for Screen reader */
+	[Component name="ohio design/agencies/medicaid/global-components/mega-menu/accessibilitymegamenuscript"]
+	/*END:  Definition of script for Screen reader */
+
+	//So click event does not trigger desktop mega menu in mobile devices
+	if( ! /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+		AcccessibilityMegaMenu.init();
+	}
 
 	hideMegaMenu();
 
