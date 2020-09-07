@@ -22,6 +22,22 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 	var $containerSectionIndividuals = $megaMenuContainer.querySelector('.b-mega-menu__section .b-section[data-section="Individuals & Families"]');
 
 
+	var updateMenuHeightWhenThreeRows = function( $containerSection, $imageSection ) {
+		var listOfSubsections = $containerSection.querySelectorAll('.row:nth-child(2) .col-md-3');
+		var numberOfSubsections = listOfSubsections.length;
+
+		if ( numberOfSubsections > 12 ) {
+			setMegaMenuImageHeight( $imageSection );
+		}
+	};
+
+	var setMegaMenuImageHeight  = function( $imageSectionWrapper ) {
+		var $image = $imageSectionWrapper.querySelector('img');
+
+		$imageSectionWrapper.style.maxHeight = '355px';
+		$image.style.maxWidth = '65vh';
+	};
+
 	var hideAllSectionsAndMegaMenuContainer = function(){
 		hideAllSections();
 		hideAllImages();
@@ -52,12 +68,18 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 		$imageSectionIndividuals.style.display = "none";
 	};
 
+	var showSectionSelected = function($imageSection, $containerSection) {
+		$imageSection.style.display = "block";
+		$containerSection.style.display = "block";
+
+		updateMenuHeightWhenThreeRows( $containerSection, $imageSection );
+	};
+
 	var toggleAboutUsSection = function(){
 		hideAllSections();
 		hideAllImages();
 
-		$imageSectionAboutUs.style.display = "block";
-		$containerSectionAboutUs.style.display = "block";
+		showSectionSelected( $imageSectionAboutUs , $containerSectionAboutUs );
 
 		showMegaMenu();
 	};
@@ -66,8 +88,7 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 		hideAllSections();
 		hideAllImages();
 
-		$imageSectionMedicaid.style.display = "block";
-		$containerSectionMedicaid.style.display = "block";
+		showSectionSelected( $imageSectionMedicaid, $containerSectionMedicaid );
 
 		showMegaMenu();
 	};
@@ -76,8 +97,7 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 		hideAllSections();
 		hideAllImages();
 
-		$imageSectionProviders.style.display = "block";
-		$containerSectionProviders.style.display = "block";
+		showSectionSelected( $imageSectionProviders, $containerSectionProviders );
 
 		showMegaMenu();
 	};
@@ -86,8 +106,7 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 		hideAllSections();
 		hideAllImages();
 
-		$imageSectionIndividuals.style.display = "block";
-		$containerSectionIndividuals.style.display = "block";
+		showSectionSelected( $imageSectionIndividuals, $containerSectionIndividuals );
 
 		showMegaMenu();
 	};
