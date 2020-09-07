@@ -51,25 +51,25 @@ var AcccessibilityMegaMenu = {
 		this.$megaMenu.setAttribute('role', 'region');
 
 		$aboutUs.setAttribute('aria-hidden', 'false');
-		$aboutUs.setAttribute('aria-label', 'Our Structure section');
+		$aboutUs.setAttribute('aria-label', 'Our Structure about us');
 		$aboutUs.setAttribute('role', 'button');
 		$aboutUs.setAttribute('aria-expanded', 'false');
 		$aboutUs.setAttribute('tabindex', '0' );
 
 		$medicaid.setAttribute('aria-hidden', 'false');
-		$medicaid.setAttribute('aria-label', 'About Medicaid section');
+		$medicaid.setAttribute('aria-label', 'Learn About Medicaid');
 		$medicaid.setAttribute('role', 'button');
 		$medicaid.setAttribute('aria-expanded', 'false');
 		$medicaid.setAttribute('tabindex', '0' );
 
 		$providers.setAttribute('aria-hidden', 'false');
-		$providers.setAttribute('aria-label', 'Providers section');
+		$providers.setAttribute('aria-label', 'Resources for Providers');
 		$providers.setAttribute('role', 'button');
 		$providers.setAttribute('aria-expanded', 'false');
 		$providers.setAttribute('tabindex', '0' );
 
 		$individuals.setAttribute('aria-hidden', 'false');
-		$individuals.setAttribute('aria-label', 'Individuals section');
+		$individuals.setAttribute('aria-label', 'Families and Individuals');
 		$individuals.setAttribute('role', 'button');
 		$individuals.setAttribute('aria-expanded', 'false');
 		$individuals.setAttribute('tabindex', '0' );
