@@ -1,5 +1,9 @@
 document.addEventListener('DOMContentLoaded', function(  ) {
 
+	var currentDevice = navigator.userAgent.toLowerCase();
+	var isTabletDevice = /(ipad|tablet|(android(?!.*mobile))|(windows(?!.*phone)(.*touch))|kindle|playbook|silk|(puffin(?!.*(IP|AP|WP))))/.test(currentDevice);
+	var isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(currentDevice);
+
 	var $anchorAboutUs = $('.awesome-navigator.navList1 li:nth-child(2)');
 	var $anchorMedicaid = $('.awesome-navigator.navList1 li:nth-child(3)');
 	var $anchorProviders = $('.awesome-navigator.navList1 li:nth-child(4)');
@@ -88,21 +92,29 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 		showMegaMenu();
 	};
 
-	$anchorAboutUs.hover(function() {
-		toggleAboutUsSection();
-	} );
+	/*
+		Validation added because in mobile, when clicking inside any section from blue right bubble, before redirecting the desktop mega menu
+		was displayed, apparently the hover was triggered
+	*/
+	if ( !isTabletDevice && !isMobileDevice ){
+		$anchorAboutUs.hover(function() {
+			toggleAboutUsSection();
+		} );
 
-	$anchorMedicaid.hover(function() {
-		toggleMedicaidSection();
-	} );
+		$anchorMedicaid.hover(function() {
+			toggleMedicaidSection();
+		} );
 
-	$anchorProviders.hover(function() {
-		toggleProviders();
-	} );
+		$anchorProviders.hover(function() {
+			toggleProviders();
+		} );
 
-	$anchorIndividuals.hover(function() {
-		toggleFamiliesAndIndividuals();
-	} );
+		$anchorIndividuals.hover(function() {
+			toggleFamiliesAndIndividuals();
+		} );
+	}
+
+	hideMegaMenu();
 
 	/*START:  Definition of script for Screen reader */
 	[Component name="ohio design/agencies/medicaid/global-components/mega-menu/accessibilitymegamenuscript"]
@@ -112,8 +124,6 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 	if( ! /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 		AcccessibilityMegaMenu.init();
 	}
-
-	hideMegaMenu();
 
 	var odxScroll = function() {
 
