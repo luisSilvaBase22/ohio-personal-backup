@@ -68,14 +68,16 @@ body .content-body hr{
 .content-body .odx-more-information,
 .content-body .odx-related-laws-and-forms,
 .content-body .odx-external-resources,
-.content-body .odx-share-this{
+.content-body .odx-share-this,
+.odx-sidebar-card{
 	background-color: white;
 	box-shadow: 1px 3px 6px 0 rgba(58, 62, 72, 0.3);
 }
 body .content-body .odx-more-information h2,
 body .content-body .odx-related-laws-and-forms h2,
 body .content-body .odx-external-resources h2,
-body .content-body .odx-share-this h2{
+body .content-body .odx-share-this h2,
+body .content-body .odx-sidebar-card h2{
 	font-size: 1.5em;
 	margin: 10px 0 20px;
 }
@@ -182,9 +184,10 @@ a.js-odx-secondary-footer__item {
 }
 
 body .content-body {
-	#footer-subscribe-button {
+	button.footer-subscribe-button {
 		background-color: $color-secondary-dark;
 		color: $color-white;
+		opacity: 1;
 	}
 	.wpthemeControlBody {
 		overflow: hidden;
@@ -213,7 +216,7 @@ body .content-body {
 			}
 		}
 	}
-	.container-fluid.footer-container::before {
+	.footer-container .container-fluid::before {
 		display: block;
 		border-top-left-radius: 65%;
 		border-top-right-radius: 65%;
@@ -224,9 +227,9 @@ body .content-body {
 		right: -20%;
 		width: 250%;
 		height: 250vw;
-		bottom: 50px;
+		bottom: 60px;
 	}
-	.container-fluid.footer-container {
+	.footer-container .container-fluid{
 		padding-top: 40px;
 	}
 	.odx-footer-navigation--cluster-list {
@@ -267,13 +270,16 @@ body .content-body {
 			margin: 0;
 			padding: 0;
 		}
+		p.help-block.error {
+			font-size: 0.75rem !important;
+		}
 		label {
 			width: 100%;
 			text-align: left;
 		}
 		input {
 			display: inline-block;
-			width: 65%;
+			width: 100%;
 			height: 40px;
 		}
 		input::placeholder {
@@ -285,9 +291,11 @@ body .content-body {
 		.btn {
 			margin-top: 0;
 			display: inline-block;
-			width: 34%;
-			height: 40px;
-			margin-left: -5px
+			width: auto;
+			height: 41px;
+			margin-left: -1px;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
 		}
 		.subscribe-info .subscribe-alert {
 			color: $color-white;
@@ -303,10 +311,14 @@ body .content-body {
 	li.odx-secondary-footer__default-nav {
 		opacity: 0.6;
 	}
+
 	.odx_secondary-footer img {
-		margin: 10% 0 0 4%;
+		margin: 17% 0 0 4%;
 	}
 	@media(max-width: 1440px) {
+		.odx_secondary-footer img {
+			margin: 6% 0 0 4%;
+		}
 		.ohio-footer-navigation .odx-footer-navigation__main-item {
 			margin-left: 0%;
 		}
@@ -337,7 +349,7 @@ body .content-body {
 		.footer-bar__logo {
 			text-align: center;
 		}
-		.container-fluid.footer-container::before {
+		.footer-container .container-fluid::before {
 			bottom: auto;
 		}
 	}
@@ -354,8 +366,13 @@ body .content-body {
 		.single-column-footer .odx_secondary-footer ul li {
 			padding: 30px 8px 0 9px;
 		}
-		.container-fluid.footer-container::before {
+		.footer-container .container-fluid::before {
 			bottom: auto;
+		}
+		.subscribe-wrapper {
+			.btn {
+				border-radius: 5px;
+			}
 		}
 	}
 	@media (max-width: 767px) {
@@ -365,7 +382,7 @@ body .content-body {
 		.footer-bar__logo {
 			margin-top: -60px;
 		}
-		.container-fluid.footer-container::before {
+		.footer-container .container-fluid::before {
 			max-height: initial;
 			top: 0;
 		}
@@ -593,7 +610,8 @@ body .content-body {
 	a i.fas {
 		float: right;
 		color: $mega-menu-section-primary-color;
-		font-size: 18px;
+		font-size: 12px;
+		margin-top: 5px;
 	}
 }
 
@@ -978,7 +996,7 @@ body .lang-modal__app-wrapper #app{
 
 	.b-search__buttons {
 		.odx-search__loop-btn .fa-search {
-			color: #4A4A4A;
+			color: $input-color;
 		}
 	}
 
@@ -1350,15 +1368,13 @@ body .lang-modal__app-wrapper #app{
 	margin-right: 20px;
 	margin-bottom: 20px;
 }
-#iop-top-banner-tiles__ads-link{
-	-moz-text-decoration-line: none;
-	text-decoration-line: none;
-	color: #4A4A4A;
+body .content-body a.iop-top-banner-tiles__ads-link{
+	text-decoration: none;
+	color: $input-color;
 	line-height: 1;
-}
-.iop-top-banner-tiles__ads-link{
 	display: flex;
 }
+
 .iop-top-banner-tiles__ads-cards-title{
 	text-align: center;
 	max-height: 47px;
@@ -1366,18 +1382,26 @@ body .lang-modal__app-wrapper #app{
 	font-weight: 600;
 }
 .iop-top-banner-tiles__ads-cards-item-container{
-	display: flex;
-	flex-direction: column;
+	width: 100%;
 }
 .iop-top-banner-tiles__ads-cards-img-container{
 	height: 70%;
 	align-items: center;
-	display: flex;
+	display: block;
 	justify-content: center;
+	position: relative;
 }
 .iop-top-banner-tiles__ads-cards-img{
 	max-width: 70px;
 	max-height: 70%;
+	position: absolute;
+	bottom: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	vertical-align: middle;
+	height: auto;
 }
 @media(max-width: 991px){
 	.iop-top-banner-tiles__container .iop-top-banner-tiles__img .container{
@@ -1391,11 +1415,46 @@ body .lang-modal__app-wrapper #app{
 		margin: 0;
 	}
 }
-@media(max-width: 480px){
+@media(max-width: 767px){
 	.iop-top-banner-tiles__ads-cards{
 		max-height: 370px;
 		overflow: hidden;
 		padding-left: 10px;
+		margin-left: 30px;
+	}
+	.iop-top-banner-tiles_text{
+		margin: 0 auto;
+		height: 120px;
+		padding: 10px 30px 0;
+		overflow: hidden;
+	}
+	body .content-body h1.iop-top-banner-tiles__title-mobile{
+		display: table-cell;
+		text-align: center;
+		font-size: 1.85em;
+		padding: 0;
+		height: 105px;
+		vertical-align: middle;
+	}
+	.iop-top-banner-tiles__container .iop-top-banner-tiles__img .container{
+		background: linear-gradient(90deg, #dadde0de 27%, transparent 100%);
+		margin-left: 0;
+	}
+	.iop-top-banner-tiles__img{
+		height: 400px;
+	}
+	.iop-top-banner-tiles__ads-cards-item{
+		height: 120px;
+	}
+	.iop-top-banner-tiles__ads-cards-img-container{
+		height: 65%;
+	}
+	.iop-top-banner-tiles__ads-cards-title{
+		height: 35%;
+		max-height: 40px;
+		font-size: 0.85em;
+		padding: 0 0 5px;
+		line-height: 1.05em;
 	}
 }
 /* END: Top Banner */
@@ -1464,6 +1523,17 @@ body .lang-modal__app-wrapper #app{
 }
 /* END - left nav image */
 
+/* START: Topic Ads */
+.odx-topic-card-item .odx-topic-card-item__text .odx-topic-card-item__text-title{
+	color: white;
+	text-align: center;
+	margin: 0;
+	padding: 12px 10px 10px;
+	line-height: 1.1;
+	font-weight: bold;
+	font-size: 18px;
+}
+/* END: Topic Ads */
 
 /* START: Ads */
 .b-all-width-background--primary-additional::before,
@@ -2359,6 +2429,7 @@ ul.b22-alphalist__alphabet li:not(:first-child) a{
 }
 /* END: Small filter cards with no Image */
 
+
 /* ==== START: FAQs Tabs Component ==== */
 .iop-faqs-tabs__container {
 	margin-top: 5px;
@@ -2368,16 +2439,16 @@ ul.b22-alphalist__alphabet li:not(:first-child) a{
 
 .iop-faqs-tabs__tab {
 	text-transform: capitalize;
-	color: #4A4A4A;
-	padding: 24px 0 24px 0;
+	color: $input-color;
 	text-align: center;
 	font-weight: bold;
 	cursor: pointer;
-	background-color: #FFFFFF;
-	border: 1px solid #f2f2f2;
+	background-color: $color-white;
+	border: 1px solid $containers-background;
 	border-radius: 3px 3px 0 0;
 	outline: none;
-	font-size: 24px;
+	font-size: 1.25em;
+	padding: 20px 0 15px;
 }
 
 .iop-faqs-tabs__tab.active {
@@ -2399,9 +2470,9 @@ ul.b22-alphalist__alphabet li:not(:first-child) a{
 	display: none;
 	position: relative;
 	z-index: 3;
-	border-left: 1px solid  #d8d8d8;
-	border-right: 1px solid  #d8d8d8;
-	border-bottom: 1px solid  #d8d8d8;
+	border-left: 1px solid $borders-color;
+	border-right: 1px solid $borders-color;
+	border-bottom: 1px solid $borders-color;
 	box-shadow: 0px 6px 12px 0px rgba(216, 216, 216, 0.5);
 }
 
@@ -2434,20 +2505,30 @@ ul.b22-alphalist__alphabet li:not(:first-child) a{
 	background-color: white;
 	color: black;
 	font-weight: bold;
-	border: 1px #d8d8d8;
+	border: 1px $borders-color;
 	display: table-cell;
 	vertical-align: middle;
 	border-radius: 5px;
-	box-shadow: 0px 1px 5px 0px #d8d8d8;
+	box-shadow: 0px 1px 5px 0px $borders-color;
 	padding: 12px 15px;
+	height: 130px;
+	overflow: hidden;
 }
 
 .content-body p.iop-faqs-tabs__card-question-title {
-	line-height: 30px;
 	margin: 0;
 	font-weight: bold;
-	font-size: 21px;
-	padding: 35px 17px 35px 17px;
+	line-height: 1.25em;
+	padding: 15px 0 0;
+	margin-bottom: 10px;
+	font-size: 1.15em;
+	max-height: 105px;
+	vertical-align: middle;
+	overflow: hidden;
+}
+
+.iop-faqs-tabs__card-question-link a.odx-view-more{
+	font-size: 0.75em;
 }
 
 .iop-faqs-tabs__card-answer-header {
@@ -2468,11 +2549,11 @@ ul.b22-alphalist__alphabet li:not(:first-child) a{
 }
 
 .iop-faqs-tabs__card-answer-body {
-	border: 1px solid #d8d8d8;
+	border: 1px solid $borders-color;
 	background-color: white;
 	padding: 20px;
 	border-radius: 5px;
-	box-shadow: 0px 1px 5px 0px #d8d8d8;
+	box-shadow: 0px 1px 5px 0px $borders-color;
 }
 
 .iop-faqs-tabs__card-question-link{
@@ -2486,7 +2567,7 @@ ul.b22-alphalist__alphabet li:not(:first-child) a{
 .content-body .iop-faqs-tabs__cards-box .iop-faqs-tabs__card-answer-tag a:active {
 	border-radius: 5px;
 	padding: 5px 15px;
-	background-color: #d8d8d8;
+	background-color: $borders-color;
 	font-size: 10px;
 	font-weight: bold;
 	line-height: 13px;
@@ -2504,7 +2585,6 @@ ul.b22-alphalist__alphabet li:not(:first-child) a{
 }
 
 /* ==== END: FAQs Tabs Component ==== */
-
 
 /* ==== START: Text Break Component ==== */
 .imgResponsive {
@@ -2602,7 +2682,7 @@ ul.b22-alphalist__alphabet li:not(:first-child) a{
 	max-height: 70px;
 }
 .medicaid-ohio-news__container {
-	height: 190px;
+	height: 210px;
 	margin-bottom: 10px;
 	border-bottom: 1px solid $borders-color;
 }
@@ -2618,10 +2698,14 @@ body .content-body p.categories-selected {
 .b22-filter__second-section.medicaid-filter__second-container-only {
 	border-top: 1px solid $borders-color;
 }
-.ohio-card-content .ohio-card-content-header.medicaid-news__title,
+.ohio-card-content .ohio-card-content-header.medicaid-news__title{
+	overflow: hidden;
+	max-height: 85px;
+	margin-top: 0;
+}
 .medicaid-news__summary {
 	overflow: hidden;
-	max-height: 100px;
+	max-height: 55px;
 	margin-top: 0;
 }
 .medicaid-news__summary-wrapper {
@@ -2696,7 +2780,7 @@ ul.odx-questions-container a:hover,
 ul.odx-questions-container a:visited,
 ul.odx-questions-container a:focus,
 ul.odx-questions-container a:active{
-	color: $standard-links-color-light;
+	color: $standard-links-color;
 }
 /* ==== END:  Common Questions Bullet list ==== */
 
@@ -2704,11 +2788,13 @@ ul.odx-questions-container a:active{
 #medicaid-reports-research__main-wrapper {
 	margin-left: 7%;
 	.medicaid-reports-research__items {
-		min-height: 100px;
 		max-height: max-content;
 		border-bottom: 1px solid $borders-color;
 		margin-right: 2%;
-		margin-top: 3.5%;
+		margin-top: 0;
+		min-height: 80px;
+		padding-bottom: 1.5em;
+		padding-top: 1em;
 	}
 	.medicaid-reports-research__icon {
 		text-align: end;
@@ -2729,6 +2815,15 @@ ul.odx-questions-container a:active{
 	.medicaid-reports-research__expand-content-county {
 		font-size: 1.1em;
 	}
+	button.medicaid-reports-research__expand-trigger {
+		border: none;
+		background-color: $color-white;
+		text-align: inherit;
+	}
+	h3 {
+		color: $titles-color;
+		font-weight: 600;
+	}
 }
 .medicaid-reports-research__reports-wrapper {
 	margin-left: 0 !important;
@@ -2744,5 +2839,49 @@ ul.odx-questions-container a:active{
 	}
 }
 /* ==== END: Reports and Research ==== */
+
+/* ==== START: Contact Us ==== */
+.medicaid-formio__contact-us-container .panel {
+	border: none;
+}
+.medicaid-formio__contact-us-container  .panel-default>.panel-heading {
+	background-color: $color-white;
+}
+.medicaid-formio__contact-us-container .panel-title {
+	text-align: center;
+	font-weight: 700;
+}
+.medicaid-formio__label {
+	text-align: right;
+}
+.medicaid-formio__dropdown .form-control {
+	border: 2px solid $color-secondary-main;
+	border-radius: 6px;
+}
+@media(max-width: 768px) {
+	.medicaid-formio__label {
+		text-align: left;
+	}
+}
+/* ==== END: Contact Us  ==== */
+
+/* ==== START: 508 validation  ==== */
+#medicaid-formio__subscribe .control-label {
+	display: none;
+}
+body .content-body{
+	.odx-font-color-gray80{
+		color: $input-color-light;
+	}
+	.single-column-footer .odx_secondary-footer ul li{
+		opacity: inherit;
+	}
+	.iop-faqs-tabs__cards-faqs a.odx-view-more{
+		color: $color-secondary-dark;
+	}
+}
+
+
+/* ==== END: 508 validation  ==== */
 
 /* END - Libraries>ODX Common Design>Content>Utility>Style Sheets>SCSS>Agencies>medicaid>medicaid-custom-styles.scss */
