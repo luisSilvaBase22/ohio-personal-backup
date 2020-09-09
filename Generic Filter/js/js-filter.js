@@ -67,9 +67,6 @@
 					srv: LocalOptions.AjaxParameters.srv,
 					cmpntid: LocalOptions.AjaxParameters.cmpntid,
 					'WCM_Page.ResetAll': 'TRUE',
-					CACHE: LocalOptions.AjaxParameters.CACHE,
-					CONTENTCACHE: LocalOptions.AjaxParameters.CONTENTCACHE,
-					CONNECTORCACHE: LocalOptions.AjaxParameters.CONNECTORCACHE,
 					location: LocalOptions.AjaxParameters.location ? LocalOptions.AjaxParameters.location : LibrarySettings.wcmLibrary + '/' + LibrarySettings.location,
 				};
 
@@ -573,6 +570,7 @@
 				$anchorPagination.attr('href', '#top');
 			},
 			paginateResults: function(page) {
+				var _this = this;
 				var els = this.elements;
 				var cardsContainer = els.$cards.root;
 				var visibleItems = els.visibleItems;
@@ -589,6 +587,32 @@
 				var headerInPage = cardsContainer.find('.js-b22-index-header[data-page="' + page + '"]');
 				headerInPage.show();
 
+				this.removeAriaAttributesFromItemsDisplayed();
+				this.focusFirstItemAfterPagination( itemInPage );
+
+				var $activePage = els.pagination.find('.page-item.active');
+				$activePage.on('click', function() {
+					_this.focusFirstItemAfterPagination( itemInPage );
+				});
+
+			},
+			removeAriaAttributesFromItemsDisplayed: function(){
+				//Accessibility
+				var els = this.elements;
+				var $items = els.$cards.items;
+
+				$items.each( function() {
+					this.removeAttribute('tabindex');
+					this.removeAttribute('aria-hidden');
+				} );
+			},
+			focusFirstItemAfterPagination: function( $items ){
+				//Accessibility
+				if ( $items.length > 0 ) {
+					$items[0].setAttribute('tabindex', '0');
+					$items[0].setAttribute('aria-hidden', 'false');
+					$items[0].focus();
+				}
 			},
 			updateFiltersClicked: function( category, values ){
 				var _this = this;
@@ -1450,6 +1474,7 @@
 					_this.setElements();
 					_this.setListenerCollapseFiltersWhenMobile();
 					_this.setPagination();
+					_this.removeAriaAttributesFromItemsDisplayed();
 					if (deferred)
 						deferred.resolve();
 				} );
