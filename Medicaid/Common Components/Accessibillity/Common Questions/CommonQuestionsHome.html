@@ -1,0 +1,189 @@
+<!-- Just to indicate where is referenced the AcccessibilityCommonQuestions object and its
+methods:
+ - init
+ - focusRightQuestionAfterCloseAnswer
+ - focusOpenedQuestion
+ -->
+<!-- START: Ohio Design / Agencies / Medicaid / Common Questions / Common Questions - Home -->
+<div class="iop-faqs-tabs" style="display: none;">
+	<div id="iop-faqs-tabs__text-container">
+		<h2 dir="ltr">[Plugin:ODXLabelTranslation contentId="[Property field='id' type='content' context='selected' name='./medicaid/label-translation']" key="medicaid-common-questions"][/Plugin:ODXLabelTranslation]</h2>
+		<hr dir="ltr" aria-hidden="true">
+		<div id="iop-faqs-tabs__container">
+
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		(function($) {
+			var items = '';
+			var dataUtils = new DataUtils();
+			var moreQuestionsWcmTranslationKey = "odx-see-other-common-questions";
+			var selector = "#iop-faqs-tabs__container";
+
+			// define JSON
+			var items = [Component name="ohio design/agencies/medicaid/common-questions/tabs-component/common-questions-tabs-json-home" resultsPerPage="" startPage=""]
+
+			var tabs = [];
+			var categoryIcon = '[Plugin:CopyText text="[Element key='translations' type='content' context='selected' name='ohio content english/medicaid/home/categories-icons' htmlencode='false' id='f379285c-b932-43ca-9f05-0a7ab43d62e5:MS9vaGlvIGNvbnRlbnQgZW5nbGlzaC9tZWRpY2FpZC9ob21lL2NhdGVnb3JpZXMtaWNvbnM=']" format="trim" escape="json"]';
+			categoryIconJSON = categoryIcon ? categoryIcon : '{}';
+			categoryIconJSON = JSON.parse(categoryIcon);
+
+			if (items.length > 0) {
+				$('.iop-faqs-tabs').show();
+
+				items.forEach(function(item) {
+					var categoriesArray = item.portalLocationCategory.split(',');
+					var category = 'General';
+
+					for (var i = 0; i < categoriesArray.length; i++) {
+						if (categoriesArray[i].indexOf('Home/Common Questions/') > 0) { // define category path
+							category = categoriesArray[i].split('Home/Common Questions/')[1];
+						}
+					}
+					var categoryClean = category.trim().replace(/\s/g, "-").toLowerCase();
+					item.categoryLabel = category;
+					item.category = categoryClean;
+
+					var categoryIcon = categoryIconJSON.hasOwnProperty(categoryClean) ? categoryIconJSON[categoryClean].value : "";
+					var indexCategory = -1;
+					var newCategory = {
+						"tabID": categoryClean,
+						"tabName": category,
+						"tabIcon": categoryIcon
+					};
+					for(var i = 0; i < tabs.length; i++){
+						if(tabs[i].tabID === categoryClean){
+							indexCategory = 1;
+						}
+					}
+					if(indexCategory === -1){
+						tabs.push(newCategory);
+					}
+				});
+
+				items = dataUtils.groupBy(items, "category", "none", "ASC");
+
+				var component = new OhioToolkit.components.WebComponent({
+					element: selector,
+					templateLocation: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/medicaid/medicaid-faqs-template.hbs.html"]',
+					data: {
+						items: items,
+						tabs: tabs,
+						moreQuestionsWcmTranslationKey: moreQuestionsWcmTranslationKey,
+						commonQuestionsLandingPage: "[URLCmpnt htmlencode="false" type="content" context="selected" mode="current" name="./medicaid/help-center/help-center-welcome"]"
+			}
+			});
+				[Component name="ohio design/agencies/medicaid/common-questions/tabs-component/acccessibility-common-questions-main"]
+				component.render().then(function() {
+					applyEventsToCurrentComponent();
+					registerEvents();
+					AcccessibilityCommonQuestions.init( 'iop-faqs-tabs__container' );
+				});
+			}
+
+			function applyEventsToCurrentComponent() {
+				$('.iop-faqs-tabs__card-item').attr('tabindex', '0');
+
+				$(selector).on("click", ".iop-faqs-tabs__card-answer-close", function() {
+					$(".iop-faqs-tabs__cards-faqs").show();
+					$(".iop-faqs-tabs__card-answer").hide();
+
+					var $wrapperActiveSection = document.querySelector('.iop-faqs-tabs__cards-faqs');
+					AcccessibilityCommonQuestions.focusRightQuestionAfterCloseAnswer( $wrapperActiveSection );
+				});
+
+				var $closeButton = $('.iop-faqs-tabs__card-answer .fa.fa-window-close');
+
+				$closeButton.attr('tabindex', '0');
+				$closeButton.on("keydown", function(e) {
+					if (e.which == 13 || e.which == 32) {
+						e.preventDefault();
+						e.stopPropagation();
+						$(this).click();
+					}
+				});
+				$(selector).on("keydown", ".iop-faqs-tabs__card-item", function(e) {
+
+					if (e.which == 13 || e.which == 32) {
+						e.preventDefault();
+						e.stopPropagation();
+						$(this).click();
+					}
+				});
+
+				$(selector).on("click", ".iop-faqs-tabs__card-item", function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					var element = $(e.currentTarget).data();
+					console.log(items, element);
+
+					var questions = items.filter(function(item) {
+						return item.groupName === element.groupid;
+					});
+
+					fillDetailCard(questions[0].groupItems[element.index]);
+				});
+
+				// open 1st tab when first loading
+				var firstTabID = $('.iop-faqs-tabs__tab:first-child').data("tab");
+				$(".iop-faqs-tabs__cards-faqs").show();
+				$(".iop-faqs-tabs__card-answer").hide();
+				$('.iop-faqs-tabs__tab:first-child').addClass("active");
+				$(".iop-faqs-tabs__cards-container").hide();
+				$("#" + firstTabID).show();
+				$(".iop-faqs-tabs__cards-box").fadeIn();
+			}
+
+			function fillDetailCard(element) {
+				if (!$.isEmptyObject(element)) {
+					$(".iop-faqs-tabs__card-answer-container .iop-faqs-tabs__card-answer-title").html("<span>" + element.title + "</span>");
+					// Fix: SOGW-3443
+					// This fix is also available as Handlebars helper to be executed from a .hbs template
+					var inputText = element.answer.replace(/\[WCM_URL path='/ig, '').replace(/'\]/g, '');
+					var fixedAnswerText = window.XWidgetCommon.actions.getURIPathFromWCMURL(inputText);
+
+					$(".iop-faqs-tabs__card-answer-container .iop-faqs-tabs__card-answer-summary").html(fixedAnswerText);
+					$(".iop-faqs-tabs__card-answer-container .iop-faqs-tabs__card-answer-tag").html("<a href=\"" + element.portalLocationURL + "\"><span>" + element.portalLocation + "</span></a>");
+					$(".iop-faqs-tabs__cards-faqs").hide();
+					$(".iop-faqs-tabs__card-answer").show();
+
+					AcccessibilityCommonQuestions.focusOpenedQuestion();
+				}
+			}
+
+			function registerEvents() {
+				var $odxHomeFaqsTab = $(".iop-faqs-tabs__tab");
+				$(".iop-faqs-tabs__tab").keydown(function(e) {
+					if (e.which == 13 || e.which == 32) {
+						$(this).click();
+					}
+				});
+				$(".iop-faqs-tabs__tab").on("click", function(e) {
+					var target = $(e.currentTarget);
+					var id = target.data("tab");
+					if (target.hasClass("active")) {
+						/*$(".iop-faqs-tabs__cards-faqs").show();
+						$(".iop-faqs-tabs__card-answer").hide();
+						target.removeClass("active");
+						$(".iop-faqs-tabs__cards-box").fadeOut(400, 'swing', function(){
+							$(".iop-faqs-tabs__cards-container").hide();
+						  });*/
+					} else {
+						$(".iop-faqs-tabs__cards-faqs").show();
+						$(".iop-faqs-tabs__card-answer").hide();
+						$(".iop-faqs-tabs__tab").removeClass("active");
+						target.addClass("active");
+						$(".iop-faqs-tabs__cards-container").hide();
+						$("#" + id).show();
+						$(".iop-faqs-tabs__cards-box").fadeIn();
+
+					}
+				});
+			}
+		})(jQuery);
+	});
+</script>
+<!-- END: Ohio Design / Agencies / Medicaid / Common Questions / Common Questions - Home -->

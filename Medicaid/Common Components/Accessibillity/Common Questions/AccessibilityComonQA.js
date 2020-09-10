@@ -5,9 +5,15 @@ var AcccessibilityCommonQuestions = {
 			$root: undefined,
 			$tabs: undefined
 		},
-		$cardsContainer: {
+		$cards: {
 			$root: undefined,
 			$sections: undefined
+		},
+		$cardAnswer: {
+			$container: undefined,
+			$title: undefined,
+			$close: undefined,
+			$description: undefined
 		},
 		$otherQuestions: {
 			$root: undefined,
@@ -20,10 +26,14 @@ var AcccessibilityCommonQuestions = {
 
 		this.$elements.$tabsContainer.$root = _el.$root.querySelector( '.row.' + containerId );
 		this.$elements.$tabsContainer.$tabs = _el.$tabsContainer.$root.querySelectorAll('button[data-tab]');
-		this.$elements.$cardsContainer.$root = _el.$root.querySelector('.row section.iop-faqs-tabs__cards-box');
-		this.$elements.$cardsContainer.$sections = _el.$cardsContainer.$root.querySelectorAll('.iop-faqs-tabs__cards-faqs .row.iop-faqs-tabs__cards-container');
-		this.$elements.$otherQuestions.$root = _el.$cardsContainer.$root.querySelector('.iop-faqs-tabs__card-question-link');
+		this.$elements.$cards.$root = _el.$root.querySelector('.row section.iop-faqs-tabs__cards-box');
+		this.$elements.$cards.$sections = _el.$cards.$root.querySelectorAll('.iop-faqs-tabs__cards-faqs .row.iop-faqs-tabs__cards-container');
+		this.$elements.$otherQuestions.$root = _el.$cards.$root.querySelector('.iop-faqs-tabs__card-question-link');
 		this.$elements.$otherQuestions.$link = this.$elements.$otherQuestions.$root.querySelector('a');
+		this.$elements.$cardAnswer.$container = this.$elements.$root.querySelector('.iop-faqs-tabs__card-answer');
+		this.$elements.$cardAnswer.$title = this.$elements.$cardAnswer.$container.querySelector('.iop-faqs-tabs__card-answer-title');
+		this.$elements.$cardAnswer.$description = this.$elements.$cardAnswer.$container.querySelector('.iop-faqs-tabs__card-answer-body');
+		this.$elements.$cardAnswer.$close = this.$elements.$cardAnswer.$container.querySelector('.iop-faqs-tabs__card-answer-close button');
 	},
 	addListenerTabs: function(){
 		var _this = this;
@@ -40,7 +50,7 @@ var AcccessibilityCommonQuestions = {
 		} );
 	},
 	searchActiveSection: function( dataId ){
-		var _$sections = this.$elements.$cardsContainer.$sections;
+		var _$sections = this.$elements.$cards.$sections;
 
 		for ( var i = 0; i < _$sections.length; i++ ) {
 			if ( _$sections[i].id === dataId ) {
@@ -50,13 +60,64 @@ var AcccessibilityCommonQuestions = {
 		}
 	},
 	focusFirstQuestionInActiveSection: function( $wrapperSection ){
+		var _this = this;
 		var _$itemsInCurrentSection = $wrapperSection.querySelectorAll('.iop-faqs-tabs__card-item');
 		_$itemsInCurrentSection.forEach( function( item ) {
 			item.setAttribute('aria-hidden', 'false');
+			item.addEventListener('click', function( event ) {
+				event.currentTarget.classList.add('active');
+			});
+
 		} );
 
 		if ( _$itemsInCurrentSection.length > 0 )
 			_$itemsInCurrentSection[0].focus();
+	},
+	focusOpenedQuestion: function(){
+		var el = this.$elements;
+		var $title = el.$cardAnswer.$title;
+		var $answer = el.$cardAnswer.$description;
+		$title.setAttribute('aria-hidden', 'false');
+		$title.setAttribute('tabindex', '0');
+
+		$answer.setAttribute('aria-hidden', 'false');
+		$answer.setAttribute('tabindex', '0');
+
+		this.addEventOnLeaveAnswer();
+
+		$title.focus();
+	},
+	addEventOnLeaveAnswer: function(){
+		var el = this.$elements;
+		var $answer = el.$cardAnswer.$description;
+		var $closeButton = el.$cardAnswer.$close;
+		$answer.addEventListener('focusout', function( event ) {
+			$closeButton.focus();
+		})
+	},
+	focusRightQuestionAfterCloseAnswer: function( $wrapperActiveSection ){
+		var el = this.$elements;
+		var $title = el.$cardAnswer.$title;
+		var $answer = el.$cardAnswer.$description;
+
+		var $activeQuestion = $wrapperActiveSection.querySelector('.iop-faqs-tabs__card-item.active');
+		if ( $activeQuestion !== null ) {
+			$activeQuestion.classList.remove('active');
+
+			$title.removeAttribute('aria-hidden');
+			$title.removeAttribute('tabindex');
+
+			$answer.removeAttribute('aria-hidden');
+			$answer.removeAttribute('tabindex');
+
+			var $rightQuestion = $activeQuestion.nextElementSibling;
+			if ($rightQuestion !== null) {
+				$rightQuestion.focus();
+			} else {
+				this.getActiveTab();
+			}
+		}
+
 	},
 	addListenerOtherQuestions: function(){
 		var _this = this;
