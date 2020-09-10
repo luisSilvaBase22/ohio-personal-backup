@@ -380,7 +380,7 @@
 					}
 				}
 
-				if ( indexOfItemToRemove ) {
+				if ( indexOfItemToRemove || indexOfItemToRemove === 0 ) {
 					ContentPieces.splice( indexOfItemToRemove, 1 );
 				}
 			},
