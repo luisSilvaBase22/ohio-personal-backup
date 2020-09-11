@@ -1,19 +1,39 @@
 var AccessibillityScriptsForFilter = {
+	idFilter: undefined,
+	$dropdown: undefined,
+	removeEmptyOptionFromDropdown: function(){
+		this.$dropdown = document.querySelector('ul.select2-results__options');
+		var $options = this.$dropdown.querySelectorAll('li.select2-results__option');
+		if ( $options.length > 0 ) {
+			if ( $options[1].hasAttribute('role') && $options[1].getAttribute('role') === "treeitem" ) {
+				$options[1].remove();
+			}
+		}
+	},
 	forceFocusArticle: function(){
 		$('.select2-container.select2-container--default').focus();
 	},
-
+	forceFocusAfterDropdownSelection: function(){
+		var $results = $('.js-b22-results-number');
+		$results.focus();
+	},
 	listenerDropdown: function(){
 		var _this = this;
 
-		var $select = $('#js-select-topics');
+		this.removeEmptyOptionFromDropdown();
+
+		//var $select = $('#js-select-topics');
+		var select2Id = this.idFilter;
+		var $select = $( select2Id );
 		$select.on('select2:select', function( e ) {
 			console.log("SELECTED", e);
+			//_this.forceFocusAfterDropdownSelection();
 			_this.forceFocusArticle();
 			$select.select2('close');
 		});
 		$select.on('change', function( ev ){
 			console.log("DO", ev);
+			//_this.forceFocusAfterDropdownSelection();
 			$select.select2('close');
 		});
 
@@ -40,8 +60,10 @@ var AccessibillityScriptsForFilter = {
 		observer.observe(elemToObserve, {attributes: true});
 	},
 	start: function( articleId ){
+		this.idFilter = articleId;
+		//var $filterWrapper = document.querySelector('article' + articleId );
 
-		var _this = this;
+		//$filterWrapper.setAttribute('aria-label', 'Press space key to display dropdown options');
 
 		$('.select2-container.select2-container--default').attr('aria-label', 'Press space key to display dropdown options or tab key twice to go to the number of results');
 
@@ -62,23 +84,22 @@ var AccessibillityScriptsForFilter = {
 		this.watcherDropdown();
 
 		$inputBox.on('keyup', function( eventInput ){
-			/*console.log("Pressed");
+			console.log("Pressed");
 			if ( eventInput.which === 32 ) {
 				console.log("SPACE");
 			}
-			 */
 
 			//Move input out of the list in order to be found by the Screen Reader
-			//var $input = '<input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="textbox" aria-autocomplete="list" style="width: 0.75em;">';
+			var $input = '<input class="select2-search__field" type="search" tabindex="0" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="textbox" aria-autocomplete="list" style="width: 0.75em;">';
 
-			//var $span = $('.select2-search');
+			var $span = $('.select2-search');
 
-			//if ( $span.length < 1 ) {
-				//$('.selection .select2-selection').append( '<span class="select2-search select2-search--inline">' + $input + '</span>' );
-			//}
+			if ( $span.length < 1 ) {
+				$('.selection .select2-selection').append( '<span class="select2-search select2-search--inline">' + $input + '</span>' );
+			}
 
-			//var $listItemAndInput = $('li.select2-search.select2-search--inline');
-			//$listItemAndInput.remove();
+			var $listItemAndInput = $('li.select2-search.select2-search--inline');
+			$listItemAndInput.remove();
 
 
 		});
