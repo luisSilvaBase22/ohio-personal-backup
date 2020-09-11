@@ -51,7 +51,7 @@
 	<div class="b22-filter__categories-title">{{getMultilingualLabelByWCMKey ./filterTitleSecondSection}}</div><!-- Filter events -->
 	<div id="b22-filter-taxonomies-container" class="row margin-bottom-sm componentContainer " style="">
 		{{#each Filters}}
-		<article id="{{propertyName}}" class="ohio-select2 col-lg-{{numColumns}} col-md-{{numColumns}} col-sm-12 col-xs-12">
+		<article id="{{propertyName}}" class="ohio-select2 col-lg-{{numColumns}} col-md-{{numColumns}} col-sm-12 col-xs-12" tabindex="-1">
 			<label for="{{id}}">{{getMultilingualLabelByWCMKey ./label}}</label>
 			<select multiple="multiple" id="{{id}}">
 				<option value="all" selected="selected">{{getMultilingualLabelByWCMKey ./allLabel}}</option>
