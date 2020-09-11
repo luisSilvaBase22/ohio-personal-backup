@@ -86,6 +86,10 @@ var AcccessibilityCommonQuestions = {
 		this.addEventOnLeaveAnswer();
 
 		$title.focus();
+		//Force screen reader to follow this workflow: title -> description -> close
+		$title.addEventListener('focusout', function() {
+			$answer.focus();
+		});
 	},
 	addEventOnLeaveAnswer: function(){
 		var el = this.$elements;
