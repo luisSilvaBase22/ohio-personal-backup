@@ -35,7 +35,11 @@ document.addEventListener('DOMContentLoaded', function(  ) {
 		var $image = $imageSectionWrapper.querySelector('img');
 
 		$imageSectionWrapper.style.maxHeight = '355px';
-		$image.style.maxWidth = '65vh';
+		$image.style.maxWidth = '75vh';
+
+		if ( $megaMenuContainer.offsetWidth > 1023 && $megaMenuContainer.offsetWidth < 1200 ) {
+			$imageSectionWrapper.style.maxHeight = '445px';
+		}
 	};
 
 	var hideAllSectionsAndMegaMenuContainer = function(){
