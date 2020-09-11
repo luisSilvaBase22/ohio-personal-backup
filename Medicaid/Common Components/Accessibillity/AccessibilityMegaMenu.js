@@ -15,7 +15,11 @@ var AcccessibilityMegaMenu = {
 		var templateSpanClosure = '<span tabindex="0" class="js-close-mg" style="width: 0"></span>';
 
 		var $lastLinkFromCurrentSubSection = $subsectionLinks[ $subsectionLinks.length -1 ];
-		$lastLinkFromCurrentSubSection.insertAdjacentHTML('afterbegin', templateSpanClosure);
+
+		//To avoid creating multiple closure spans
+		if ( ! $lastLinkFromCurrentSubSection.firstChild.classList.contains('js-close-mg') ) {
+			$lastLinkFromCurrentSubSection.insertAdjacentHTML('afterbegin', templateSpanClosure);
+		}
 
 		var $spanClosure = $lastLinkFromCurrentSubSection.querySelector('span.js-close-mg');
 
