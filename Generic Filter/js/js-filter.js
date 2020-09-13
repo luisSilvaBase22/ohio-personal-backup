@@ -380,7 +380,7 @@
 					}
 				}
 
-				if ( indexOfItemToRemove || indexOfItemToRemove === 0 ) {
+				if (  indexOfItemToRemove || indexOfItemToRemove === 0 ) {
 					ContentPieces.splice( indexOfItemToRemove, 1 );
 				}
 			},
@@ -1357,6 +1357,7 @@
 						Labels.filterTitleSecondSection = undefined;
 						Labels.allTypeIndexButton = undefined;
 						Labels.resetFiltersButton = undefined;
+						Labels.shareTitle = undefined;
 					}
 
 					_this.Filters = _this.addPropertiesToFiltersForTemplate( Filters );
@@ -1456,7 +1457,8 @@
 				var templateItems = _this.WidgetSettings.templateItems;
 				var imageNoResults = _this.WidgetSettings.imageNoResults;
 				var idTemplateItems = _this.WidgetSettings.idTemplateItems;
-				var noResultsText = _this.WidgetSettings.Labels;
+				var noResultsText = _this.WidgetSettings.Labels.noResultsText;
+				var shareTitle = _this.WidgetSettings.Labels.shareTitle;
 
 				var CardsComponent = new OhioToolkitWebComponent({
 					element: idTemplateItems,
@@ -1464,7 +1466,8 @@
 					data: {
 						items: response,
 						noResultsImgPath: imageNoResults,
-						noResultsText: noResultsText
+						noResultsText: noResultsText,
+						shareTitle: shareTitle
 					}
 				});
 

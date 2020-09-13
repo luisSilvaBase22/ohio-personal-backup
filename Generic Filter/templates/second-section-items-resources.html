@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row js-common-card-wrapper">
 	<p class=""></p>
 	<div class="list-unstyled js-b22-items-container">
 		{{#each items}}
@@ -16,12 +16,111 @@
 		<div id = {{uuid}} class="js-b22-item js-b22-item--visible base22-filter-container__item-grid base22-filter-container--visible odx-carousel-cards-item col-xs-12 col-sm-12 col-md-6 col-lg-6" >
 		{{/if}}
 			<div class="ohio-card ohio-card--center">
+				{{#if linkURLExternal}}
+				{{#if linkURLWebContent}}
+				<a href="{{getURIPathFromWCMURL linkURLExternal}}" aria-label="{{decode title}}">
+					{{else}}
+				<a href="{{{linkURLExternal}}}" aria-label="{{decode title}}">
+				{{/if}}
+					{{else}}
+				<a href="{{getURIPathFromWCMURL href}}" aria-label="{{decode title}}">
+				{{/if}}
+					<div class="ohio-card-bg">
+						{{#if thumbnail}}
+						<img class="ohio-card-bg-img" src="{{thumbnail}}" alt="{{altThumbnail}}">
+						{{else}}
+						<div class="ohio-card-bg-img ohio-card-bg-img--default"><span class="sr-only">Ohio map image placeholder</span></div>
+						{{/if}}
+					</div>
+				</a>
 				<section class="ohio-card-content">
-					<a class="ohio-card-wrapper-anchor" href="{{getURIPathFromWCMURL eventLink}}">
-						<h3 class="ohio-card-content-header js-b22-item-header">{{decode eventName}}</h3>
+					{{#if linkURLExternal}}
+					{{#if linkURLWebContent}}
+					<a class="ohio-card-wrapper-anchor" href="{{getURIPathFromWCMURL linkURLExternal}}">
+						<h3 class="ohio-card-content-header js-b22-item-header">{{decode title}}</h3>
 					</a>
+					{{else}}
+					<a class="ohio-card-wrapper-anchor" href="{{{linkURLExternal}}}">
+						<h3 class="ohio-card-content-header js-b22-item-header">{{decode title}}</h3>
+					</a>
+					{{/if}}
+					{{else}}
+					<a class="ohio-card-wrapper-anchor" href="{{getURIPathFromWCMURL href}}">
+						<h3 class="ohio-card-content-header js-b22-item-header">{{decode title}}</h3>
+					</a>
+					{{/if}}
 					<p class="ohio-card-content-summary">{{decode description}}</p>
+					<div class="ohio-card-content__bottom">
+						<!-- START: Optional CATEGORIES in the left down corner -->
+						<div class="ohio-card-wrapper-anchor odx-background-color-gray40 odx-resource__category">
+							<span class="ohio-card-division__box">{{decode topics}}</span>
+						</div>
+						<!-- END: Optional CATEGORIES in the left down corner -->
+						<!-- START: Optional Share button in the right down corner -->
+						<span class="pull-right">
+							<a class="ohio-card-wrapper-anchor js-share-button odx-card__share-anchor" href="ohio-card-content__share">
+								<span>{{ getMultilingualLabelByWCMKey ../shareTitle }}</span>
+							</a>
+						</span>
+						<!-- END: Optional Share button in the right down corner -->
+					</div>
 				</section>
+				<!-- START Optional: Share button, in case not using comment from line 70 to 125 -->
+				<div class="ohio-card__share-box odx-background-color-gray" style="display:none"
+				     data-title="{{{decode title}}}" data-url="{{url}}" data-description="{{{decode summary}}}"
+				     data-alternate-summary="{{decode description}}" data-image="{{image}}">
+					<div class="ohio-card__share-close">
+						<div class="close-icon-container">
+							<i class="fa fa-close"></i>
+						</div>
+					</div>
+					<div class="ohio-card__share-content">
+						<div class="ohio-card__share-content-title">
+							<p class="share-content__title">
+								{{ getMultilingualLabelByWCMKey ../shareTitle }} "{{decode title}}"
+							</p>
+						</div>
+						<div class="ohio-card__share-icons">
+							<a class="share__icon-tile-anchor js-facebook-anchor">
+								<div class="share__icon-tile">
+									<div class="share-icon">
+										<i class="fa fa-facebook"></i>
+									</div>
+									<div class="share-link">
+										<p>
+											Facebook
+										</p>
+									</div>
+								</div>
+							</a>
+							<a class="share__icon-tile-anchor js-twitter-anchor">
+								<div class="share__icon-tile">
+									<div class="share-icon">
+										<i class="fa fa-twitter"></i>
+									</div>
+									<div class="share-link">
+										<p>
+											Twitter
+										</p>
+									</div>
+								</div>
+							</a>
+							<a class="share__icon-tile-anchor js-copy-url-anchor" tabindex="0">
+								<div class="share__icon-tile">
+									<div class="share-icon">
+										<i class="fa fa-link"></i>
+									</div>
+									<div class="share-link">
+										<p>
+											Copy URL
+										</p>
+									</div>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+				<!-- END Optional: Share button -->
 			</div>
 		</div>
 		{{/each}}
