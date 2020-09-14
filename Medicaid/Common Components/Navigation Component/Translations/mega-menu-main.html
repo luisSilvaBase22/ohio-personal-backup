@@ -1,0 +1,213 @@
+<!-- START: Ohio Design / Agencies / Medicaid / Global Components / Mega Menu / Mega Menu - Main Component -->
+<div class="b-mega-menu" style="display: none">
+	<div>
+		<div class="row">
+			<div class="col-md-9">
+				<div class="b-mega-menu__section">
+					<div class="b-section" data-section="Our Structure about us" style="display: none">
+						<div class="row">
+							<div class="col-12">
+								<div class="b-section__title">
+									<a href='[URLCmpnt type="sitearea" context="selected" mode="current" name="./medicaid/about-us"]'><span>[Property field="title" type="content" context="selected" name="./medicaid/about-us/about-us"]</span> <i class="fas fa-chevron-right"></i></a>
+								</div>
+								<div class="b-section__description">
+									<span>[Element key="summary" type="content" context="selected" name="./medicaid/about-us/main-section-landing-page"]</span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<!-- START: Menu component to get secondary pages under Our Structure about us  -->
+							<div id="our-structure-about-us-subsections" class="margin-bottom-lg"></div>
+							<!-- END: Menu component to get secondary pages under Our Structure about us  -->
+						</div>
+					</div>
+					<div class="b-section" data-section="Learn About Medicaid" style="display: none">
+						<div class="row">
+							<div class="col-12">
+								<div class="b-section__title">
+									<a href='[URLCmpnt type="sitearea" context="selected" mode="current" name="./medicaid/learn-about-medicaid"]'><span>[Property field="title" type="content" context="selected" name="./medicaid/learn-about-medicaid/learn-about-medicaid"]</span> <i class="fas fa-chevron-right"></i></a>
+								</div>
+								<div class="b-section__description">
+									<span>[Element key="summary" type="content" context="selected" name="./medicaid/learn-about-medicaid/learn-about-medicaid"]</span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<!-- START: Menu component to get secondary pages under Learn About Medicaid  -->
+							<div id="learn-about-medicaid-subsections" class="margin-bottom-lg"></div>
+							<!-- END: Menu component to get secondary pages under Learn About Medicaid  -->
+						</div>
+					</div>
+					<div class="b-section" data-section="Resources for Providers" style="display: none">
+						<div class="row">
+							<div class="col-12">
+								<div class="b-section__title">
+									<a href='[URLCmpnt type="sitearea" context="selected" mode="current" name="./medicaid/resources-for-providers"]'><span>[Property field="title" type="content" context="selected" name="./medicaid/resources-for-providers/resources-for-providers"]</span> <i class="fas fa-chevron-right"></i></a>
+								</div>
+								<div class="b-section__description">
+									<span>[Element key="summary" type="content" context="selected" name="./medicaid/resources-for-providers/resources-for-providers"]</span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<!-- START: Menu component to get secondary pages under Resources for Providers  -->
+							<div id="resources-for-providers-subsections" class="margin-bottom-lg"></div>
+							<!-- END: Menu component to get secondary pages under Resources for Providers  -->
+						</div>
+					</div>
+					<div class="b-section" data-section="Individuals & Families" style="display: none">
+						<div class="row">
+							<div class="col-12">
+								<div class="b-section__title">
+									<a href='[URLCmpnt type="sitearea" context="selected" mode="current" name="./medicaid/families-and-individuals"]'><span>[Property field="title" type="content" context="selected" name="./medicaid/families-and-individuals/families-and-individuals"]</span> <i class="fas fa-chevron-right"></i></a>
+								</div>
+								<div class="b-section__description">
+									<span>[Element key="summary" type="content" context="selected" name="./medicaid/families-and-individuals/families-and-individuals"]</span>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<!-- START: Menu component to get secondary pages under Individuals & Families  -->
+							<div id="families-and-individuals-subsections" class="margin-bottom-lg"></div>
+							<!-- END: Menu component to get secondary pages under Individuals & Families  -->
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="b-mega-menu-images">
+					<div class="b-mega-menu__image-section" data-section="Our Structure about us" style="display: none">
+						<img src='[Element key="thumbnail" type="content" context="selected" name="./medicaid/about-us/about-us" format="url"]' class="hidden-xs hidden-sm" alt="">
+					</div>
+					<div class="b-mega-menu__image-section" data-section="Learn About Medicaid" style="display: none">
+						<img src='[Element key="thumbnail" type="content" context="selected" name="./medicaid/learn-about-medicaid/learn-about-medicaid" format="url"]' class="hidden-xs hidden-sm" alt="">
+					</div>
+					<div class="b-mega-menu__image-section" data-section="Resources for Providers" style="display: none">
+						<img src='[Element key="thumbnail" type="content" context="selected" name="./medicaid/resources-for-providers/resources-for-providers" format="url"]' class="hidden-xs hidden-sm" alt="">
+					</div>
+					<div class="b-mega-menu__image-section" data-section="Individuals & Families" style="display: block">
+						<img src='[Element key="thumbnail" type="content" context="selected" name="./medicaid/families-and-individuals/families-and-individuals" format="url"]' class="hidden-xs hidden-sm" alt="">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="b-mega-menu__bottom-line"></div>
+</div>
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		var MegaMenuRenderSubsections = {
+			getVariablesToSupportMultilingualContent: function( siteArea ){
+				// 1) Get all variables to support multilingual content
+				var currentLanguage = OHIO.ODX.actions.getUserLanguageByCookie();
+				// Get the library according to the user's language
+				var wcmLibrary = (typeof window.WCMLibraries !== "undefined") ? window.WCMLibraries[currentLanguage] : window.WCMLibraries['en'];
+				var virtualPortal = (window.portalContext !== 'none') ? window.portalContext + '/' : 'gov';
+
+				var urlComponent;
+
+				switch( siteArea ) {
+					case 'about-us':
+						urlComponent = '[URLCmpnt type="sitearea" context="selected" mode="current" name="./medicaid/about-us"]';
+						break;
+					case 'learn-about-medicaid':
+						urlComponent = '[URLCmpnt type="sitearea" context="selected" mode="current" name="./medicaid/learn-about-medicaid"]';
+						break;
+					case 'resources-for-providers':
+						urlComponent = '[URLCmpnt type="sitearea" context="selected" mode="current" name="./medicaid/resources-for-providers"]';
+						break;
+					case 'families-and-individuals':
+						urlComponent = '[URLCmpnt type="sitearea" context="selected" mode="current" name="./medicaid/families-and-individuals"]';
+						break;
+					default:
+						urlComponent = '[URLCmpnt type="sitearea" context="selected" mode="current" name="./medicaid"]';
+				}
+
+				var currentPathArray = decodeURIComponent(urlComponent).split("/");
+				var location = "";
+				var length = currentPathArray.length;
+				currentPathArray.forEach(function (element, index) {
+					if (index > 1) {
+						location += "/" + element;
+					}
+				});
+
+				var LibrarySettings = {
+					virtualPortal: virtualPortal,
+					wcmLibrary: wcmLibrary,
+					location: location
+				};
+
+				return LibrarySettings;
+			},
+			configureAjaxParameters: function( menuComponentId, siteArea ){
+				var LibrarySettings = this.getVariablesToSupportMultilingualContent( siteArea );
+
+				var paramsEvents = {
+					source: 'library',
+					srv: 'cmpnt',
+					cmpntid: menuComponentId,
+					'WCM_Page.ResetAll': 'TRUE',
+					location: LibrarySettings.wcmLibrary + '/' + LibrarySettings.location,
+				};
+
+				var serviceURLEvents = '/wps/wcm/connect/' + LibrarySettings.virtualPortal + LibrarySettings.wcmLibrary + '/' + window.siteId + '?' + $.param(paramsEvents);
+
+				return serviceURLEvents;
+			},
+			getDataFor: function( menuComponent, siteArea ){
+				var serviceURL = this.configureAjaxParameters( menuComponent, siteArea );
+
+				// 3) Run the AJAX call and do something with the response
+				return OHIO.ODX.actions.getAjaxDataFromURL( serviceURL ).then( function( response ){
+					var SecondaryPagesData = JSON.parse( response );
+					return SecondaryPagesData;
+				},function( error ){
+					console.error(error);
+				} );
+			},
+			renderSubsections: function( menuComponent, elementId, siteArea ){
+				this.getDataFor( menuComponent, siteArea ).then( function( response ) {
+					//console.log("The data: " +siteArea+ " ", response );
+
+					var component = new OhioToolkit.components.WebComponent({
+						element: elementId,
+						templateLocation: '[Element key="templateFile" type="content" context="selected" name="ohio design/component-templates/agencies/medicaid/subsections-mega-menu"]',
+						data: {
+							items: response
+						}
+					});
+
+					component.render().then(function() {
+						//console.log('Subsection Rendered!');
+					});
+
+				} );
+			},
+			init: function(){
+				var ourStructureAboutUsMenuComponent = '[Component name="ohio design/agencies/medicaid/global-components/mega-menu/secondary-pages-getters/our-structure-about-us-secondary-pages-json" resultsPerPage="" startPage="" format="id"]';
+				var learnAboutMedicaidMenuComponent = '[Component name="ohio design/agencies/medicaid/global-components/mega-menu/secondary-pages-getters/learn-about-medicaid-secondary-pages-json" resultsPerPage="" startPage="" format="id"]';
+				var resourcesForProvidersMenuComponent = '[Component name="ohio design/agencies/medicaid/global-components/mega-menu/secondary-pages-getters/resources-for-providers-secondary-pages-json" resultsPerPage="" startPage="" format="id"]';
+				var familiesAndIndividualsMenuComponent = '[Component name="ohio design/agencies/medicaid/global-components/mega-menu/secondary-pages-getters/families-and-individuals-secondary-pages-json" resultsPerPage="" startPage="" format="id"]';
+
+				this.renderSubsections( ourStructureAboutUsMenuComponent, '#our-structure-about-us-subsections', 'about-us' );
+				this.renderSubsections( learnAboutMedicaidMenuComponent, '#learn-about-medicaid-subsections', 'learn-about-medicaid' );
+				this.renderSubsections( resourcesForProvidersMenuComponent, '#resources-for-providers-subsections', 'resources-for-providers' );
+				this.renderSubsections( familiesAndIndividualsMenuComponent, '#families-and-individuals-subsections', 'families-and-individuals' );
+
+			}
+		};
+
+		MegaMenuRenderSubsections.init();
+	});
+</script>
+
+<!-- START: Mega Menu Script executed for DESKTOP -->
+[Component name="ohio design/agencies/medicaid/global-components/mega-menu/mega-menu-js-desktop"]
+<!-- END: Mega Menu Script executed for DESKTOP -->
+
+<!-- START: Mega Menu Script executed for TABLET -->
+[Component name="ohio design/agencies/medicaid/global-components/mega-menu/mega-menu-js-tablet"]
+<!-- END: Mega Menu Script executed for TABLET -->
+
+<!-- END: Ohio Design / Agencies / Medicaid / Global Components / Mega Menu / Mega Menu - Main Component -->

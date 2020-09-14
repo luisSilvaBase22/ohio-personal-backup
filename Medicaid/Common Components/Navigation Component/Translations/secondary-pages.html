@@ -1,0 +1,14 @@
+{{#each items}}
+<div class="col-md-3 col-lg-2">
+	<ul class="b-section__secondary-pages-list" role="presentation">
+		<li>
+			<div class="b-secondary-page__title">
+				<a href='{{getURIPathFromWCMURL href}}'><span>{{title}}</span> <i class="fas fa-chevron-right"></i></a>
+			</div>
+			<div class="b-secondary-page__description">
+				{{summary}}
+			</div>
+		</li>
+	</ul>
+</div>
+{{/each}}
